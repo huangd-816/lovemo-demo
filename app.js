@@ -1,0 +1,264 @@
+console.log("0816 upgraded v2 - Fixed audio & Snapchat UI");
+
+let callActive = false;
+let audioContext = null;
+let mediaRecorder = null;
+let audioChunks = [];
+
+// Initialize audio context
+function initAudio() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+// Scroll to bottom
+function scrollToBottom() {
+  const chat = document.getElementById("chat");
+  setTimeout(() => {
+    chat.scrollTop = chat.scrollHeight;
+  }, 50);
+}
+
+// Play voice with Web Audio API (FIXED)
+async function playVoice(text) {
+  try {
+    initAudio();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    utterance.lang = "en-US";
+    
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
+  } catch (error) {
+    console.error("Voice playback error:", error);
+  }
+}
+
+// Render message
+function renderMessage(item, sender) {
+  const chat = document.getElementById("chat");
+  const div = document.createElement("div");
+  div.className = `msg ${sender}`;
+
+  if (item.type === "text") {
+    div.className += " msg-text";
+    div.innerText = item.content;
+  } else if (item.type === "image") {
+    div.className += " msg-image";
+    const url = item.content || "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400";
+    div.innerHTML = `<img src="${url}" onerror="this.src='https://via.placeholder.com/200'" />`;
+  } else if (item.type === "image-upload") {
+    div.className += " msg-image";
+    div.innerHTML = `<img src="${item.content}" />`;
+  } else if (item.type === "voice") {
+    div.className += " msg-voice";
+    const duration = item.content || "0:02";
+    div.innerHTML = `
+      <div class="voice-play" onclick="playVoiceBar(this)">▶</div>
+      <div class="voice-waves">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+      </div>
+      <span class="voice-duration">${duration}</span>
+      <span style="display:none;" class="voice-text">${item.textToRead || ""}</span>
+    `;
+  }
+
+  chat.appendChild(div);
+  scrollToBottom();
+}
+
+// Play voice bar
+function playVoiceBar(element) {
+  const text = element.parentElement.querySelector(".voice-text").textContent;
+  if (text) {
+    playVoice(text);
+    animateWaves(element.parentElement);
+  }
+}
+
+// Animate wave bars
+function animateWaves(voiceElement) {
+  const bars = voiceElement.querySelectorAll(".wave-bar");
+  const interval = setInterval(() => {
+    bars.forEach(bar => {
+      bar.classList.toggle("active");
+    });
+  }, 100);
+  
+  setTimeout(() => clearInterval(interval), 2000);
+}
+
+// Send message
+async function sendMessage() {
+  const input = document.getElementById("input");
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  renderMessage({ type: "text", content: msg }, "user");
+  input.value = "";
+
+  sendToAI(msg);
+}
+
+// Core AI call
+async function sendToAI(text) {
+  try {
+    const res = await fetch("http://localhost:3000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+
+    if (data.messages && Array.isArray(data.messages)) {
+      data.messages.forEach(m => {
+        renderMessage(m, "ai");
+
+        if (m.type === "voice" && m.textToRead) {
+          playVoice(m.textToRead);
+        } else if (m.type === "text" && m.textToRead) {
+          playVoice(m.textToRead);
+        }
+      });
+    }
+  } catch (error) {
+    console.error("AI Error:", error);
+    renderMessage({ type: "text", content: "Oops! Connection lost 🌙" }, "ai");
+  }
+}
+
+// Voice input
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = "en-US";
+recognition.continuous = false;
+recognition.interimResults = false;
+
+document.getElementById("recordBtn").onclick = () => {
+  try {
+    recognition.start();
+    document.getElementById("recordBtn").classList.add("recording");
+  } catch (error) {
+    console.error("Recording error:", error);
+  }
+};
+
+recognition.onstart = () => {
+  document.getElementById("recordBtn").classList.add("recording");
+};
+
+recognition.onend = () => {
+  document.getElementById("recordBtn").classList.remove("recording");
+};
+
+recognition.onresult = (e) => {
+  const text = Array.from(e.results)
+    .map(result => result[0].transcript)
+    .join("");
+  
+  if (text.trim()) {
+    renderMessage({ type: "text", content: text }, "user");
+    sendToAI(text);
+  }
+};
+
+recognition.onerror = (e) => {
+  console.error("Speech recognition error:", e.error);
+  if (e.error !== "no-speech") {
+    renderMessage({ type: "text", content: "Didn't catch that 🎤" }, "ai");
+  }
+};
+
+// Image upload
+const fileInput = document.getElementById("fileInput");
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = e.target.result;
+    renderMessage({ type: "image-upload", content: img }, "user");
+    
+    const desc = prompt("Describe this image (or press Enter to skip):");
+    if (desc && desc.trim()) {
+      sendToAI("User sent an image: " + desc);
+    }
+  };
+  reader.readAsDataURL(file);
+});
+
+// Voice call loop
+function startCall() {
+  callActive = true;
+  renderMessage({ type: "text", content: "📞 Call started..." }, "system");
+  listenLoop();
+}
+
+function endCall() {
+  callActive = false;
+  recognition.abort();
+  speechSynthesis.cancel();
+  renderMessage({ type: "text", content: "📞 Call ended." }, "system");
+}
+
+function listenLoop() {
+  if (!callActive) return;
+
+  recognition.start();
+
+  recognition.onresult = async (e) => {
+    const text = e.results[0][0].transcript;
+    renderMessage({ type: "text", content: text }, "user");
+
+    try {
+      const res = await fetch("http://localhost:3000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await res.json();
+      if (data.messages && data.messages.length > 0) {
+        const reply = data.messages[0];
+        renderMessage(reply, "ai");
+
+        const voiceText = reply.textToRead || reply.content;
+        playVoice(voiceText);
+
+        setTimeout(listenLoop, 1000);
+      }
+    } catch (error) {
+      console.error("Call error:", error);
+      setTimeout(listenLoop, 1000);
+    }
+  };
+
+  recognition.onerror = () => {
+    if (callActive) {
+      setTimeout(listenLoop, 500);
+    }
+  };
+}
+
+// Enter key to send
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("input");
+  if (input) {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  }
+});

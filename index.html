@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>0816</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div>0816</div>
+    <button onclick="startCall()">📞</button>
+    <button onclick="endCall()">❌</button>
+  </div>
+
+  <div id="chat" class="chat"></div>
+
+  <div class="inputbar">
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <button onclick="fileInput.click()">📎</button>
+
+    <button id="recordBtn">🎤</button>
+
+    <input id="input" placeholder="Message..."
+      onkeydown="if(event.key==='Enter') sendMessage()" />
+
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
