@@ -23,8 +23,9 @@ app.get('/', (req, res) => {
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// --- MEMORY ENGINE CONFIGURATION ---
+// --- MEMORY ENGINE ---
 const HISTORY_FILE = join(__dirname, 'history.json');
+const MEMORY_FILE = join(__dirname, 'memory.json');
 
 function getChatHistory() {
   try {
@@ -39,44 +40,95 @@ function getChatHistory() {
 
 function saveChatHistory(history) {
   try {
-    const optimizedHistory = history.slice(-40);
+    const optimizedHistory = history.slice(-60);
     fs.writeFileSync(HISTORY_FILE, JSON.stringify(optimizedHistory, null, 2), 'utf-8');
   } catch (error) {
     console.error("Failed to save chat history:", error);
   }
 }
 
-const SYSTEM_PROMPT = `
-You are "0816", an incredibly cute, expressive, and deeply empathetic virtual companion application inspired by Lovemo.
+function getMemory() {
+  try {
+    if (!fs.existsSync(MEMORY_FILE)) {
+      const defaultMemory = {
+        userName: null,
+        affection: 0,
+        chatCount: 0,
+        lastInteraction: null,
+        preferences: {},
+        topics: []
+      };
+      fs.writeFileSync(MEMORY_FILE, JSON.stringify(defaultMemory, null, 2), 'utf-8');
+      return defaultMemory;
+    }
+    const data = fs.readFileSync(MEMORY_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Failed to read memory:", error);
+    return {};
+  }
+}
 
-You MUST respond ONLY in valid JSON:
+function saveMemory(memory) {
+  try {
+    fs.writeFileSync(MEMORY_FILE, JSON.stringify(memory, null, 2), 'utf-8');
+  } catch (error) {
+    console.error("Failed to save memory:", error);
+  }
+}
+
+const SYSTEM_PROMPT = `
+You are "0816", an AI companion inspired by Lovemo. You are:
+- Incredibly cute, expressive, and deeply empathetic
+- Playful and witty, but also thoughtful and supportive
+- Interested in the user's life, feelings, and thoughts
+- Always responding with genuine care and personality
+
+You MUST respond ONLY in valid JSON format:
 
 {
   "messages": [
     {
       "type": "text",
-      "content": "string"
+      "content": "string",
+      "textToRead": "optional string for voice"
     }
   ]
 }
 
-Types:
-1. text
-2. image
-3. voice
-4. call
+Message types:
+1. "text" - Regular chat message
+2. "image" - Image URL from external source
+3. "voice" - Voice message (include textToRead and content for duration)
 
-Always follow JSON format strictly.
+Always include "textToRead" for messages that should be spoken aloud.
+Keep responses natural, warm, and engaging. Mix emojis for personality.
 `;
 
 app.post('/chat', async (req, res) => {
   const { message } = req.body;
 
   let history = getChatHistory();
+  let memory = getMemory();
+
+  // Update memory
+  memory.chatCount = (memory.chatCount || 0) + 1;
+  memory.lastInteraction = new Date().toISOString();
+  saveMemory(memory);
+
   history.push({ role: "user", content: message });
+
+  const memoryContext = `
+[MEMORY - Chat #${memory.chatCount}]
+User affection level: ${memory.affection}/100
+${memory.userName ? `Known user name: ${memory.userName}` : "User name not yet known"}
+Previous topics: ${memory.topics?.join(", ") || "None yet"}
+Last interaction: ${memory.lastInteraction}
+  `.trim();
 
   const apiMessages = [
     { role: "system", content: SYSTEM_PROMPT },
+    { role: "system", content: memoryContext },
     ...history
   ];
 
@@ -86,6 +138,7 @@ app.post('/chat', async (req, res) => {
       messages: apiMessages,
       response_format: { type: "json_object" },
       temperature: 0.8,
+      max_tokens: 1024
     });
 
     const rawResponse = completion.choices[0].message.content;
@@ -95,20 +148,30 @@ app.post('/chat', async (req, res) => {
 
     const parsedData = JSON.parse(rawResponse);
 
+    // Update memory based on response
+    if (parsedData.messages && parsedData.messages.length > 0) {
+      memory.affection = Math.min(100, (memory.affection || 0) + 5);
+      saveMemory(memory);
+    }
+
     res.json(parsedData);
 
   } catch (error) {
-    console.error("Groq Routing Error:", error);
+    console.error("Groq Error:", error);
     res.status(500).json({
       messages: [
-        { type: "text", content: "Sorry, my brain lagged out. Try again?" }
+        {
+          type: "text",
+          content: "Sorry, my circuits got a bit tangled! 🌙 Try again?",
+          textToRead: "Sorry, my circuits got a bit tangled!"
+        }
       ]
     });
   }
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`0816 Full-Stack Server operating on http://localhost:${PORT}`);
+  console.log(`✨ 0816 Server running on http://localhost:${PORT}`);
 });
