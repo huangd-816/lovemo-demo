@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>0816 - Snapchat Companion</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2.1">
 </head>
 <body>
 
@@ -18,8 +18,8 @@
       </div>
     </div>
     <div class="topbar-actions">
-      <button class="icon-btn" onclick="alert('Camera coming soon!')" title="Camera">📷</button>
-      <button class="icon-btn" onclick="alert('Settings coming soon!')" title="Settings">⚙️</button>
+      <button class="icon-btn" onclick="alert('Coming soon')" title="Camera">📷</button>
+      <button class="icon-btn" onclick="alert('Coming soon')" title="Settings">⚙️</button>
     </div>
   </div>
 
@@ -27,13 +27,13 @@
 
   <div class="inputbar">
     <input type="file" id="fileInput" accept="image/*" hidden>
-    <button class="icon-btn" onclick="fileInput.click()" title="Send photo">📸</button>
-    <button class="icon-btn" id="recordBtn" title="Voice message">🎤</button>
+    <button class="icon-btn" onclick="fileInput.click()" title="Photo">📸</button>
+    <button class="icon-btn" id="recordBtn" title="Voice">🎤</button>
     <input id="input" type="text" placeholder="Say something..." />
-    <button class="send-btn" onclick="sendMessage()" title="Send">➤</button>
+    <button class="send-btn" onclick="sendMessage()">➤</button>
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js?v=2.1"></script>
 </body>
 </html>
