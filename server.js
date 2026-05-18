@@ -97,7 +97,6 @@ You MUST respond ONLY in valid JSON format:
 }
 
 Message types:
-console.log("Raw response:", rawResponse);
 1. "text" - Regular chat message
 2. "image" - Image URL from external source
 3. "voice" - Voice message (include textToRead and content for duration)
@@ -142,12 +141,37 @@ Last interaction: ${memory.lastInteraction}
       max_tokens: 1024
     });
 
-    const rawResponse = completion.choices[0].message.content;
+    let rawResponse = completion.choices[0].message.content;
 
     history.push({ role: "assistant", content: rawResponse });
     saveChatHistory(history);
 
-    const parsedData = JSON.parse(rawResponse);
+    let parsedData;
+
+    try {
+      // clean possible markdown wrappers
+      let clean = rawResponse
+        .replace(/^```json/, "")
+        .replace(/```$/, "")
+        .trim();
+
+      parsedData = JSON.parse(clean);
+
+    } catch (err) {
+      console.error("JSON parse failed:", err);
+      console.log("Raw response was:", rawResponse);
+
+      // fallback so server NEVER crashes
+      parsedData = {
+        messages: [
+          {
+            type: "text",
+            content: rawResponse || "Sorry, something went wrong.",
+            textToRead: "Sorry, something went wrong"
+          }
+        ]
+      };
+    }
 
     // Update memory based on response
     if (parsedData.messages && parsedData.messages.length > 0) {
