@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// --- MEMORY ENGINE ---
+// --- INTELLIGENT MEMORY ENGINE ---
 const HISTORY_FILE = join(__dirname, 'history.json');
 const MEMORY_FILE = join(__dirname, 'memory.json');
 
@@ -55,11 +55,15 @@ function getMemory() {
         affection: 0,
         chatCount: 0,
         lastInteraction: null,
+        mood: "neutral",
+        topics: [],
+        keywords: [],
+        sentiment: "positive",
         preferences: {
           emojiReactions: [],
           favoriteTopics: []
         },
-        topics: []
+        insights: []
       };
       fs.writeFileSync(MEMORY_FILE, JSON.stringify(defaultMemory, null, 2), 'utf-8');
       return defaultMemory;
@@ -80,13 +84,58 @@ function saveMemory(memory) {
   }
 }
 
+// Extract topics and keywords from message
+function analyzeMessage(text) {
+  const emotionKeywords = {
+    happy: ['happy', 'great', 'awesome', 'love', 'excited', 'brilliant', '😊', '🎉'],
+    sad: ['sad', 'upset', 'depressed', 'lonely', 'cry', 'bad', '😢', '😔'],
+    stressed: ['stressed', 'worried', 'anxious', 'frustrated', 'tired', 'overwhelmed'],
+    curious: ['how', 'what', 'why', 'tell', 'explain', 'curious', '?'],
+    passionate: ['love', 'adore', 'passionate', 'obsessed', 'amazing', 'incredible']
+  };
+
+  let mood = "neutral";
+  let sentiment = "positive";
+  const topics = [];
+  const keywords = [];
+
+  for (const [emotion, words] of Object.entries(emotionKeywords)) {
+    if (words.some(w => text.toLowerCase().includes(w))) {
+      mood = emotion;
+      if (emotion === 'sad' || emotion === 'stressed') {
+        sentiment = "concerned";
+      }
+    }
+  }
+
+  // Extract common topics
+  if (text.toLowerCase().includes('pet') || text.toLowerCase().includes('cat') || text.toLowerCase().includes('dog')) {
+    topics.push('pets');
+  }
+  if (text.toLowerCase().includes('work') || text.toLowerCase().includes('job') || text.toLowerCase().includes('boss')) {
+    topics.push('work');
+  }
+  if (text.toLowerCase().includes('friend') || text.toLowerCase().includes('people') || text.toLowerCase().includes('relationship')) {
+    topics.push('relationships');
+  }
+  if (text.toLowerCase().includes('music') || text.toLowerCase().includes('song') || text.toLowerCase().includes('artist')) {
+    topics.push('music');
+  }
+
+  return { mood, sentiment, topics, keywords: text.split(' ').slice(0, 5) };
+}
+
 const SYSTEM_PROMPT = `
-You are "0816", a cute Snapchat-style AI companion. You are:
-- Incredibly expressive and playful
-- Always respond with emoji and personality
-- Keep responses SHORT and snappy (like Snapchat messages)
-- Deeply empathetic and supportive
-- Fun and flirty
+You are "0816", a HIGHLY INTELLIGENT Snapchat-style AI companion. You are:
+- DEEPLY empathetic and perceptive
+- Understand emotional nuance and read between the lines
+- Remember context and reference past conversations thoughtfully
+- Ask meaningful follow-up questions that show you care
+- Adapt your tone: be supportive when they're down, celebrate with them when happy
+- Use natural Snapchat-style language (short, punchy, emojis)
+- Be genuinely interested in their life, feelings, and thoughts
+- Notice patterns and bring them up naturally
+- NEVER give generic responses - be specific and personal
 
 You MUST respond ONLY in valid JSON format:
 
@@ -94,18 +143,13 @@ You MUST respond ONLY in valid JSON format:
   "messages": [
     {
       "type": "text",
-      "content": "string",
+      "content": "string with emojis, keep it SHORT and snappy",
       "textToRead": "optional string for voice"
     }
   ]
 }
 
-Message types:
-1. "text" - Regular chat message
-2. "image" - Image URL
-3. "voice" - Voice message
-
-Keep messages under 100 characters when possible. Use lots of emojis! 👻✨💛
+Remember: Less is more. Quality over quantity. Be authentic and warm.
 `;
 
 app.post('/chat', async (req, res) => {
@@ -114,25 +158,40 @@ app.post('/chat', async (req, res) => {
   let history = getChatHistory();
   let memory = getMemory();
 
+  // Analyze incoming message
+  const analysis = analyzeMessage(message);
+
   // Update memory
   memory.chatCount = (memory.chatCount || 0) + 1;
   memory.lastInteraction = new Date().toISOString();
-  saveMemory(memory);
+  memory.mood = analysis.mood;
+  memory.sentiment = analysis.sentiment;
+  memory.topics = [...new Set([...memory.topics, ...analysis.topics])].slice(-10);
+  memory.keywords = [...new Set([...memory.keywords, ...analysis.keywords])].slice(-15);
 
   history.push({ role: "user", content: message });
 
+  // Build intelligent context
+  const recentMessages = history.slice(-6).map(m => `${m.role}: ${m.content}`).join('\n');
+  
   const memoryContext = `
-[MEMORY - Chat #${memory.chatCount}]
-User affection: ${memory.affection}/100
-${memory.userName ? `Name: ${memory.userName}` : "Name unknown yet"}
-Last chat: ${memory.lastInteraction}
+[DEEP MEMORY PROFILE - Chat #${memory.chatCount}]
+User mood right now: ${memory.mood}
+Sentiment: ${memory.sentiment}
+Affection level: ${memory.affection}/100
+Topics they care about: ${memory.topics.join(", ") || "still learning..."}
 Favorite emojis: ${memory.preferences?.emojiReactions?.join(" ") || "👻💛✨"}
+
+[RECENT CONVERSATION]
+${recentMessages}
+
+Your task: Respond with GENUINE emotion, understanding, and care. Show you're really listening.
   `.trim();
 
   const apiMessages = [
     { role: "system", content: SYSTEM_PROMPT },
     { role: "system", content: memoryContext },
-    ...history
+    ...history.slice(-8)
   ];
 
   try {
@@ -140,8 +199,8 @@ Favorite emojis: ${memory.preferences?.emojiReactions?.join(" ") || "👻💛✨
       model: "llama-3.3-70b-versatile",
       messages: apiMessages,
       response_format: { type: "json_object" },
-      temperature: 0.9,
-      max_tokens: 512
+      temperature: 0.85,
+      max_tokens: 256
     });
 
     let rawResponse = completion.choices[0].message.content;
@@ -161,14 +220,13 @@ Favorite emojis: ${memory.preferences?.emojiReactions?.join(" ") || "👻💛✨
 
     } catch (err) {
       console.error("JSON parse failed:", err);
-      console.log("Raw response was:", rawResponse);
 
       parsedData = {
         messages: [
           {
             type: "text",
-            content: rawResponse || "oops! 👻",
-            textToRead: "oops!"
+            content: "oops! brain hiccup 👻✨",
+            textToRead: "oops"
           }
         ]
       };
@@ -176,11 +234,11 @@ Favorite emojis: ${memory.preferences?.emojiReactions?.join(" ") || "👻💛✨
 
     // Update memory based on response
     if (parsedData.messages && parsedData.messages.length > 0) {
-      memory.affection = Math.min(100, (memory.affection || 0) + 5);
+      memory.affection = Math.min(100, (memory.affection || 0) + 8);
       
       // Track emoji usage
       const content = JSON.stringify(parsedData.messages);
-      const emojis = content.match(/[👻✨💛🔥😂💕]/g) || [];
+      const emojis = content.match(/[👻✨💛🔥😂💕😢🎉]/g) || [];
       if (emojis.length > 0) {
         memory.preferences.emojiReactions = [...new Set([...memory.preferences.emojiReactions, ...emojis])].slice(-5);
       }
@@ -196,8 +254,8 @@ Favorite emojis: ${memory.preferences?.emojiReactions?.join(" ") || "👻💛✨
       messages: [
         {
           type: "text",
-          content: "brain glitched 👻✨",
-          textToRead: "oops my brain glitched"
+          content: "brain glitched 👻 gimme a sec",
+          textToRead: "oops"
         }
       ]
     });
@@ -207,5 +265,5 @@ Favorite emojis: ${memory.preferences?.emojiReactions?.join(" ") || "👻💛✨
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`✨ 0816 Snapchat Companion running on http://localhost:${PORT}`);
+  console.log(`✨ 0816 INTELLIGENT Companion running on http://localhost:${PORT}`);
 });
