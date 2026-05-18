@@ -1,9 +1,6 @@
 console.log("0816 upgraded v2 - Fixed audio & Snapchat UI");
 
-let callActive = false;
 let audioContext = null;
-let mediaRecorder = null;
-let audioChunks = [];
 
 // Initialize audio context
 function initAudio() {
@@ -136,26 +133,20 @@ async function sendToAI(text) {
   }
 }
 
-// Voice input
+// Voice input - FIXED (no more multiple listeners)
+let recognitionActive = false;
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = "en-US";
 recognition.continuous = false;
 recognition.interimResults = false;
 
-document.getElementById("recordBtn").onclick = () => {
-  try {
-    recognition.start();
-    document.getElementById("recordBtn").classList.add("recording");
-  } catch (error) {
-    console.error("Recording error:", error);
-  }
-};
-
 recognition.onstart = () => {
+  recognitionActive = true;
   document.getElementById("recordBtn").classList.add("recording");
 };
 
 recognition.onend = () => {
+  recognitionActive = false;
   document.getElementById("recordBtn").classList.remove("recording");
 };
 
@@ -174,6 +165,18 @@ recognition.onerror = (e) => {
   console.error("Speech recognition error:", e.error);
   if (e.error !== "no-speech") {
     renderMessage({ type: "text", content: "Didn't catch that 🎤" }, "ai");
+  }
+};
+
+document.getElementById("recordBtn").onclick = () => {
+  if (recognitionActive) {
+    recognition.abort();
+  } else {
+    try {
+      recognition.start();
+    } catch (error) {
+      console.error("Recording already in progress:", error);
+    }
   }
 };
 
@@ -196,59 +199,6 @@ fileInput.addEventListener("change", () => {
   };
   reader.readAsDataURL(file);
 });
-
-// Voice call loop
-function startCall() {
-  callActive = true;
-  renderMessage({ type: "text", content: "📞 Call started..." }, "system");
-  listenLoop();
-}
-
-function endCall() {
-  callActive = false;
-  recognition.abort();
-  speechSynthesis.cancel();
-  renderMessage({ type: "text", content: "📞 Call ended." }, "system");
-}
-
-function listenLoop() {
-  if (!callActive) return;
-
-  recognition.start();
-
-  recognition.onresult = async (e) => {
-    const text = e.results[0][0].transcript;
-    renderMessage({ type: "text", content: text }, "user");
-
-    try {
-      const res = await fetch("http://localhost:3000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
-      });
-
-      const data = await res.json();
-      if (data.messages && data.messages.length > 0) {
-        const reply = data.messages[0];
-        renderMessage(reply, "ai");
-
-        const voiceText = reply.textToRead || reply.content;
-        playVoice(voiceText);
-
-        setTimeout(listenLoop, 1000);
-      }
-    } catch (error) {
-      console.error("Call error:", error);
-      setTimeout(listenLoop, 1000);
-    }
-  };
-
-  recognition.onerror = () => {
-    if (callActive) {
-      setTimeout(listenLoop, 500);
-    }
-  };
-}
 
 // Enter key to send
 document.addEventListener("DOMContentLoaded", () => {
