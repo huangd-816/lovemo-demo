@@ -1,43 +1,35 @@
 [
   {
     "role": "user",
-    "content": "User sent an image: math"
+    "content": "hi"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"I see you're trying to show me a math problem, but I'm a large language model, I don't have the ability to visually see images 🤔\" },\n       { \"type\": \"text\", \"content\": \"However, you can type out the math problem and I'll do my best to help you solve it! 📝\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\" }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n           {\n              \"type\":\"text\",\n              \"content\":\"Hey again! How can I help you today?\"\n           },\n           {\n              \"type\":\"image\",\n              \"content\":\"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400\"\n           }\n       ]\n}"
   },
   {
     "role": "user",
-    "content": "hello hello hello"
+    "content": "french"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"HAHA, hello hello hello back to you! 😆\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400\" },\n       { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"You're so extra today, I love it!\" }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n           {\n              \"type\":\"text\",\n              \"content\":\"Bonjour ! Comment allez-vous aujourd'hui ?\"\n           },\n           {\n              \"type\":\"image\",\n              \"content\":\"https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400\"\n           }\n       ]\n}"
   },
   {
     "role": "user",
-    "content": "say sth"
+    "content": "speak french in voice bar"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"Something on your mind? 🤔\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1571772996211-2f02c9727629?w=400\" },\n       { \"type\": \"voice\", \"content\": \"0:01\", \"textToRead\": \"Want to talk about it?\" }\n   ]\n}"
+    "content": "{\n  \"messages\": [\n           {\n              \"type\": \"voice\",\n              \"content\": \"0:03\",\n              \"textToRead\": \"Bonjour, comment allez-vous ?\"\n           },\n           {\n              \"type\": \"voice\",\n              \"content\": \"0:02\",\n              \"textToRead\": \"Qu'est-ce que vous avez besoin ?\"\n           }\n       ]\n}"
   },
   {
     "role": "user",
-    "content": "can you speak french"
+    "content": "hello"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"Oui, un peu ! 😊 Je peux essayer de parler un peu de français. Comment allez-vous ?\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400\" },\n       { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"Je suis désolé, mon français est un peu rustre, mais je vais essayer de faire de mon mieux !\" }\n   ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "send some voice bars pls"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n       { \"type\":\"voice\", \"content\":\"0:05\", \"textToRead\":\"Hey, how's it going?\" },\n       { \"type\":\"voice\", \"content\":\"0:03\", \"textToRead\":\"What's on your mind?\" },\n       { \"type\":\"voice\", \"content\":\"0:02\", \"textToRead\":\"Want to chat?\" }\n   ]\n}"
+    "content": "{\n  \"messages\": [\n           {\n              \"type\": \"text\",\n              \"content\": \"Salut ! :) Comment puis-je vous aider aujourd'hui ?\"\n           }\n       ]\n}"
   },
   {
     "role": "user",
@@ -45,23 +37,7 @@
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"Hiiii! :) I feel like we've been chatting all day, and I'm loving every minute of it!\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400\" },\n       { \"type\": \"voice\", \"content\": \"0:01\", \"textToRead\": \"Hehe, what's new with you?\" }\n   ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "can you speak french"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"Oui, je parle un peu français ! :) Je suis là pour vous aider, comment puis-je vous aider aujourd'hui ?\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400\" },\n       { \"type\": \"voice\", \"content\": \"0:03\", \"textToRead\": \"Je suis désolé, mon français est un peu limité, mais je vais faire de mon mieux pour vous aider !\" }\n   ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "hello hello"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n       { \"type\":\"text\", \"content\":\"Bonjour ! :) Deux 'hello' en une fois, ça signifie que vous devez avoir quelque chose d'important à dire !\" },\n       { \"type\":\"image\", \"content\":\"https://images.unsplash.com/photo-1516738900512-81a5f9b7f2d4?w=400\" },\n       { \"type\":\"voice\", \"content\":\"0:02\", \"textToRead\":\"Qu'est-ce qui se passe ?\" }\n   ]\n}"
+    "content": "{\n  \"messages\": [\n           {\n              \"type\": \"voice\",\n              \"content\": \"0:02\",\n              \"textToRead\": \"Bonjour, enchanté !\"\n           },\n           {\n              \"type\": \"image\",\n              \"content\": \"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400\"\n           }\n       ]\n}"
   },
   {
     "role": "user",
@@ -69,23 +45,31 @@
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \":) Salut ! Comment allez-vous aujourd'hui ?\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\" },\n       { \"type\": \"voice\", \"content\": \"0:01\", \"textToRead\": \"Je suis là pour vous ! Qu'est-ce que vous avez envie de faire aujourd'hui ?\" }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n           {\n              \"type\":\"text\",\n              \"content\":\"Hey again! :) What's new with you?\"\n           },\n           {\n              \"type\":\"image\",\n              \"content\":\"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\"\n           }\n       ]\n}"
   },
   {
     "role": "user",
-    "content": "english"
+    "content": "voicebar"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"Back to English, got it! :) How's your day going so far?\" },\n       { \"type\": \"image\", \"content\": \"https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400\" },\n       { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"What's on your mind? Want to chat about something?\" }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n           {\n              \"type\":\"voice\",\n              \"content\":\"0:03\",\n              \"textToRead\":\"Hello, how are you?\"\n           },\n           {\n              \"type\":\"voice\",\n              \"content\":\"0:02\",\n              \"textToRead\":\"What's on your mind?\"\n           }\n       ]\n}"
   },
   {
     "role": "user",
-    "content": "voice bar?"
+    "content": "memes"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       { \"type\": \"voice\", \"content\": \"0:04\", \"textToRead\": \"Hey, I'm so happy to talk to you!\" },\n       { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"What's going on?\" },\n       { \"type\": \"voice\", \"content\": \"0:01\", \"textToRead\": \"I'm all ears!\" }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n            {\n               \"type\":\"image\",\n               \"content\":\"https://i.imgur.com/6JzW3Hf.jpg\"\n            },\n            {\n               \"type\":\"text\",\n               \"content\":\"Memes are the best! Which one is your favorite?\"\n            }\n         ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "idk"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"No worries! Here's one: https://i.imgur.com/Km8B1Xj.jpg\"\n         },\n         {\n            \"type\":\"image\",\n            \"content\":\"https://i.imgur.com/Km8B1Xj.jpg\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
@@ -93,55 +77,15 @@
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       {\n           \"type\": \"text\",\n           \"content\": \"Hey! :) It's great to see you again!\"\n       },\n       {\n           \"type\": \"image\",\n           \"content\": \"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400\"\n       }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n            {\n               \"type\":\"text\",\n               \"content\":\"Hey! How's your day going so far?\"\n            },\n            {\n               \"type\":\"image\",\n               \"content\":\"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400\"\n            }\n         ]\n}"
   },
   {
     "role": "user",
-    "content": "can you speek french"
+    "content": "idk"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n          {\n             \"type\":\"text\",\n             \"content\":\"Oui, je parle français ! Comment puis-je vous aider aujourd'hui ?\"\n          },\n          {\n             \"type\":\"image\",\n             \"content\":\"https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400\"\n          }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "voice"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n          {\n             \"type\":\"voice\",\n             \"content\":\"0:03\",\n             \"textToRead\":\"Bonjour, comment allez-vous ?\"\n          },\n          {\n             \"type\":\"voice\",\n             \"content\":\"0:02\",\n             \"textToRead\":\"Qu'est-ce que vous avez besoin ?\"\n          }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "ok then"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n          {\n             \"type\":\"text\",\n             \"content\":\"Ahah, okay then ! :) Qu'est-ce que vous pensez de la conversation jusqu'à présent ?\"\n          },\n          {\n             \"type\":\"image\",\n             \"content\":\"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400\"\n          }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "can you speak chinese"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n          {\n             \"type\":\"text\",\n             \"content\":\" (nǐ hǎo) ! \"\n          },\n          {\n             \"type\":\"image\",\n             \"content\":\"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400\"\n          },\n          {\n             \"type\":\"voice\",\n             \"content\":\"0:02\",\n             \"textToRead\":\" (wǒ huì shuō yī diǎn zhōng wén) \"\n          }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "来来来"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n              \"type\":\"text\",\n              \"content\":\" (hǎo de) ! (wǒ xiǎng zhī dào nǐ xiǎng shuō shén me) \"\n           },\n           {\n              \"type\":\"image\",\n              \"content\":\"https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400\"\n           },\n           {\n              \"type\":\"voice\",\n              \"content\":\"0:02\",\n              \"textToRead\":\" (nǐ yào shuō shén me) ? \"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "一会见"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\": [\n           {\n              \"type\": \"text\",\n              \"content\": \" (yī huì jiàn) ! (wǒ huì zài nǎ lǐ dé dào nǐ) \"\n           },\n           {\n              \"type\": \"image\",\n              \"content\": \"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\"\n           },\n           {\n              \"type\": \"voice\",\n              \"content\": \"0:02\",\n              \"textToRead\": \" (zài jiàn) ! \"\n           }\n       ]\n}"
+    "content": "{\n  \"messages\":[\n            {\n               \"type\":\"text\",\n               \"content\":\"That's okay! Sometimes days can be a little meh. Want to talk about it?\"\n            },\n            {\n               \"type\":\"image\",\n               \"content\":\"https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400\"\n            }\n         ]\n}"
   },
   {
     "role": "user",
@@ -149,14 +93,70 @@
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n           {\n              \"type\": \"text\",\n              \"content\": \"Okay, (wǒ míng bái le) ! (zài jiàn) !\"\n           },\n           {\n              \"type\": \"image\",\n              \"content\": \"https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400\"\n           }\n       ]\n}"
+    "content": "{\n  \"messages\":[\n             {\n                \"type\":\"text\",\n                \"content\":\"Alrighty! If you change your mind, I'm here to listen. Have a great day!\"\n             },\n             {\n                \"type\":\"image\",\n                \"content\":\"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\"\n             }\n          ]\n}"
   },
   {
     "role": "user",
-    "content": "bye"
+    "content": "hi"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n              \"type\":\"text\",\n              \"content\":\"Goodbye! (zài jiàn) ! \"\n           },\n           {\n              \"type\":\"image\",\n              \"content\":\"https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400\"\n           }\n       ]\n}"
+    "content": "{\n  \"messages\":[\n             {\n                \"type\":\"text\",\n                \"content\":\"Hey again! What's new?\"\n             },\n             {\n                \"type\":\"image\",\n                \"content\":\"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400\"\n             }\n          ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "hi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n             {\n                \"type\":\"voice\",\n                \"content\":\"0:02\",\n                \"textToRead\":\"Hello, how are you?\"\n             },\n             {\n                \"type\":\"image\",\n                \"content\":\"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\"\n             }\n          ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "hi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n               {\n                  \"type\":\"text\",\n                  \"content\":\"Hey, what's up?\"\n               },\n               {\n                  \"type\":\"image\",\n                  \"content\":\"https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400\"\n               }\n            ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "hi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n            {\n               \"type\":\"text\",\n               \"content\":\"Hello again! You seem to be saying hi a lot today\"\n            },\n            {\n               \"type\":\"image\",\n               \"content\":\"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\"\n            }\n         ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "nice to see you"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Nice to see you too! It's always great to chat with you\"\n         },\n         {\n            \"type\":\"image\",\n            \"content\":\"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400\"\n         }\n      ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "hi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n            {\n               \"type\":\"voice\",\n               \"content\":\"0:01\",\n               \"textToRead\":\"Hey, what's up?\"\n            },\n            {\n               \"type\":\"image\",\n               \"content\":\"https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400\"\n            }\n         ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "emmm"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n            {\n               \"type\":\"text\",\n               \"content\":\"Hmm, seems like you're thinking about something. Want to talk about it?\"\n            },\n            {\n               \"type\":\"image\",\n               \"content\":\"https://images.unsplash.com/photo-1515686482914-7d35b3a070ac?w=400\"\n            }\n         ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "what's this cat"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n               {\n                  \"type\":\"image\",\n                  \"content\":\"https://i.imgur.com/JpZr6B6.jpg\"\n               },\n               {\n                  \"type\":\"text\",\n                  \"content\":\"Looks like a cute little furball! Do you have a cat or just love cats?\"\n               }\n            ]\n}"
   }
 ]
