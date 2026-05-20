@@ -15,17 +15,18 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.use(express.static(__dirname));
+// Serve frontend from public/
+app.use(express.static(join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'index.html'));
+  res.sendFile(join(__dirname, 'public', 'index.html'));
 });
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // --- INTELLIGENT MEMORY ENGINE ---
-const HISTORY_FILE = join(__dirname, 'history.json');
-const MEMORY_FILE = join(__dirname, 'memory.json');
+const HISTORY_FILE = join(__dirname, 'data', 'history.json');
+const MEMORY_FILE  = join(__dirname, 'data', 'memory.json');
 
 function getChatHistory() {
   try {
@@ -87,40 +88,28 @@ function saveMemory(memory) {
 // Extract topics and keywords from message
 function analyzeMessage(text) {
   const emotionKeywords = {
-    happy: ['happy', 'great', 'awesome', 'love', 'excited', 'brilliant', '😊', '🎉'],
-    sad: ['sad', 'upset', 'depressed', 'lonely', 'cry', 'bad', '😢', '😔'],
-    stressed: ['stressed', 'worried', 'anxious', 'frustrated', 'tired', 'overwhelmed'],
-    curious: ['how', 'what', 'why', 'tell', 'explain', 'curious', '?'],
-    passionate: ['love', 'adore', 'passionate', 'obsessed', 'amazing', 'incredible']
+    happy:     ['happy', 'great', 'awesome', 'love', 'excited', 'brilliant', '😊', '🎉'],
+    sad:       ['sad', 'upset', 'depressed', 'lonely', 'cry', 'bad', '😢', '😔'],
+    stressed:  ['stressed', 'worried', 'anxious', 'frustrated', 'tired', 'overwhelmed'],
+    curious:   ['how', 'what', 'why', 'tell', 'explain', 'curious', '?'],
+    passionate:['love', 'adore', 'passionate', 'obsessed', 'amazing', 'incredible']
   };
 
   let mood = "neutral";
   let sentiment = "positive";
   const topics = [];
-  const keywords = [];
 
   for (const [emotion, words] of Object.entries(emotionKeywords)) {
     if (words.some(w => text.toLowerCase().includes(w))) {
       mood = emotion;
-      if (emotion === 'sad' || emotion === 'stressed') {
-        sentiment = "concerned";
-      }
+      if (emotion === 'sad' || emotion === 'stressed') sentiment = "concerned";
     }
   }
 
-  // Extract common topics
-  if (text.toLowerCase().includes('pet') || text.toLowerCase().includes('cat') || text.toLowerCase().includes('dog')) {
-    topics.push('pets');
-  }
-  if (text.toLowerCase().includes('work') || text.toLowerCase().includes('job') || text.toLowerCase().includes('boss')) {
-    topics.push('work');
-  }
-  if (text.toLowerCase().includes('friend') || text.toLowerCase().includes('people') || text.toLowerCase().includes('relationship')) {
-    topics.push('relationships');
-  }
-  if (text.toLowerCase().includes('music') || text.toLowerCase().includes('song') || text.toLowerCase().includes('artist')) {
-    topics.push('music');
-  }
+  if (text.toLowerCase().match(/pet|cat|dog/))              topics.push('pets');
+  if (text.toLowerCase().match(/work|job|boss/))            topics.push('work');
+  if (text.toLowerCase().match(/friend|people|relationship/)) topics.push('relationships');
+  if (text.toLowerCase().match(/music|song|artist/))        topics.push('music');
 
   return { mood, sentiment, topics, keywords: text.split(' ').slice(0, 5) };
 }
@@ -156,24 +145,21 @@ app.post('/chat', async (req, res) => {
   const { message } = req.body;
 
   let history = getChatHistory();
-  let memory = getMemory();
+  let memory  = getMemory();
 
-  // Analyze incoming message
   const analysis = analyzeMessage(message);
 
-  // Update memory
-  memory.chatCount = (memory.chatCount || 0) + 1;
+  memory.chatCount      = (memory.chatCount || 0) + 1;
   memory.lastInteraction = new Date().toISOString();
-  memory.mood = analysis.mood;
-  memory.sentiment = analysis.sentiment;
-  memory.topics = [...new Set([...memory.topics, ...analysis.topics])].slice(-10);
-  memory.keywords = [...new Set([...memory.keywords, ...analysis.keywords])].slice(-15);
+  memory.mood           = analysis.mood;
+  memory.sentiment      = analysis.sentiment;
+  memory.topics         = [...new Set([...memory.topics, ...analysis.topics])].slice(-10);
+  memory.keywords       = [...new Set([...memory.keywords, ...analysis.keywords])].slice(-15);
 
   history.push({ role: "user", content: message });
 
-  // Build intelligent context
   const recentMessages = history.slice(-6).map(m => `${m.role}: ${m.content}`).join('\n');
-  
+
   const memoryContext = `
 [DEEP MEMORY PROFILE - Chat #${memory.chatCount}]
 User mood right now: ${memory.mood}
@@ -209,40 +195,20 @@ Your task: Respond with GENUINE emotion, understanding, and care. Show you're re
     saveChatHistory(history);
 
     let parsedData;
-
     try {
-      let clean = rawResponse
-        .replace(/^```json/, "")
-        .replace(/```$/, "")
-        .trim();
-
+      const clean = rawResponse.replace(/^```json/, "").replace(/```$/, "").trim();
       parsedData = JSON.parse(clean);
-
     } catch (err) {
       console.error("JSON parse failed:", err);
-
-      parsedData = {
-        messages: [
-          {
-            type: "text",
-            content: "oops! brain hiccup 👻✨",
-            textToRead: "oops"
-          }
-        ]
-      };
+      parsedData = { messages: [{ type: "text", content: "oops! brain hiccup 👻✨", textToRead: "oops" }] };
     }
 
-    // Update memory based on response
-    if (parsedData.messages && parsedData.messages.length > 0) {
+    if (parsedData.messages?.length > 0) {
       memory.affection = Math.min(100, (memory.affection || 0) + 8);
-      
-      // Track emoji usage
-      const content = JSON.stringify(parsedData.messages);
-      const emojis = content.match(/[👻✨💛🔥😂💕😢🎉]/g) || [];
+      const emojis = JSON.stringify(parsedData.messages).match(/[👻✨💛🔥😂💕😢🎉]/g) || [];
       if (emojis.length > 0) {
         memory.preferences.emojiReactions = [...new Set([...memory.preferences.emojiReactions, ...emojis])].slice(-5);
       }
-      
       saveMemory(memory);
     }
 
@@ -251,19 +217,12 @@ Your task: Respond with GENUINE emotion, understanding, and care. Show you're re
   } catch (error) {
     console.error("Groq Error:", error);
     res.status(500).json({
-      messages: [
-        {
-          type: "text",
-          content: "brain glitched 👻 gimme a sec",
-          textToRead: "oops"
-        }
-      ]
+      messages: [{ type: "text", content: "brain glitched 👻 gimme a sec", textToRead: "oops" }]
     });
   }
 });
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-  console.log(`✨ 0816 INTELLIGENT Companion running on http://localhost:${PORT}`);
+  console.log(`✨ 0816 running on http://localhost:${PORT}`);
 });
