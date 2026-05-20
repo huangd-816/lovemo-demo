@@ -1,9 +1,6 @@
 console.log("0816 v3.0 - Blue UI + Voice Fix");
 
-<<<<<<< HEAD
-=======
 // ─── AUDIO ────────────────────────────────────────────
->>>>>>> 9ad19a8 (feat: blue UI redesign, SVG icons, fix voice bar & SpeechRecognition crash)
 let audioContext = null;
 
 function initAudio() {
@@ -163,33 +160,6 @@ async function sendToAI(text) {
   }
 }
 
-<<<<<<< HEAD
-// Voice input - FIXED (no more multiple listeners)
-let recognitionActive = false;
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = "en-US";
-recognition.continuous = false;
-recognition.interimResults = false;
-
-recognition.onstart = () => {
-  recognitionActive = true;
-  document.getElementById("recordBtn").classList.add("recording");
-};
-
-recognition.onend = () => {
-  recognitionActive = false;
-  document.getElementById("recordBtn").classList.remove("recording");
-};
-
-recognition.onresult = (e) => {
-  const text = Array.from(e.results)
-    .map(result => result[0].transcript)
-    .join("");
-  
-  if (text.trim()) {
-    renderMessage({ type: "text", content: text }, "user");
-    sendToAI(text);
-=======
 // ─── SPEECH RECOGNITION (SAFE INIT) ──────────────────
 let recognition = null;
 let recognitionActive = false;
@@ -250,40 +220,12 @@ document.getElementById("recordBtn").addEventListener("click", () => {
     } catch (err) {
       console.warn("Recognition start error:", err);
     }
->>>>>>> 9ad19a8 (feat: blue UI redesign, SVG icons, fix voice bar & SpeechRecognition crash)
   }
 });
 
-<<<<<<< HEAD
-recognition.onerror = (e) => {
-  console.error("Speech recognition error:", e.error);
-  if (e.error !== "no-speech") {
-    renderMessage({ type: "text", content: "Didn't catch that 🎤" }, "ai");
-  }
-};
-
-document.getElementById("recordBtn").onclick = () => {
-  if (recognitionActive) {
-    recognition.abort();
-  } else {
-    try {
-      recognition.start();
-    } catch (error) {
-      console.error("Recording already in progress:", error);
-    }
-  }
-};
-
-// Image upload
-const fileInput = document.getElementById("fileInput");
-
-fileInput.addEventListener("change", () => {
-  const file = fileInput.files[0];
-=======
 // ─── IMAGE UPLOAD ─────────────────────────────────────
 document.getElementById("fileInput").addEventListener("change", () => {
   const file = document.getElementById("fileInput").files[0];
->>>>>>> 9ad19a8 (feat: blue UI redesign, SVG icons, fix voice bar & SpeechRecognition crash)
   if (!file) return;
 
   const reader = new FileReader();
@@ -297,11 +239,7 @@ document.getElementById("fileInput").addEventListener("change", () => {
   reader.readAsDataURL(file);
 });
 
-<<<<<<< HEAD
-// Enter key to send
-=======
 // ─── ENTER KEY ────────────────────────────────────────
->>>>>>> 9ad19a8 (feat: blue UI redesign, SVG icons, fix voice bar & SpeechRecognition crash)
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("input");
   if (input) {
