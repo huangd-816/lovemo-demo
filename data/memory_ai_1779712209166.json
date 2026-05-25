@@ -1,0 +1,56 @@
+{
+  "userName": null,
+  "affection": 100,
+  "chatCount": 13,
+  "lastInteraction": "2026-05-25T12:32:29.790Z",
+  "mood": "neutral",
+  "topics": [
+    "pets"
+  ],
+  "keywords": [
+    "shui",
+    "ge",
+    "hao",
+    "jiao",
+    "this",
+    "in",
+    "chinese",
+    "晚安",
+    "说中文",
+    "行明天见",
+    "[User",
+    "reacted",
+    "👏",
+    "to",
+    "your",
+    "不要每句话前来个like",
+    "sent",
+    "a",
+    "GIF/meme",
+    "—"
+  ],
+  "sentiment": "positive",
+  "preferences": {
+    "emojiReactions": [
+      "\ud83d",
+      "\ude02",
+      "\ud83c"
+    ],
+    "favoriteTopics": []
+  },
+  "insights": [],
+  "facts": [],
+  "emotions": [
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    }
+  ],
+  "importantMoments": [],
+  "personality": {
+    "humorLevel": 5,
+    "openness": 5,
+    "emotionalDepth": 5
+  }
+}

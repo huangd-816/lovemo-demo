@@ -1,29 +1,34 @@
 {
   "userName": null,
   "affection": 100,
-  "chatCount": 39,
-  "lastInteraction": "2026-05-21T01:55:21.573Z",
+  "chatCount": 80,
+  "lastInteraction": "2026-05-21T13:14:42.910Z",
   "mood": "neutral",
   "topics": [
     "pets",
     "music"
   ],
   "keywords": [
-    "memes",
-    "where",
-    "emmm",
-    "collection?",
-    "stuck",
-    "in",
+    "you",
+    "think",
+    "saved",
+    "Cat",
     "oi",
-    "wow",
-    "nice",
-    "ok",
-    "popop",
-    "ji",
-    "now",
-    "thats",
-    "it"
+    "meme]",
+    "[reacted",
+    "😂",
+    "to",
+    "0816:",
+    "\"a",
+    "😮",
+    "[User",
+    "whose",
+    "that",
+    "person",
+    "on",
+    "the",
+    "good",
+    "night"
   ],
   "sentiment": "positive",
   "preferences": {
@@ -35,5 +40,45 @@
     ],
     "favoriteTopics": []
   },
-  "insights": []
+  "insights": [],
+  "facts": [
+    "none",
+    "user is interested in Mike Tyson",
+    "user is not into boxing"
+  ],
+  "emotions": [
+    {
+      "date": "2026-05-21",
+      "emotion": "neutral",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-21",
+      "emotion": "curious",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-21",
+      "emotion": "curious",
+      "context": "what"
+    },
+    {
+      "date": "2026-05-21",
+      "emotion": "neutral",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-21",
+      "emotion": "curious",
+      "context": "what do you think"
+    }
+  ],
+  "importantMoments": [
+    "catching up"
+  ],
+  "personality": {
+    "humorLevel": 5,
+    "openness": 5,
+    "emotionalDepth": 5
+  }
 }

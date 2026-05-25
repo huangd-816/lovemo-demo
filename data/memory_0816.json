@@ -1,0 +1,101 @@
+{
+  "userName": null,
+  "affection": 100,
+  "chatCount": 43,
+  "lastInteraction": "2026-05-25T21:39:07.998Z",
+  "mood": "neutral",
+  "topics": [
+    "pets"
+  ],
+  "keywords": [
+    "i'm",
+    "sleepy",
+    "now",
+    "its",
+    "1230",
+    "early",
+    "morning",
+    "going",
+    "to",
+    "sleep",
+    "what",
+    "ttyl",
+    "[User",
+    "reacted",
+    "👏",
+    "your",
+    "ok",
+    "good",
+    "night",
+    "oi"
+  ],
+  "sentiment": "positive",
+  "preferences": {
+    "emojiReactions": [
+      "\ud83d",
+      "\ude02",
+      "\ud83c"
+    ],
+    "favoriteTopics": []
+  },
+  "insights": [],
+  "facts": [
+    "user greeted me",
+    "user said cya bye",
+    "user went to sleep at 1:30 am",
+    "user said good night"
+  ],
+  "emotions": [
+    {
+      "date": "2026-05-22",
+      "emotion": "user seems neutral",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-22",
+      "emotion": "curious",
+      "context": "why"
+    },
+    {
+      "date": "2026-05-22",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    },
+    {
+      "date": "2026-05-22",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    },
+    {
+      "date": "2026-05-22",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    },
+    {
+      "date": "2026-05-22",
+      "emotion": "user seems neutral",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "user seemed sleepy",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "what ttyl"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "user seemed neutral",
+      "context": "AI observed"
+    }
+  ],
+  "importantMoments": [],
+  "personality": {
+    "humorLevel": 5,
+    "openness": 5,
+    "emotionalDepth": 5
+  }
+}

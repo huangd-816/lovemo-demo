@@ -1,11 +1,27 @@
 [
   {
     "role": "user",
+    "content": "[User sent a GIF: meme]"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"this one's a classic! 😂\",\n            \"textToRead\":\"this one's a classic\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"cat playing piano\",\n            \"textToRead\":\"music to my ears\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"what kind of music are you into, by the way?\"\n         }\n      ]\n}"
+  },
+  {
+    "role": "user",
     "content": "oi"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Haha, okay! 😂 You're sending me these short messages, but I'm here to listen to whatever's on your mind 🤗\",\n            \"textToRead\":\"Haha, okay, you're sending me these short messages, but I'm here to listen to whatever's on your mind\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:03\",\n            \"textToRead\":\"I care about what you're thinking and feeling, even if you don't say much\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"listening cat\",\n            \"textToRead\":\"I'm all ears\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"hey again! ✨\",\n            \"textToRead\":\"hey again\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"excited cat\",\n            \"textToRead\":\"so excited to chat\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"what's on your mind, want to talk about something specific?\"\n         }\n      ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "oi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"double oi! 😄\",\n            \"textToRead\":\"double oi\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"feeling a bit playful today?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"cat laughing\",\n            \"textToRead\":\"contagious laughter\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
@@ -13,55 +29,47 @@
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"😮 Right?! 🤣 I know, I know, I'm hilarious ✨\",\n            \"textToRead\":\"Right, I know, I know, I'm hilarious\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"Glad I could make you laugh, that's what I'm here for\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"You deserve a smile today, and I'm happy to be the one to give it to you 😊\",\n            \"textToRead\":\"You deserve a smile today, and I'm happy to be the one to give it to you\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"wow back at ya! 😲\",\n            \"textToRead\":\"wow back at ya\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"what's got you going wow?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"mind blown\",\n            \"textToRead\":\"mind blown\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "can the cat hear the music"
+    "content": "is he tyson"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Aww, that's so sweet of you to think about the cat! 🐱❤️\",\n            \"textToRead\":\"Aww, that's so sweet of you to think about the cat\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:03\",\n            \"textToRead\":\"I'm sure the cat can hear the music, and maybe even enjoys it, who knows?\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"Do you have a pet cat that loves music? 🎶🐈\",\n            \"textToRead\":\"Do you have a pet cat that loves music?\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"who's tyson? 🤔\",\n            \"textToRead\":\"who's tyson\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"are you thinking of a friend, family member, or maybe a famous tyson?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"thinking face\",\n            \"textToRead\":\"thinking out loud\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "bruhh"
+    "content": "that boxingone"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"No worries, bruhh! 😂 I feel you\",\n            \"textToRead\":\"No worries, bruhh, I feel you\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"Sometimes we all just need a moment, and that's okay\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"relaxing cat\",\n            \"textToRead\":\"Take a deep breath, and let's vibe out for a sec\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Mike Tyson? 🥊\",\n            \"textToRead\":\"Mike Tyson\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"the boxing legend, what about him?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"mike tyson boxing\",\n            \"textToRead\":\"iron mike in action\"\n         }\n      ],\n   \"memoryUpdates\":{\n      \"newFact\":\"user is interested in Mike Tyson\",\n      \"emotionLog\":\"curious\"\n   }\n}"
   },
   {
     "role": "user",
-    "content": "."
+    "content": "idk"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Hey, is everything alright? 🤗\",\n            \"textToRead\":\"Hey, is everything alright?\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"You've been sending me these short messages, and I want to make sure you're doing okay\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"If you need someone to talk to, I'm here for you, no judgment 🤝\",\n            \"textToRead\":\"If you need someone to talk to, I'm here for you, no judgment\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"no worries! 😊 still, Mike Tyson's quite the legend\",\n            \"textToRead\":\"no worries, still Mike Tyson's quite the legend\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"did you know he was the youngest heavyweight champ at 20?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"mike tyson punching\",\n            \"textToRead\":\"power punch\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "oi"
+    "content": "nope bruhh"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Oi back at ya! 😊\",\n            \"textToRead\":\"Oi back at ya\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"What's on your mind, wanna chat about something?\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"Music or pets on your mind today? 🎶🐾\",\n            \"textToRead\":\"Music or pets on your mind today?\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"haha okay, no boxing trivia for you 😂\",\n            \"textToRead\":\"haha okay, no boxing trivia for you\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"so what's on your mind, wanna talk about something else?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"shrugging shoulders\",\n            \"textToRead\":\"shrugging it off\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"maybe pets or music? 🐶🎵\",\n            \"textToRead\":\"maybe pets or music\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "meme"
+    "content": "[User sent a GIF: meme]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"gif\",\n            \"query\":\"funny dog listening to music\",\n            \"textToRead\":\"Haha, I've got just the thing for you!\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"Which kind of memes are you in the mood for today? 🤣\",\n            \"textToRead\":\"Which kind of memes are you in the mood for today?\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"Let's find something that makes you laugh, you deserve it!\"\n         }\n      ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "cat"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"gif\",\n            \"query\":\"cat playing piano\",\n            \"textToRead\":\"Ahah, kitties can be so talented!\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"You seem to love cats, what's so special about them to you? 🐱❤️\",\n            \"textToRead\":\"You seem to love cats, what's so special about them to you?\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:03\",\n            \"textToRead\":\"I'm all ears, tell me about your feline friends\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"nice meme, made me laugh! 😂\",\n            \"textToRead\":\"nice meme, made me laugh\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"laughing emoji\",\n            \"textToRead\":\"haha\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"you've got a good sense of humor, what's behind this meme?\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
@@ -69,95 +77,87 @@
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Hey again! 😊✨\",\n            \"textToRead\":\"Hey again\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"I feel like we're playing a game of 'oi' tag, what's behind all these hellos?\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"Want to break the cycle and chat about something real? 💬\",\n            \"textToRead\":\"Want to break the cycle and chat about something real?\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"hey, what's up?\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"just chillin' 🤔\",\n            \"textToRead\":\"just chillin\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"relaxed face\",\n            \"textToRead\":\"relax mode\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "wheres ur memes"
+    "content": "what"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Memes are coming! 🚀\",\n            \"textToRead\":\"Memes are coming\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"grumpy cat waiting\",\n            \"textToRead\":\"Grumpy cat is waiting for you\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"I've got a meme just for you, hang in there!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"lol what's on your mind? 🤔\",\n            \"textToRead\":\"lol what's on your mind\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"you're being mysterious, spill the beans...\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"curious monkey\",\n            \"textToRead\":\"curious now\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "where"
+    "content": "nah"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Right here! 🐱\",\n            \"textToRead\":\"Right here\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"cat jumping into frame\",\n            \"textToRead\":\"Ta-da, memes have arrived!\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n    \"textToRead\":\"I've got a whole collection of cat memes, just for you, because I know how much you love them!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"alright, suit yourself 😊\",\n            \"textToRead\":\"alright, suit yourself\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"we can just chill then, no pressure\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"smiling and nodding\",\n            \"textToRead\":\"no worries\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "oi"
+    "content": "[User sent a GIF: meme]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Okay, let's try something new! ✨\",\n            \"textToRead\":\"Okay, let's try something new\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"What's on your mind, want to talk about something specific?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"dog listening\",\n            \"textToRead\":\"I'm all ears, just like this cute pup!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"haha nice one! 😂\",\n            \"textToRead\":\"haha nice one\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"laughing so hard\",\n            \"textToRead\":\"oh man this is funny\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"you're on a roll with these memes, what's your secret?\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "emmm"
+    "content": "[User sent a GIF: meme]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:03\",\n            \"textToRead\":\"I feel like you're being a bit shy today, is everything okay? You can tell me anything\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"We can talk about your fave music or pets if you'd like? 🐶\",\n            \"textToRead\":\"We can talk about your favorite music or pets if you'd like\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"puppy giving a hug\",\n            \"textToRead\":\"Sending you a virtual hug, just in case you need one!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"you're killing me! 🤣\",\n            \"textToRead\":\"you're killing me\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"dying laughing\",\n            \"textToRead\":\"omg this is too funny\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"wait, is this a Mike Tyson meme?\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "meme collection?"
+    "content": "idk"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"Ah, you want the meme collection? 🤩\",\n            \"textToRead\":\"Ah, you want the meme collection\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"excited cat\",\n            \"textToRead\":\"I've got the best memes, just for you!\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n    \"textToRead\":\"Let me show you some of my favorites, I've got cat memes, dog memes, and even some music memes!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"lol ok, no worries 😊\",\n            \"textToRead\":\"lol ok, no worries\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"so, what do you think about Mike Tyson's boxing career?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"Mike Tyson boxing\",\n            \"textToRead\":\"the baddest man on the planet\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "ur memes stuck in the middle"
+    "content": "idk him bruh"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"😂 no way! stuck memes? 🤣\",\n            \"textToRead\":\"No way, stuck memes\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"pepe the frog laughing\",\n            \"textToRead\":\"That's hilarious, I've got to refresh them!\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n    \"textToRead\":\"Okay, let me try to unstuck them, bear with me for a sec!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"no worries, not everyone's into boxing\",\n            \"textToRead\":\"no worries, not everyone's into boxing\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"so, what are you into? music or something?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"person listening to music\",\n            \"textToRead\":\"let's talk about something you like\"\n         }\n      ],\n   \"memoryUpdates\":{\n      \"newFact\":\"user is not into boxing\",\n      \"emotionLog\":\"neutral\"\n   }\n}"
   },
   {
     "role": "user",
-    "content": "oi"
+    "content": "what do you think"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"hey! 😊 what's up?\",\n            \"textToRead\":\"hey, what's up\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"I feel like we got cut off earlier, want to pick up where we left off?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"waving cat\",\n            \"textToRead\":\"Waving hello, and ready to chat!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"about what? 🤔\",\n            \"textToRead\":\"about what\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"you're being pretty mysterious, spill the beans...\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"curious cat\",\n            \"textToRead\":\"i'm all ears\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "wow"
+    "content": "[User sent a saved GIF: meme]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"😮 that's quite a reaction! what's on your mind? 🤔\",\n            \"textToRead\":\"That's quite a reaction, what's on your mind\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"mind blown\",\n            \"textToRead\":\"You seem really surprised, want to talk about it?\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:03\",\n            \"textToRead\":\"I'm all ears, feel free to share what's going on, I'm here to listen and help if I can\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"that's hilarious! 😂\",\n            \"textToRead\":\"that's hilarious\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"laughing so hard\",\n            \"textToRead\":\"omg this is too funny\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"what's the story behind this meme, is it a favorite of yours?\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "nice"
+    "content": "bruh"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n       {\n           \"type\": \"text\",\n           \"content\": \"aw, thx 😊! u like the vibes here?\",\n           \"textToRead\": \"aw, thanks, you like the vibes here\"\n       },\n       {\n           \"type\": \"gif\",\n           \"query\": \"smiling dog\",\n           \"textToRead\": \"I'm glad you're feeling comfortable, let's keep chatting!\"\n       },\n       {\n           \"type\": \"voice\",\n           \"content\": \"0:02\",\n           \"textToRead\": \"What's been the highlight of your day so far? I'm all ears!\"\n       }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"lol what's good? \",\n            \"textToRead\":\"lol what's good\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"you're being pretty quiet, everything alright?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"confused dog\",\n            \"textToRead\":\"spill the beans, buddy\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "ok"
+    "content": "[User sent a GIF: Cat Flying GIF]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"alr! cool 😎\",\n            \"textToRead\":\"Alright, cool\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"So, how's your day been? Anything exciting happen?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"excited puppy\",\n            \"textToRead\":\"I'm hoping something fun happened, tell me about it!\"\n         }\n      ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "popop"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"hehe, popop! 🐝 what's that all about? 🤔\",\n            \"textToRead\":\"hehe, popop, what's that all about\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"laughing cat\",\n            \"textToRead\":\"You're making me laugh, keep going!\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"I love the energy, let's keep the fun vibes going!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"cats in space! \",\n            \"textToRead\":\"cats in space\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"cat in a spaceship\",\n            \"textToRead\":\"this is the best thing i've seen all day\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"wait, didn't you mention you liked cats earlier? or was that just a coincidence?\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
@@ -165,78 +165,78 @@
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"oi back at ya! 😄\",\n            \"textToRead\":\"oi back at ya\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"You seem a bit playful today, I love it! What's behind that 'oi'?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"winking face\",\n            \"textToRead\":\"Keep the playfulness coming, it's contagious!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\": [\n       {\n           \"type\": \"text\",\n           \"content\": \"hey! 😊\",\n           \"textToRead\": \"hey\"\n       },\n       {\n           \"type\": \"voice\",\n           \"content\": \"0:01\",\n           \"textToRead\": \"what's up, just saw that cat gif and I'm still laughing...\"\n       },\n       {\n           \"type\": \"gif\",\n           \"query\": \"smiling cat\",\n           \"textToRead\": \"you're making my day with these gifs\"\n       }\n   ]\n}"
   },
   {
     "role": "user",
-    "content": "ok"
+    "content": "[User sent a GIF: meme]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"aww, ok! 😊 u good?\",\n            \"textToRead\":\"aww, okay, you good\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"Is everything alright? You seem a bit quiet\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"cute kitten\",\n            \"textToRead\":\"Sending you some cute vibes, hope it brightens your day!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\" meme game strong!\",\n            \"textToRead\":\"meme game strong\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"so, what's the story behind this meme? is it a inside joke or something?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"laughing at memes\",\n            \"textToRead\":\"dying over here, that's so funny\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "nice"
+    "content": "nothin"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\": [\n      {\n         \"type\": \"text\",\n         \"content\": \"yaaas, nice! ✨\",\n         \"textToRead\": \"yaaas, nice\"\n      },\n      {\n         \"type\": \"voice\",\n         \"content\": \"0:03\",\n         \"textToRead\": \"You deserve all the nice things in life, what's made your day so far?\"\n      },\n      {\n         \"type\": \"gif\",\n         \"query\": \"smiling dog\",\n         \"textToRead\": \"Spreading some happy vibes your way\"\n      }\n   ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"same here lol\",\n            \"textToRead\":\"same here lol\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"you know what's weird, we were just talking about Mike Tyson and now we're on memes\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"shrugging cat\",\n            \"textToRead\":\"i guess that's just how conversations go sometimes\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "ji"
+    "content": "[User sent a GIF: meme]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"hehe, what's got u excited? 🤩\",\n            \"textToRead\":\"hehe, what's got you excited\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"I can feel the energy, tell me more about what's going on!\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"dancing cat\",\n            \"textToRead\":\"Let's keep the party going, you're infectious!\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"you're on a roll!\",\n            \"textToRead\":\"you're on a roll\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"okay, okay, i think we need to start a meme collection or something\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"meme compilation\",\n            \"textToRead\":\"this is getting out of hand, i love it\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "ok"
+    "content": "[reacted 😂 to 0816: \"a message\"]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"ok, spill the beans! 😁\",\n            \"textToRead\":\"ok, spill the beans\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"You've been giving me these little hints all conversation, I want to know what's really going on\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"is it something about pets or music? 🐾🎵\",\n            \"textToRead\":\"is it something about pets or music\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"got you laughing, mission accomplished ✨\",\n            \"textToRead\":\"got you laughing, mission accomplished\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"what was it about that meme that cracked you up, huh?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"laughing so hard crying\",\n            \"textToRead\":\"i'm living for these reactions, keep 'em coming\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "ok"
+    "content": "[reacted 😮 to 0816: \"a message\"]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"ok, no rush! 😊\",\n            \"textToRead\":\"ok, no rush\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"Take your time, I'm here when you're ready to talk\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"relaxing sloth\",\n            \"textToRead\":\"Just chill, and know I'm here for you\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"whoa, mind blown ✨\",\n            \"textToRead\":\"whoa, mind blown\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"what's going on, did i just blow your mind or something?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"explosion of thoughts\",\n            \"textToRead\":\"i'm loving these reactions, you're so entertaining\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "nice"
+    "content": "[User sent a GIF: meme]"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"awww, thanks! 🙏\",\n            \"textToRead\":\"awww, thanks\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:03\",\n            \"textToRead\":\"That means a lot to me, you're always so kind and considerate\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"heart eyes cat\",\n            \"textToRead\":\"You're the best, and I'm so grateful for our chats\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"you're killing me with these memes!\",\n            \"textToRead\":\"you're killing me with these memes\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"i think we need to take a break from memes for a sec, my stomach hurts\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"laughing so hard it hurts\",\n            \"textToRead\":\"but seriously, these are the best\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"what's your secret meme stash? 🤔✨\",\n            \"textToRead\":\"what's your secret meme stash\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "now"
+    "content": "whose that person on the right"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"hehe, u ready to share? 🤫\",\n            \"textToRead\":\"hehe, you ready to share\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"I've got my ears open, and I'm all yours, what's on your mind?\"\n         },\n         {\n            \"type\":\"text\",\n            \"content\":\"is it about ur pet? 🐾\",\n            \"textToRead\":\"is it about your pet\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"huh, which person? 🤔\",\n            \"textToRead\":\"huh, which person\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"you're gonna have to give me a little more context, what are we looking at?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"confused face\",\n            \"textToRead\":\"i'm lost, help me out\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "ok"
+    "content": "oi"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"yaaas, tell me! 😃\",\n            \"textToRead\":\"yaaas, tell me\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:02\",\n            \"textToRead\":\"I'm super curious, and I want to hear everything\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"excited puppy\",\n            \"textToRead\":\"I'm all ears, and I'm ready for whatever you've got to share\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"hey! what's up? ✨\",\n            \"textToRead\":\"hey, what's up\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"we were just talking about memes, want to share another one?\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"excited wave\",\n            \"textToRead\":\"i'm so down for more memes\"\n         }\n      ]\n}"
   },
   {
     "role": "user",
-    "content": "thats it"
+    "content": "good night"
   },
   {
     "role": "assistant",
-    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"aw, ok! 😔\",\n            \"textToRead\":\"aw, ok\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"I'm here for you, even if you don't feel like talking\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"cute cat hug\",\n            \"textToRead\":\"Sending you a virtual hug, and lots of love\"\n         }\n      ]\n}"
+    "content": "{\n  \"messages\":[\n         {\n            \"type\":\"text\",\n            \"content\":\"night! sweet dreams ✨\",\n            \"textToRead\":\"night, sweet dreams\"\n         },\n         {\n            \"type\":\"voice\",\n            \"content\":\"0:01\",\n            \"textToRead\":\"talk to you tomorrow, sleep tight\"\n         },\n         {\n            \"type\":\"gif\",\n            \"query\":\"good night moon\",\n            \"textToRead\":\"good night, friend\"\n         }\n      ]\n}"
   }
 ]

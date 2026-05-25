@@ -3,48 +3,238 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>0816 - AI Companion Demo</title>
-  <link rel="stylesheet" href="css/style.css?v=3.0">
+  <title>lovemo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css?v=6.1">
 </head>
 <body>
-<div class="app">
-  <div class="topbar">
-    <div class="status">
-      <div class="avatar"><span class="avatar-emoji">👻</span></div>
-      <div class="status-info">
-        <div class="name">0816</div>
-        <div class="online"><span class="dot"></span>Active now</div>
+<div class="app-shell">
+
+  <!-- ══ SIDEBAR ══════════════════════════════ -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-topbar">
+      <div class="sidebar-title">lovemo</div>
+      <button class="sidebar-edit-btn" onclick="openCreateModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="sidebar-search-wrap">
+      <input class="sidebar-search" type="text" placeholder="Search" oninput="filterCompanions(this.value)" />
+    </div>
+    <div class="companions-list" id="companionsList"></div>
+  </div>
+
+  <!-- ══ CHAT PANEL ════════════════════════════ -->
+  <div class="chat-panel" id="chatPanel">
+
+    <div class="topbar">
+      <button class="back-to-sidebar" onclick="showSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="status" id="currentCompanionStatus">
+        <div class="avatar" id="topbarAvatar"><span class="avatar-emoji" id="topbarEmoji">👻</span></div>
+        <div class="status-info">
+          <div class="name" id="topbarName">0816</div>
+          <div class="online"><span class="dot"></span>Active now</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="openScreen('video')" title="Call">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </button>
+        <button class="icon-btn" onclick="openScreen('profile')" title="Profile">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </button>
       </div>
     </div>
-    <div class="topbar-actions">
-      <button class="icon-btn" onclick="alert('Coming soon')" title="Video call">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+
+    <div id="chat" class="chat"></div>
+
+    <div class="gif-picker" id="gifPicker">
+      <div class="gif-picker-tabs">
+        <button class="gif-tab active" onclick="switchGifTab('trending', this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Trending
+        </button>
+        <button class="gif-tab" onclick="switchGifTab('saved', this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Saved
+        </button>
+      </div>
+      <div class="gif-picker-header">
+        <input type="text" id="gifSearch" placeholder="Search GIFs..." class="gif-search-input" />
+      </div>
+      <div class="gif-grid" id="gifGrid"></div>
+    </div>
+
+    <div class="reply-bar" id="replyBar">
+      <span>↩️</span>
+      <span class="reply-bar-text" id="replyBarText"></span>
+      <button class="reply-bar-cancel" onclick="cancelReply()">✕</button>
+    </div>
+
+    <div class="inputbar">
+      <input type="file" id="fileInput" accept="image/*" hidden>
+      <button class="icon-btn input-icon" onclick="document.getElementById('fileInput').click()" title="Photo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
       </button>
-      <button class="icon-btn" onclick="alert('Coming soon')" title="Info">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <button class="icon-btn input-icon gif-btn" onclick="toggleGifPicker()" title="GIF">
+        <span style="font-size:12px;font-weight:800">GIF</span>
+      </button>
+      <input id="input" type="text" placeholder="Message..." autocomplete="off" />
+      <button class="icon-btn input-icon" id="recordBtn" title="Voice">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <button class="send-btn" onclick="sendMessage()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
     </div>
   </div>
-  <div id="chat" class="chat"></div>
-  <div class="reply-bar" id="replyBar">
-    <span style="font-size:14px">↩️</span>
-    <span class="reply-bar-text" id="replyBarText"></span>
-    <button class="reply-bar-cancel" onclick="cancelReply()">✕</button>
+</div>
+
+<!-- ══ VIDEO CALL SCREEN ═════════════════════ -->
+<div class="fullscreen" id="videoScreen">
+  <div class="video-bg">
+    <canvas id="callFaceCanvas" width="280" height="280"></canvas>
+    <div class="video-name" id="callName">0816</div>
+    <div class="video-status" id="videoStatus">Connecting...</div>
+    <div class="call-speak-indicator" id="callSpeakIndicator">
+      <div class="speak-bar"></div><div class="speak-bar"></div>
+      <div class="speak-bar"></div><div class="speak-bar"></div>
+      <div class="speak-bar"></div>
+    </div>
   </div>
-  <div class="inputbar">
-    <input type="file" id="fileInput" accept="image/*" hidden>
-    <button class="icon-btn input-icon" onclick="document.getElementById('fileInput').click()" title="Photo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+  <div class="video-self"><div class="video-self-inner">You</div></div>
+  <div class="video-controls">
+    <button class="vid-btn" id="muteBtn" onclick="toggleMute(this)">
+      <div class="vid-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+      <span class="vid-label">Mute</span>
     </button>
-    <input id="input" type="text" placeholder="Message..." autocomplete="off" />
-    <button class="icon-btn input-icon" id="recordBtn" title="Voice message">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    <button class="vid-btn vid-end" onclick="closeScreen('video')">
+      <div class="vid-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07C9.44 17.25 7.76 15.59 6.46 13.56A19.79 19.79 0 0 1 3.39 4.93 2 2 0 0 1 5.36 2.75h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.34 10.66"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div>
+      <span class="vid-label">End</span>
     </button>
-    <button class="send-btn" onclick="sendMessage()" title="Send">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    <button class="vid-btn" id="camBtn" onclick="toggleCamera(this)">
+      <div class="vid-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
+      <span class="vid-label">Hide</span>
+    </button>
+    <button class="vid-btn" onclick="minimizeCall()">
+      <div class="vid-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></svg></div>
+      <span class="vid-label">Mini</span>
     </button>
   </div>
 </div>
-<script src="js/app.js?v=3.0"></script>
+
+<!-- ══ MINIMIZED CALL PIP ════════════════════ -->
+<div class="call-pip" id="callPip" onclick="expandCall()">
+  <div class="pip-avatar" id="pipAvatar">👻</div>
+  <div class="pip-info">
+    <div class="pip-name" id="pipName">0816</div>
+    <div class="pip-time" id="pipTime">0:00</div>
+  </div>
+  <button class="pip-end" onclick="event.stopPropagation(); closeScreen('video')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
+<!-- ══ PROFILE SCREEN ════════════════════════ -->
+<div class="fullscreen" id="profileScreen">
+  <div class="profile-header">
+    <button class="back-btn" onclick="closeScreen('profile')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span>Profile</span>
+    <button class="profile-edit-btn" id="profileEditBtn" onclick="editCurrentCompanion()">Edit</button>
+  </div>
+  <div class="profile-body">
+    <div class="profile-avatar-big" id="profileAvatarBig">👻</div>
+    <div class="profile-name" id="profileNameBig">0816</div>
+    <div class="profile-tags" id="profileTags"></div>
+    <div class="profile-stats">
+      <div class="stat"><span id="statChats">0</span><label>Chats</label></div>
+      <div class="stat"><span id="statAffection">0</span><label>Bond</label></div>
+      <div class="stat"><span id="statSaved">0</span><label>Saved</label></div>
+    </div>
+    <div class="profile-section-title">Saved GIFs</div>
+    <div class="gif-grid" id="savedGifGrid" style="padding:0;max-height:200px;overflow-y:auto;"></div>
+    <button class="profile-clear-btn" onclick="clearMemory()">🗑️ Clear Memory</button>
+    <button class="profile-clear-btn" style="background:rgba(255,59,48,0.15);margin-top:8px" onclick="deleteCurrentCompanion()">🗑️ Delete AI</button>
+  </div>
+</div>
+
+<!-- ══ CREATE COMPANION MODAL ════════════════ -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <span id="modalTitle">New AI Companion</span>
+      <button class="modal-close" onclick="closeCreateModal()">✕</button>
+    </div>
+
+    <!-- Step 1: Name & Avatar -->
+    <div class="modal-step active" id="step1">
+      <div class="modal-avatar-picker" id="avatarPicker">
+        <span class="avatar-opt selected" onclick="selectAvatar(this)">👻</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🐱</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🦊</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🐺</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🐰</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🐸</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🦋</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🌙</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">⭐</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🔥</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">💎</span>
+        <span class="avatar-opt" onclick="selectAvatar(this)">🌸</span>
+      </div>
+      <input class="modal-input" id="companionNameInput" type="text" placeholder="Name your AI..." maxlength="20" />
+      <div class="modal-label">Relationship Type</div>
+      <div class="vibe-grid" id="vibeGrid">
+        <button class="vibe-btn selected" data-vibe="bestie" onclick="selectVibe(this)">💫 Bestie</button>
+        <button class="vibe-btn" data-vibe="romantic" onclick="selectVibe(this)">💝 Romantic</button>
+        <button class="vibe-btn" data-vibe="mysterious" onclick="selectVibe(this)">🌙 Mysterious</button>
+        <button class="vibe-btn" data-vibe="mentor" onclick="selectVibe(this)">🧑‍🏫 Mentor</button>
+      </div>
+      <button class="modal-next-btn" onclick="goStep(2)">Next →</button>
+    </div>
+
+    <!-- Step 2: Personalities -->
+    <div class="modal-step" id="step2">
+      <div class="modal-label">Choose up to 4 personalities</div>
+      <div class="personality-grid" id="personalityGrid">
+        <button class="pers-btn selected" data-p="bff" onclick="togglePersonality(this)"><span>🤙</span><b>BFF</b><small>gen z bestie</small></button>
+        <button class="pers-btn" data-p="flirty" onclick="togglePersonality(this)"><span>😏</span><b>Flirty</b><small>charming & playful</small></button>
+        <button class="pers-btn" data-p="deep" onclick="togglePersonality(this)"><span>🧠</span><b>Deep</b><small>philosophical</small></button>
+        <button class="pers-btn" data-p="sarcastic" onclick="togglePersonality(this)"><span>😈</span><b>Sarcastic</b><small>loving roasts</small></button>
+        <button class="pers-btn" data-p="soft" onclick="togglePersonality(this)"><span>🌸</span><b>Soft</b><small>nurturing & gentle</small></button>
+        <button class="pers-btn" data-p="chaotic" onclick="togglePersonality(this)"><span>🤪</span><b>Chaotic</b><small>unhinged memes</small></button>
+        <button class="pers-btn" data-p="cool" onclick="togglePersonality(this)"><span>😎</span><b>Cool</b><small>lowkey & chill</small></button>
+        <button class="pers-btn" data-p="hype" onclick="togglePersonality(this)"><span>🔥</span><b>Hype</b><small>your cheerleader</small></button>
+      </div>
+      <button class="modal-next-btn" onclick="goStep(3)">Next →</button>
+      <button class="modal-back-btn" onclick="goStep(1)">← Back</button>
+    </div>
+
+    <!-- Step 3: Language & Gender -->
+    <div class="modal-step" id="step3">
+      <div class="modal-label">Language</div>
+      <div class="lang-grid" id="langGrid">
+        <button class="lang-btn selected" data-lang="en" onclick="selectLang(this)">🇺🇸 English</button>
+        <button class="lang-btn" data-lang="zh" onclick="selectLang(this)">🇨🇳 中文</button>
+        <button class="lang-btn" data-lang="es" onclick="selectLang(this)">🇪🇸 Español</button>
+        <button class="lang-btn" data-lang="ja" onclick="selectLang(this)">🇯🇵 日本語</button>
+        <button class="lang-btn" data-lang="ko" onclick="selectLang(this)">🇰🇷 한국어</button>
+        <button class="lang-btn" data-lang="fr" onclick="selectLang(this)">🇫🇷 Français</button>
+      </div>
+      <div class="modal-label" style="margin-top:16px">Gender / Voice</div>
+      <div class="gender-grid">
+        <button class="gender-btn selected" data-gender="female" onclick="selectGender(this)">👩 Female</button>
+        <button class="gender-btn" data-gender="male" onclick="selectGender(this)">👨 Male</button>
+        <button class="gender-btn" data-gender="nonbinary" onclick="selectGender(this)">🧑 Non-binary</button>
+      </div>
+      <button class="modal-create-btn" onclick="createCompanion()">✨ Create</button>
+      <button class="modal-back-btn" onclick="goStep(2)">← Back</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js?v=6.1"></script>
 </body>
 </html>

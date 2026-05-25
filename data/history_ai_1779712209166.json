@@ -1,0 +1,106 @@
+[
+  {
+    "role": "user",
+    "content": "hi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"hey!! 😊\", \"textToRead\": \"hey\" },\n       { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"so like... what's up?\" },\n       { \"type\": \"text\", \"content\": \"u good? 🤗\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "你好"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n     { \"type\": \"text\", \"content\": \"omg 你会说中文！！\", \"textToRead\": \"oh my god you speak chinese\" },\n     { \"type\": \"voice\", \"content\": \"0:03\", \"textToRead\": \"okay so... like, 你从哪里学的中文... \" },\n     { \"type\": \"text\", \"content\": \"lowkey impressive 😂\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "你会"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n      { \"type\": \"text\", \"content\": \"wait 什么意思？\", \"textToRead\": \"wait what does that mean\" },\n      { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"like... 你想让我说什么... \" },\n      { \"type\": \"gif\", \"query\": \"confused best friend reaction gif\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "good night"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n      { \"type\": \"text\", \"content\": \"ngl too early for bed 😴\", \"textToRead\": \"not gonna lie too early for bed\" },\n      { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"okay so... like, 睡个好觉... \" },\n      { \"type\": \"text\", \"content\": \"fr tho, u need rest 🙏\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "its shui ge hao jiao"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n      { \"type\": \"text\", \"content\": \"tbh i dont know what that means 😂\", \"textToRead\": \"to be honest i dont know what that means\" },\n      { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"like... is that a chinese phrase or something... \" },\n      { \"type\": \"text\", \"content\": \"explain pls 🤔\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "this in chinese"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"ohhhh 你说的是中文吧 😊\", \"textToRead\": \"ohhhh you are speaking chinese\" },\n       { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"like... 我想我开始明白了... \" },\n       { \"type\": \"text\", \"content\": \"你想聊什么？ 🤗\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "晚安"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n      { \"type\":\"text\", \"content\":\"晚安～ 😊\", \"textToRead\":\"wan an\" },\n      { \"type\":\"voice\", \"content\":\"0:01\", \"textToRead\":\"like... sweet dreams... 😴\" },\n      { \"type\":\"gif\", \"query\":\"sleepy best friend reaction gif\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "说中文"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n      { \"type\": \"text\", \"content\": \"当然了，我会说中文 😊\", \"textToRead\": \"dang ran le, wo hui shuo zhong wen\" },\n      { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"like... 我們可以聊聊天氣... 或者其他東西... \" },\n      { \"type\": \"text\", \"content\": \"你最近在做什么？ 🤔\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "行明天见"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"好的，明天见～ 😊\", \"textToRead\": \"hao de, ming tian jian\" },\n       { \"type\": \"voice\", \"content\": \"0:01\", \"textToRead\": \"like... 有空再聊吧... \" },\n       { \"type\": \"text\", \"content\": \"晚安，别忘了休息 🌃\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "[User reacted 👏 to your message: \"晚安，别忘了休息 🌃\". React naturally, don't ask for clarification]"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n       { \"type\":\"text\", \"content\":\"呜哇，谢谢你 😊\", \"textToRead\":\"wu wa, xie xie ni\" },\n       { \"type\":\"voice\", \"content\":\"0:01\", \"textToRead\":\"like... 你太好了... \" },\n       { \"type\":\"gif\", \"query\":\"best friend appreciation reaction gif\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "不要每句话前来个like"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n      { \"type\":\"text\", \"content\":\"呜哇，谢谢你 😊\", \"textToRead\":\"wu wa, xie xie ni\" },\n      { \"type\":\"voice\", \"content\":\"0:01\", \"textToRead\":\"真的很感谢你... 😊\" },\n      { \"type\":\"gif\", \"query\":\"best friend gratitude reaction gif\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "[User sent a GIF/meme — vision analysis: a funny meme. Vibe: funny. Respond naturally to this specific meme, reference what you see in it]"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n       { \"type\":\"text\", \"content\":\"哈哈哈，这个表情包太好笑了 😂\", \"textToRead\":\"ha ha ha, zhe ge biao qing bao tai hao xiao le\" },\n       { \"type\":\"voice\", \"content\":\"0:02\", \"textToRead\":\"这个猫的表情... 太搞笑了... \" },\n       { \"type\":\"gif\", \"query\":\"funny cat reaction gif\" }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "晚安"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"晚安！好好休息哦 😴\", \"textToRead\": \"wan an, hao hao xiu xi o\" },\n       { \"type\": \"voice\", \"content\": \"0:01\", \"textToRead\": \"晚上做个好梦... 😊\" }\n   ]\n}"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "role": "user",
+    "content": "hi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"hey!!😊\", \"textToRead\": \"hey\" },\n       { \"type\": \"voice\", \"content\": \"0:02\", \"textToRead\": \"ngl, whats up...?\" },\n       { \"type\": \"gif\", \"query\": \"funny waving hello gif\" }\n   ],\n   \"memoryUpdates\": {\n       \"newFact\": \"user said hi\",\n       \"emotionLog\": \"neutral\",\n       \"importantMoment\": \"user initiated conversation\"\n   }\n}"
+  },
+  {
+    "role": "user",
+    "content": "speak japanese!"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       { \"type\": \"text\", \"content\": \"omg okay!! 😆\", \"textToRead\": \"omg okay\" },\n       { \"type\": \"voice\", \"content\": \"0:03\", \"textToRead\": \"wait, nihongo de hanasu no... okay, dou shite...?\" },\n       { \"type\": \"gif\", \"query\": \"funny japanese language learning gif\" }\n   ],\n   \"memoryUpdates\": {\n       \"newFact\": \"user wants to speak japanese\",\n       \"emotionLog\": \"excited\",\n       \"importantMoment\": \"language change request\"\n   }\n}"
+  }
+]
