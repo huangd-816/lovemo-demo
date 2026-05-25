@@ -223,8 +223,13 @@ function switchCompanion(id) {
   document.getElementById('topbarAvatar').style.background =
     `linear-gradient(135deg, ${avatarColor(c.avatar)} 0%, #0055cc 100%)`;
 
-  // Restore or clear chat
-  document.getElementById('chat').innerHTML = chatCaches[id] || '';
+  // Restore from memory cache or localStorage
+  if (chatCaches[id]) {
+    document.getElementById('chat').innerHTML = chatCaches[id];
+  } else {
+    document.getElementById('chat').innerHTML = '';
+    loadChatFromStorage(id);
+  }
 
   // Update sidebar active state
   renderSidebar(document.querySelector('.sidebar-search')?.value || '');
@@ -696,10 +701,13 @@ function hideTyping() { document.getElementById('typingIndicator')?.remove(); }
 // ─── REPLY ────────────────────────────────────
 let replyingTo = null;
 function setReply(text, sender) {
-  replyingTo = { text, sender };
-  document.getElementById('replyBar').classList.add('active');
-  document.getElementById('replyBarText').textContent = (sender==='user'?'You':'AI') + ': ' + text.slice(0,60);
-  document.getElementById('input').focus();
+  if (!text?.trim()) return;
+  replyingTo = { text: text.trim(), sender };
+  const bar = document.getElementById('replyBar');
+  const barText = document.getElementById('replyBarText');
+  if (bar) bar.classList.add('active');
+  if (barText) barText.textContent = (sender==='user'?'You':'AI') + ': ' + text.slice(0,60);
+  document.getElementById('input')?.focus();
 }
 function cancelReply() { replyingTo = null; document.getElementById('replyBar').classList.remove('active'); }
 
@@ -800,7 +808,7 @@ function renderMessage(item, sender) {
 
   if (item.type === 'text') {
     const c = getCurrentCompanion();
-    const showTranslate = c.language !== 'en' || sender === 'ai';
+    const showTranslate = sender === 'user' && c.language !== 'en';
     div.innerHTML = `
       <div class="translate-wrap">
         <div class="msg-text-inner translate-content">${escapeHtml(item.content)}</div>
@@ -876,8 +884,16 @@ function renderMessage(item, sender) {
 
   const replyBtn = document.createElement('button'); replyBtn.className = 'msg-action-btn'; replyBtn.title = 'Reply'; replyBtn.innerHTML = '↩';
   replyBtn.onclick = () => {
-    const t = (item.type==='image'||item.type==='image-upload') ? (item.title||'meme') : (item.content||'message');
-    setReply(t, sender);
+    let t;
+    if (item.type === 'image' || item.type === 'image-upload') {
+      t = item.title || div.querySelector('img')?.title || 'meme';
+    } else if (item.type === 'voice') {
+      t = div.querySelector('.voice-text')?.textContent || 'voice message';
+    } else {
+      // Try item.content first, fallback to reading from DOM
+      t = item.content || div.querySelector('.translate-content')?.textContent || div.querySelector('.msg-text-inner')?.textContent || 'message';
+    }
+    setReply(t.slice(0, 80), sender);
   };
   actEl.appendChild(replyBtn);
 
@@ -990,6 +1006,7 @@ async function sendMessage() {
   saveCompanions(); renderSidebar();
 
   sendToAI(msg);
+  setTimeout(saveChatToStorage, 100);
 }
 
 async function sendToAI(text) {
@@ -1006,6 +1023,7 @@ async function sendToAI(text) {
     if (data.profile) localStorage.setItem('0816_profile', JSON.stringify(data.profile));
     (data.messages||[]).forEach(m => renderMessage(m, 'ai'));
     if (data.emojiReaction) setTimeout(()=>addReactionToLastUserMsg(data.emojiReaction), 600);
+    setTimeout(saveChatToStorage, 500);
 
     // Update last message from AI
     if (data.messages?.[0]?.type === 'text') {
@@ -1072,3 +1090,84 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sidebar').classList.add('sidebar-active');
   }
 });
+
+// ─── TRANSLATE ────────────────────────────────
+async function translateText(text, targetLang, btn) {
+  if (!text?.trim()) return;
+  const original = btn.dataset.original || null;
+  if (original) {
+    const container = btn.closest('.translate-wrap');
+    if (container) container.querySelector('.translate-content').textContent = original;
+    btn.dataset.original = '';
+    btn.textContent = '🌐';
+    btn.title = 'Translate';
+    return;
+  }
+  const origText = btn.textContent;
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, targetLang: targetLang || 'en' })
+    });
+    const data = await res.json();
+    const container = btn.closest('.translate-wrap');
+    const contentEl = container?.querySelector('.translate-content');
+    if (contentEl) {
+      btn.dataset.original = contentEl.textContent;
+      contentEl.textContent = data.translated;
+    }
+    btn.textContent = '↩️';
+    btn.title = 'Show original';
+  } catch {
+    showToast('Translation failed 😅');
+    btn.textContent = origText;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ─── VOICE TRANSCRIPT ─────────────────────────
+function toggleTranscript(btn) {
+  const voiceWrap = btn.closest('.msg-voice-wrap') || btn.closest('.msg');
+  const transcript = voiceWrap?.querySelector('.voice-transcript');
+  if (!transcript) return;
+  const isVisible = transcript.style.display !== 'none';
+  transcript.style.display = isVisible ? 'none' : 'block';
+  btn.classList.toggle('active', !isVisible);
+}
+
+// ─── CHAT HISTORY PERSISTENCE ─────────────────
+const CHAT_STORAGE_KEY = 'lovemo_chat_history';
+
+function saveChatToStorage() {
+  const chat = document.getElementById('chat');
+  if (!chat) return;
+  const stored = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY) || '{}');
+  // Save simplified version - just text content per companion
+  const messages = [];
+  chat.querySelectorAll('.msg-row').forEach(row => {
+    const sender = row.classList.contains('user') ? 'user' : 'ai';
+    const textEl = row.querySelector('.msg-text-inner .translate-content, .msg-text-inner');
+    const voiceEl = row.querySelector('.voice-text');
+    const imgEl = row.querySelector('img');
+    if (textEl) messages.push({ type: 'text', sender, content: textEl.textContent });
+    else if (voiceEl) messages.push({ type: 'voice', sender, content: '0:02', textToRead: voiceEl.textContent });
+    else if (imgEl && imgEl.src) messages.push({ type: 'image', sender, content: imgEl.src, isGif: true, title: imgEl.title });
+  });
+  stored[currentId] = messages.slice(-60); // keep last 60
+  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(stored));
+}
+
+function loadChatFromStorage(id) {
+  const stored = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY) || '{}');
+  const messages = stored[id] || [];
+  if (!messages.length) return;
+  const chat = document.getElementById('chat');
+  chat.innerHTML = '';
+  messages.forEach(msg => renderMessage(msg, msg.sender));
+}
+window.translateText = translateText;
+window.toggleTranscript = toggleTranscript;

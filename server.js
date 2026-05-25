@@ -58,7 +58,7 @@ app.post('/describe-gif', async (req, res) => {
   if (!imageUrl) return res.json({ description: 'a meme', text: '', people: '' });
   try {
     const c = await groq.chat.completions.create({
-      model: "llama-3.2-11b-vision-preview",
+      model: "meta-llama/llama-4-scout-17b-16e-instruct",
       messages: [{ role:"user", content: [
         { type:"image_url", image_url:{ url:imageUrl } },
         { type:"text", text:`Analyze this meme/GIF/image and respond in JSON only:

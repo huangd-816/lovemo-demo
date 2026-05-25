@@ -1,40 +1,41 @@
 {
   "userName": null,
   "affection": 100,
-  "chatCount": 43,
-  "lastInteraction": "2026-05-25T21:39:07.998Z",
-  "mood": "neutral",
+  "chatCount": 54,
+  "lastInteraction": "2026-05-25T21:52:35.557Z",
+  "mood": "curious",
   "topics": [
     "pets"
   ],
   "keywords": [
+    "wait",
+    "theres",
+    "no",
+    "chat",
+    "history",
+    "here",
     "i'm",
-    "sleepy",
-    "now",
-    "its",
-    "1230",
-    "early",
-    "morning",
-    "going",
-    "to",
-    "sleep",
-    "what",
-    "ttyl",
+    "add",
+    "them",
+    "did",
+    "i",
+    "said",
+    "before",
+    "that",
+    "idk",
     "[User",
-    "reacted",
-    "👏",
-    "your",
-    "ok",
-    "good",
-    "night",
-    "oi"
+    "sent",
+    "a",
+    "GIF/meme",
+    "—"
   ],
   "sentiment": "positive",
   "preferences": {
     "emojiReactions": [
       "\ud83d",
       "\ude02",
-      "\ud83c"
+      "\ud83c",
+      "\udf89"
     ],
     "favoriteTopics": []
   },
@@ -90,6 +91,16 @@
       "date": "2026-05-25",
       "emotion": "user seemed neutral",
       "context": "AI observed"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "what did i said before"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
     }
   ],
   "importantMoments": [],
