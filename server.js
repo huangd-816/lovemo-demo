@@ -22,7 +22,7 @@ app.get('/', (req, res) => res.sendFile(join(__dirname, 'index.html')));
 // ─── GEMINI ───────────────────────────────────
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const geminiModel = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groq = process.env.GROQ_API_KEY ? new Groq({ apiKey: process.env.GROQ_API_KEY }) : null;
 
 // ─── GIPHY ────────────────────────────────────
 async function fetchGif(query) {
@@ -325,7 +325,22 @@ app.post('/chat', async (req, res) => {
     }].slice(-20);
   }
 
-  history.push({ role:'user', content:aiMessage });
+  // Handle edited messages - replace the old version in history
+  const isEdit = aiMessage.startsWith('[User edited their previous message to]:');
+  if (isEdit) {
+    const newText = aiMessage.replace('[User edited their previous message to]: ', '');
+    // Find and replace the last user message in history
+    for (let i = history.length - 1; i >= 0; i--) {
+      if (history[i].role === 'user') {
+        history[i].content = newText;
+        break;
+      }
+    }
+    // Remove last AI response so it regenerates
+    if (history[history.length-1]?.role === 'assistant') history.pop();
+  } else {
+    history.push({ role:'user', content:aiMessage });
+  }
 
   const recentEmotions = (memory.emotions||[]).slice(-5).map(e=>`${e.emotion}(${e.date})`).join(', ');
   const memoryContext = `${timeContext}
@@ -368,6 +383,7 @@ ${history.slice(-8).map(m=>`${m.role==='user'?'User':'You'}: ${m.content.slice(0
       raw = result.response.text();
     } catch(geminiErr) {
       if (geminiErr.message?.includes('429') || geminiErr.message?.includes('quota')) {
+        if (!groq) throw geminiErr;
         console.log('Gemini quota hit, falling back to Groq...');
         const groqRes = await groq.chat.completions.create({
           model: 'llama-3.1-8b-instant',

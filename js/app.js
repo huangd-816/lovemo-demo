@@ -1061,6 +1061,66 @@ function showConfirm(message, onConfirm) {
   overlay.querySelector('#confirmOk').onclick = () => { overlay.remove(); onConfirm(); };
 }
 
+
+// ─── MULTI-SELECT DELETE ──────────────────────
+let selectMode = false;
+const selectedRows = new Set();
+
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  selectedRows.clear();
+  document.querySelectorAll('.msg-row').forEach(row => {
+    row.classList.remove('selected');
+    const cb = row.querySelector('.msg-checkbox');
+    if (cb) cb.style.display = selectMode ? 'flex' : 'none';
+  });
+  const bar = document.getElementById('selectBar');
+  if (bar) { bar.style.display = selectMode ? 'flex' : 'none'; bar.style.setProperty('display', selectMode ? 'flex' : 'none', 'important'); }
+  updateSelectCount();
+}
+
+function toggleSelectRow(row) {
+  if (!selectMode) return;
+  const cb = row.querySelector('.msg-checkbox');
+  if (selectedRows.has(row)) {
+    selectedRows.delete(row);
+    row.classList.remove('selected');
+    if (cb) cb.classList.remove('checked');
+  } else {
+    selectedRows.add(row);
+    row.classList.add('selected');
+    if (cb) cb.classList.add('checked');
+  }
+  updateSelectCount();
+}
+
+function updateSelectCount() {
+  const el = document.getElementById('selectCount');
+  if (el) el.textContent = selectedRows.size > 0 ? `${selectedRows.size} selected` : 'Select messages';
+}
+
+function deleteSelected() {
+  if (!selectedRows.size) return;
+  showConfirm(`Delete ${selectedRows.size} message${selectedRows.size>1?'s':''}?`, () => {
+    selectedRows.forEach(row => {
+      row.style.opacity = '0'; row.style.transform = 'scale(0.9)'; row.style.transition = 'all 0.15s';
+      setTimeout(() => row.remove(), 150);
+    });
+    selectedRows.clear();
+    toggleSelectMode();
+    setTimeout(saveChatToStorage, 300);
+  });
+}
+
+function selectAll() {
+  document.querySelectorAll('.msg-row').forEach(row => {
+    selectedRows.add(row); row.classList.add('selected');
+    const cb = row.querySelector('.msg-checkbox');
+    if (cb) cb.classList.add('checked');
+  });
+  updateSelectCount();
+}
+
 // ─── RENDER MESSAGE ───────────────────────────
 function renderMessage(item, sender) {
   const chat = document.getElementById('chat');
@@ -1140,6 +1200,33 @@ function renderMessage(item, sender) {
   }
 
   const row = document.createElement('div'); row.className = 'msg-row ' + sender;
+  // Checkbox
+  const checkbox = document.createElement('div');
+  checkbox.className = 'msg-checkbox';
+  checkbox.style.display = 'none';
+  checkbox.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+  checkbox.onclick = e => { e.stopPropagation(); toggleSelectRow(row); };
+  row.appendChild(checkbox);
+  // Long-press to enter select mode
+  let _pt;
+  // Long press on the message div itself
+  row.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button, a, .msg-action-btn, .voice-play')) return;
+    _pt = setTimeout(() => {
+      navigator.vibrate && navigator.vibrate(30);
+      if (!selectMode) toggleSelectMode();
+      toggleSelectRow(row);
+    }, 500);
+  });
+  row.addEventListener('pointerup', () => clearTimeout(_pt));
+  row.addEventListener('pointercancel', () => clearTimeout(_pt));
+  row.addEventListener('pointermove', (e) => { if (e.movementX**2 + e.movementY**2 > 25) clearTimeout(_pt); });
+  // Tap to select when in select mode
+  row.addEventListener('click', (e) => {
+    if (!selectMode) return;
+    if (e.target.closest('button, .msg-checkbox')) return;
+    toggleSelectRow(row);
+  });
   const actEl = document.createElement('div'); actEl.className = 'msg-actions';
 
   const replyBtn = document.createElement('button'); replyBtn.className = 'msg-action-btn'; replyBtn.title = 'Reply'; replyBtn.innerHTML = '↩';
@@ -1546,3 +1633,6 @@ window.showConfirm = showConfirm;
 window.editMessage = editMessage;
 window.cancelEdit = cancelEdit;
 window.toggleTranscript = toggleTranscript;
+window.toggleSelectMode = toggleSelectMode;
+window.deleteSelected = deleteSelected;
+window.selectAll = selectAll;

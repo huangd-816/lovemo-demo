@@ -467,3 +467,69 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
   margin-left: 6px;
   font-style: italic;
 }
+/* ─── SELECT BAR DELETE ──────────────────────── */
+.select-bar-delete-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,59,48,0.1);
+  border: 1px solid rgba(255,59,48,0.25);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s;
+  flex-shrink: 0;
+}
+.select-bar-delete-btn:hover {
+  background: rgba(255,59,48,0.22);
+  border-color: rgba(255,59,48,0.5);
+  transform: scale(1.1);
+}
+.select-bar-delete-btn:active { transform: scale(0.93); }
+
+/* ─── MULTI-SELECT ───────────────────────────── */
+.select-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(0,132,255,0.12);
+  border-top: 1px solid rgba(0,132,255,0.25);
+  gap: 12px;
+}
+
+.select-cancel-btn {
+  background: none; border: none; color: rgba(255,255,255,0.6);
+  cursor: pointer; font-size: 14px; padding: 4px 8px;
+}
+
+.select-count {
+  flex: 1; text-align: center; font-size: 14px;
+  color: rgba(255,255,255,0.85); font-weight: 500;
+}
+
+.select-action-btn {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; padding: 6px 14px; border-radius: 10px; cursor: pointer; font-size: 13px;
+}
+
+.select-delete-btn {
+  background: rgba(255,59,48,0.2); border: 1px solid rgba(255,59,48,0.3);
+  color: #ff3b30; padding: 6px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600;
+}
+
+.msg-checkbox {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  color: transparent; background: transparent;
+  margin: auto 4px;
+}
+
+.msg-checkbox.checked {
+  background: #0084FF; border-color: #0084FF; color: #fff;
+}
+
+.msg-row.selected .msg { opacity: 0.7; outline: 2px solid #0084FF; outline-offset: 2px; border-radius: 14px; }
+.msg-checkbox { width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:transparent;background:transparent;transition:all 0.15s;margin:auto 4px; }
+.msg-checkbox.checked { background:#0084FF;border-color:#0084FF;color:#fff; }
+.msg-row.selected .msg { opacity:0.7;outline:2px solid #0084FF;outline-offset:2px;border-radius:14px; }

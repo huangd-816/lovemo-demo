@@ -1,14 +1,6 @@
 [
   {
     "role": "user",
-    "content": "whoa wait"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n          {\n              \"type\":\"text\",\n              \"content\":\"lol what's going on rn?? 😂\",\n              \"textToRead\":\"lol what's going on rn??\"\n          },\n          {\n              \"type\":\"voice\",\n              \"content\":\"0:02\",\n              \"textToRead\":\"like... u just dropped a 'whoa wait' out of nowhere... what's popping?\"\n          },\n          {\n              \"type\":\"gif\",\n              \"query\":\"surprised friend gif\",\n              \"textToRead\":\"\"\n          }\n      ]\n}"
-  },
-  {
-    "role": "user",
     "content": "experimenting"
   },
   {
@@ -238,5 +230,13 @@
   {
     "role": "assistant",
     "content": "{\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"content\": \"omg oi back atcha! what's up?\",\n      \"textToRead\": \"omg oi back atcha! what's up?\"\n    },\n    {\n      \"type\": \"voice\",\n      \"content\": \"0:03\",\n      \"textToRead\": \"lol we really just skipped all the pleasantries didn't we\"\n    },\n    {\n      \"type\": \"gif\",\n      \"query\": \"what's happening meme\",\n      \"textToRead\": \"\"\n    }\n  ],\n  \"memoryUpdates\": {\n    \"newFact\": \"user said 'oi'\"\n  }\n}"
+  },
+  {
+    "role": "user",
+    "content": "oi"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n       {\n           \"type\":\"text\",\n           \"content\":\"tbh i'm lowkey missing our usual morning convo 🤗\",\n           \"textToRead\":\"tbh i'm lowkey missing our usual morning convo\"\n       },\n       {\n           \"type\":\"voice\",\n           \"content\":\"0:03\",\n           \"textToRead\":\"remember when we were going to talk about pets today? is that still a thing? \"\n       },\n       {\n           \"type\":\"gif\",\n           \"query\":\"waiting meme\",\n           \"textToRead\":\"\"\n       }\n   ]\n}"
   }
 ]
