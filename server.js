@@ -333,7 +333,7 @@ RESPOND in JSON with 2-3 MIXED messages. Example:
 {
   "messages": [
     { "type": "text", "content": "omg wait that's actually wild" },
-    { "type": "voice", "content": "0:03", "textToRead": "okay so... I literally cannot believe that happened... like what even" },
+    { "type": "voice", "content": "0:03", "textToRead": "no but seriously... I need you to explain this from the beginning because I'm losing my mind right now" },
     { "type": "gif", "query": "mind blown reaction" }
   ],
   "memoryUpdates": {
@@ -344,8 +344,8 @@ RESPOND in JSON with 2-3 MIXED messages. Example:
 }
 RULES:
 - 2-3 messages, mixed types. Include gif every 2-3 turns.
-- voice textToRead: write EXACTLY what you would say out loud — natural speech, "..." pauses, contractions
-- text content: short punchy message, lowercase
+- text: short punchy typed message
+- voice textToRead: MUST be DIFFERENT content from the text — it's a follow-up thought, extra reaction, or add-on said out loud. Natural speech with "..." pauses and contractions. NEVER repeat or rephrase the text message above it.
 - memoryUpdates: fill in whenever user shares anything personal
 - NEVER repeat the example text above — always write fresh, relevant content`;
 }
@@ -489,21 +489,28 @@ ${history.slice(-14).map(m=>`${m.role==='user'?'User':'You'}: ${m.content.slice(
     catch { parsed = { messages:[{ type:'text', content:'oops brain glitch 👻', textToRead:'oops' }] }; }
 
     const isPlaceholder = s => !s || /^(spoken version|placeholder|\[.*\]|0:\d\d)$/i.test(s.trim());
+    let lastTextContent = '';
     for (const msg of parsed.messages||[]) {
       if (msg.type==='gif' && msg.query) {
         const url = await fetchGif(msg.query);
         if (url) { msg.type='image'; msg.content=url; msg.isGif=true; }
         else { msg.type='text'; msg.content="couldn't load that gif 😅"; }
       }
-      // Voice messages must have real spoken text — if placeholder, drop the voice type
-      if (msg.type === 'voice' && isPlaceholder(msg.textToRead)) {
-        msg.type = 'text';
-        msg.content = msg.content && msg.content !== '0:02' ? msg.content : '...';
-        delete msg.textToRead;
+      // Track last text content for dedup
+      if (msg.type === 'text') { lastTextContent = msg.content || ''; delete msg.textToRead; }
+      // Voice: reject placeholder OR exact repeat of preceding text message
+      if (msg.type === 'voice') {
+        const ttr = msg.textToRead?.trim() || '';
+        if (isPlaceholder(ttr)) {
+          msg.type = 'text'; msg.content = '...'; delete msg.textToRead;
+        } else if (ttr === lastTextContent.trim()) {
+          // Same as text above — drop the voice message entirely
+          msg._drop = true;
+        }
       }
-      // Text messages never need textToRead
-      if (msg.type === 'text') delete msg.textToRead;
     }
+
+    parsed.messages = (parsed.messages||[]).filter(m => !m._drop);
 
     if (parsed.memoryUpdates) {
       const mu = parsed.memoryUpdates;
