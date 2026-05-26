@@ -467,6 +467,40 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
   margin-left: 6px;
   font-style: italic;
 }
+/* ─── SELECT BAR BUTTONS ─────────────────────── */
+.select-bar-cancel-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(255,255,255,0.55);
+  transition: all 0.18s; flex-shrink: 0;
+}
+.select-bar-cancel-btn:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
+  color: #fff;
+  transform: scale(1.1);
+}
+.select-bar-cancel-btn:active { transform: scale(0.93); }
+
+.select-bar-all-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(0,132,255,0.1);
+  border: 1px solid rgba(0,132,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--blue-light);
+  transition: all 0.18s; flex-shrink: 0;
+}
+.select-bar-all-btn:hover {
+  background: rgba(0,132,255,0.22);
+  border-color: rgba(0,132,255,0.5);
+  transform: scale(1.1);
+}
+.select-bar-all-btn:active { transform: scale(0.93); }
+
 /* ─── SELECT BAR DELETE ──────────────────────── */
 .select-bar-delete-btn {
   width: 36px; height: 36px;
