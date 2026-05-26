@@ -1704,15 +1704,14 @@ function renderMessage(item, sender) {
 function escapeHtml(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // ─── VOICE BAR ────────────────────────────────
+const _voicePlaceholderRE = /^(spoken version|placeholder|\[.*\]|0:\d\d)$/i;
 function playVoiceBar(btn) {
-  // Find msg-voice container
   let el = btn;
   while (el && !el.classList.contains('msg-voice')) el = el.parentElement;
   if (!el) return;
-  const text = el.querySelector('.voice-text')?.innerText?.trim()
-             || el.querySelector('.voice-text')?.textContent?.trim();
-  console.log('Playing voice bar:', text?.slice(0, 50));
-  if (text) { animateWaves(el); playVoice(text); }
+  const text = el.querySelector('.voice-text')?.textContent?.trim();
+  if (!text || _voicePlaceholderRE.test(text)) { showToast('no audio for this message'); return; }
+  animateWaves(el); playVoice(text);
 }
 
 function animateWaves(el) {
@@ -2053,7 +2052,11 @@ function saveChatToStorage() {
     const voiceEl = row.querySelector('.voice-text');
     const imgEl = row.querySelector('img');
     if (textEl) messages.push({ type: 'text', sender, content: textEl.textContent });
-    else if (voiceEl) messages.push({ type: 'voice', sender, content: '0:02', textToRead: voiceEl.textContent });
+    else if (voiceEl) {
+      const vt = voiceEl.textContent?.trim();
+      if (vt && !_voicePlaceholderRE.test(vt)) messages.push({ type: 'voice', sender, content: '0:02', textToRead: vt });
+      // skip saving voice bars with no real text
+    }
     else if (imgEl && imgEl.src) messages.push({ type: 'image', sender, content: imgEl.src, isGif: true, title: imgEl.title });
   });
   stored[currentId] = messages.slice(-60); // keep last 60
@@ -2066,7 +2069,11 @@ function loadChatFromStorage(id) {
   if (!messages.length) return;
   const chat = document.getElementById('chat');
   chat.innerHTML = '';
-  messages.forEach(msg => renderMessage(msg, msg.sender));
+  messages.forEach(msg => {
+    // Drop voice bars that have placeholder text — they have no audio
+    if (msg.type === 'voice' && (!msg.textToRead || _voicePlaceholderRE.test(msg.textToRead.trim()))) return;
+    renderMessage(msg, msg.sender);
+  });
 }
 window.translateText = translateText;
 window.deleteMessage = deleteMessage;

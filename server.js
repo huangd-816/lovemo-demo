@@ -329,25 +329,25 @@ HOW YOU TEXT:
 REPLY HANDLING:
 - If message starts with "replying to when": read carefully and respond to both original and new message
 
-RESPOND in JSON with 2-3 MIXED messages:
+RESPOND in JSON with 2-3 MIXED messages. Example:
 {
   "messages": [
-    { "type": "text", "content": "actual message text — NEVER write 'spoken version' here" },
-    { "type": "voice", "content": "0:02", "textToRead": "casual spoken words with... natural pauses" },
-    { "type": "gif", "query": "specific ${gifStyle} gif search term" }
+    { "type": "text", "content": "omg wait that's actually wild" },
+    { "type": "voice", "content": "0:03", "textToRead": "okay so... I literally cannot believe that happened... like what even" },
+    { "type": "gif", "query": "mind blown reaction" }
   ],
   "memoryUpdates": {
-    "newFact": "one key fact learned about the user (name, location, relationship, job, etc.) or omit",
-    "emotionLog": "user's emotional state or omit",
-    "importantMoment": "a significant event/confession to remember forever or omit"
+    "newFact": "user is in New Zealand",
+    "emotionLog": "excited",
+    "importantMoment": "user told me about their long distance relationship"
   }
 }
 RULES:
 - 2-3 messages, mixed types. Include gif every 2-3 turns.
-- voice textToRead: natural speech with "..." pauses, contractions, NOT robotic
-- text content: the actual message — NEVER placeholder text like "spoken version"
-- NEVER generic or repetitive responses
-- ALWAYS use memoryUpdates when user shares something personal`;
+- voice textToRead: write EXACTLY what you would say out loud — natural speech, "..." pauses, contractions
+- text content: short punchy message, lowercase
+- memoryUpdates: fill in whenever user shares anything personal
+- NEVER repeat the example text above — always write fresh, relevant content`;
 }
 
 // ─── SYNC / CLEAR / GET HISTORY ───────────────
@@ -488,18 +488,20 @@ ${history.slice(-14).map(m=>`${m.role==='user'?'User':'You'}: ${m.content.slice(
     try { parsed = JSON.parse(raw.replace(/^```json/,'').replace(/```$/,'').trim()); }
     catch { parsed = { messages:[{ type:'text', content:'oops brain glitch 👻', textToRead:'oops' }] }; }
 
-    const PLACEHOLDER_RE = /^spoken version|^placeholder|^\[.*\]$/i;
+    const isPlaceholder = s => !s || /^(spoken version|placeholder|\[.*\]|0:\d\d)$/i.test(s.trim());
     for (const msg of parsed.messages||[]) {
       if (msg.type==='gif' && msg.query) {
         const url = await fetchGif(msg.query);
         if (url) { msg.type='image'; msg.content=url; msg.isGif=true; }
         else { msg.type='text'; msg.content="couldn't load that gif 😅"; }
       }
-      // Strip placeholder textToRead — use actual content instead
-      if (msg.textToRead && PLACEHOLDER_RE.test(msg.textToRead.trim())) {
-        msg.textToRead = msg.content || '';
+      // Voice messages must have real spoken text — if placeholder, drop the voice type
+      if (msg.type === 'voice' && isPlaceholder(msg.textToRead)) {
+        msg.type = 'text';
+        msg.content = msg.content && msg.content !== '0:02' ? msg.content : '...';
+        delete msg.textToRead;
       }
-      // Text messages never need a separate textToRead
+      // Text messages never need textToRead
       if (msg.type === 'text') delete msg.textToRead;
     }
 
