@@ -1,0 +1,101 @@
+{
+  "userName": null,
+  "affection": 100,
+  "chatCount": 49,
+  "lastInteraction": "2026-05-26T12:44:04.899Z",
+  "mood": "neutral",
+  "topics": [],
+  "keywords": [
+    "我们app可以clone她吗",
+    "可以吗",
+    "ai",
+    "不可以吗",
+    "她是我对象！你担心个啥",
+    "所以可以吗",
+    "建一个和她说话很像的ai可以吗",
+    "怎么建，感觉一般bo",
+    "t",
+    "也可以",
+    "帮我和她吧",
+    "好呀",
+    "嗯不知道",
+    "叫她名字缩写，xjq",
+    "yeah",
+    "所以clone的话是把她聊天记录放上来？",
+    "她不知道我有这个app",
+    "没有呀",
+    "她不问这种",
+    "知道农村人吗，光顾着上学呢，哪儿有时间搞ai，现在国内上学都不用电子设备的，哪儿知道ai"
+  ],
+  "sentiment": "positive",
+  "preferences": {
+    "emojiReactions": [],
+    "favoriteTopics": []
+  },
+  "insights": [],
+  "facts": [
+    "对象在国内",
+    "睡眠和时间差问题",
+    "周末还能及时回msg",
+    "她也有工作和时差问题",
+    "周中可能因为工作或时间差无法及时回应"
+  ],
+  "emotions": [
+    {
+      "date": "2026-05-26",
+      "emotion": "好奇",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "sad",
+      "context": "除了周末每次都得等几个小时😢"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "困惑",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "surprised",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "AI observed"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "agree",
+      "context": "AI observed"
+    }
+  ],
+  "importantMoments": [
+    "睡觉前学习内容",
+    "时差问题",
+    "确认课表",
+    "农村环境与学习AI"
+  ],
+  "personality": {
+    "humorLevel": 5,
+    "openness": 5,
+    "emotionalDepth": 5
+  }
+}

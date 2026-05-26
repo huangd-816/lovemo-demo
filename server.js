@@ -488,12 +488,19 @@ ${history.slice(-14).map(m=>`${m.role==='user'?'User':'You'}: ${m.content.slice(
     try { parsed = JSON.parse(raw.replace(/^```json/,'').replace(/```$/,'').trim()); }
     catch { parsed = { messages:[{ type:'text', content:'oops brain glitch 👻', textToRead:'oops' }] }; }
 
+    const PLACEHOLDER_RE = /^spoken version|^placeholder|^\[.*\]$/i;
     for (const msg of parsed.messages||[]) {
       if (msg.type==='gif' && msg.query) {
         const url = await fetchGif(msg.query);
         if (url) { msg.type='image'; msg.content=url; msg.isGif=true; }
         else { msg.type='text'; msg.content="couldn't load that gif 😅"; }
       }
+      // Strip placeholder textToRead — use actual content instead
+      if (msg.textToRead && PLACEHOLDER_RE.test(msg.textToRead.trim())) {
+        msg.textToRead = msg.content || '';
+      }
+      // Text messages never need a separate textToRead
+      if (msg.type === 'text') delete msg.textToRead;
     }
 
     if (parsed.memoryUpdates) {
