@@ -178,7 +178,7 @@ function getChatHistory(id) {
 }
 
 function saveChatHistory(id, history) {
-  try { fs.writeFileSync(getHistoryFile(id), JSON.stringify(history.slice(-60), null, 2)); }
+  try { fs.writeFileSync(getHistoryFile(id), JSON.stringify(history.slice(-100), null, 2)); }
   catch(e) { console.error(e); }
 }
 
@@ -204,29 +204,69 @@ function saveMemory(id, m) {
 }
 
 function analyzeMessage(text) {
+  const t = text.toLowerCase();
   const emotionMap = {
-    happy:['happy','great','awesome','love','excited','lol','haha','🎉','😊'],
-    sad:['sad','upset','lonely','cry','miss','😢','😔'],
-    stressed:['stressed','worried','anxious','tired','overwhelmed','ugh'],
-    curious:['how','what','why','?'],
-    passionate:['obsessed','amazing','incredible','love']
+    happy:    ['happy','great','awesome','love','excited','lol','haha','🎉','😊','哈哈','开心','好棒','喜欢'],
+    sad:      ['sad','upset','lonely','cry','miss','😢','😔','伤心','想你','孤独','咕嘟','压抑','难受'],
+    stressed: ['stressed','worried','anxious','tired','overwhelmed','ugh','焦虑','累了','烦'],
+    curious:  ['how','what','why','?','怎么','什么','为什么'],
+    passionate:['obsessed','amazing','incredible','love','太棒','超级','喜欢','爱']
   };
   let mood = 'neutral', sentiment = 'positive';
   const topics = [], facts = [];
+
   for (const [e, ws] of Object.entries(emotionMap)) {
-    if (ws.some(w => text.toLowerCase().includes(w))) {
+    if (ws.some(w => t.includes(w))) {
       mood = e;
       if (['sad','stressed'].includes(e)) sentiment = 'concerned';
     }
   }
-  if (/pet|cat|dog|fish/.test(text.toLowerCase())) topics.push('pets');
-  if (/work|job|boss/.test(text.toLowerCase())) topics.push('work');
-  if (/friend|relationship|date/.test(text.toLowerCase())) topics.push('relationships');
-  if (/music|song|artist/.test(text.toLowerCase())) topics.push('music');
-  const nameMatch = text.match(/my name is ([a-zA-Z]+)/i);
-  if (nameMatch) facts.push(`name is ${nameMatch[1]}`);
-  if (/i (have|own|got) a? ?(cat|dog|pet)/.test(text.toLowerCase())) facts.push('has a pet');
-  return { mood, sentiment, topics, keywords: text.split(' ').slice(0,5), facts };
+
+  // Topics — English + Chinese
+  if (/pet|cat|dog|fish|宠物|猫|狗/.test(t)) topics.push('pets');
+  if (/work|job|boss|职场|工作|上班/.test(t)) topics.push('work');
+  if (/friend|relationship|date|boyfriend|girlfriend|对象|男友|女友|恋爱/.test(t)) topics.push('relationships');
+  if (/music|song|artist|音乐|歌/.test(t)) topics.push('music');
+  if (/school|study|class|exam|university|college|上学|考试|大学|上课/.test(t)) topics.push('school');
+  if (/travel|trip|flight|国外|出国|旅行/.test(t)) topics.push('travel');
+  if (/food|eat|hungry|吃|饭|饿/.test(t)) topics.push('food');
+  if (/game|play|gaming|游戏/.test(t)) topics.push('gaming');
+  if (/time.?zone|时差/.test(t)) topics.push('long-distance');
+
+  // Fact extraction — English
+  const nameEn = text.match(/my name is ([a-zA-Z]+)/i);
+  if (nameEn) facts.push(`name: ${nameEn[1]}`);
+  const ageEn = text.match(/i(?:'m| am) (\d+)(?: years? old)?/i);
+  if (ageEn) facts.push(`age: ${ageEn[1]}`);
+  if (/i(?:'m| am) (?:from|in|living in) ([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)/i.test(text)) {
+    const loc = text.match(/(?:from|in|living in) ([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)/i);
+    if (loc) facts.push(`location: ${loc[1]}`);
+  }
+  if (/(?:my )?(girlfriend|boyfriend|partner|wife|husband|对象|男友|女友)/i.test(t)) {
+    const rel = t.match(/(girlfriend|boyfriend|partner|wife|husband|对象|男友|女友)/);
+    if (rel) facts.push(`has a ${rel[1]}`);
+  }
+  if (/i(?:'m| am) a(?:n)? (student|teacher|engineer|doctor|designer|developer)/i.test(t)) {
+    const job = text.match(/i(?:'m| am) a(?:n)? (\w+)/i);
+    if (job) facts.push(`occupation: ${job[1]}`);
+  }
+  if (/has? a? ?(cat|dog|pet|puppy|kitten)/i.test(t)) facts.push('has a pet');
+
+  // Fact extraction — Chinese
+  if (/在新西兰|在NZ|在纽西兰/.test(text)) facts.push('location: New Zealand');
+  if (/在澳大利亚|在澳洲|在Australia/.test(text)) facts.push('location: Australia');
+  if (/在美国|在英国|在加拿大|在德国|在日本/.test(text)) {
+    const cnLoc = { '美国':'USA','英国':'UK','加拿大':'Canada','德国':'Germany','日本':'Japan' };
+    for (const [cn, en] of Object.entries(cnLoc)) if (text.includes(cn)) facts.push(`location: ${en}`);
+  }
+  if (/时差/.test(text)) {
+    const tdMatch = text.match(/(\d+)\s*小时.*时差/);
+    if (tdMatch) facts.push(`time difference: ${tdMatch[1]}h`);
+  }
+  if (/我对象|我男友|我女友/.test(text)) facts.push('has a partner (mentioned 我对象/男友/女友)');
+
+  const keywords = text.replace(/[^\w一-鿿 ]/g, '').split(/\s+/).filter(k => k.length > 1).slice(0, 6);
+  return { mood, sentiment, topics, keywords, facts };
 }
 
 // ─── PERSONALITY SYSTEM ───────────────────────
@@ -284,24 +324,30 @@ HOW YOU TEXT:
 - NEVER say "I understand", "certainly", "as an AI"
 - max one question per response
 - When user replies to a specific message, acknowledge EXACTLY what they're replying to
+- USE MEMORY: reference facts about the user naturally — their name, location, relationships, interests
 
 REPLY HANDLING:
-- If message starts with "replying to when": read carefully and respond directly to both the original and new message
-- Always show you understand the context
+- If message starts with "replying to when": read carefully and respond to both original and new message
 
 RESPOND in JSON with 2-3 MIXED messages:
 {
   "messages": [
-    { "type": "text", "content": "short lowercase 💬", "textToRead": "spoken version" },
-    { "type": "voice", "content": "0:02", "textToRead": "casual voice note with pauses..." },
-    { "type": "gif", "query": "specific ${gifStyle} gif" }
+    { "type": "text", "content": "actual message text — NEVER write 'spoken version' here" },
+    { "type": "voice", "content": "0:02", "textToRead": "casual spoken words with... natural pauses" },
+    { "type": "gif", "query": "specific ${gifStyle} gif search term" }
   ],
-  "memoryUpdates": { "newFact": "optional", "emotionLog": "optional", "importantMoment": "optional" }
+  "memoryUpdates": {
+    "newFact": "one key fact learned about the user (name, location, relationship, job, etc.) or omit",
+    "emotionLog": "user's emotional state or omit",
+    "importantMoment": "a significant event/confession to remember forever or omit"
+  }
 }
-- 2-3 messages, mixed types
-- gif every 2-3 responses
-- voice textToRead: casual with "..." pauses, NOT robotic
-- NEVER generic responses`;
+RULES:
+- 2-3 messages, mixed types. Include gif every 2-3 turns.
+- voice textToRead: natural speech with "..." pauses, contractions, NOT robotic
+- text content: the actual message — NEVER placeholder text like "spoken version"
+- NEVER generic or repetitive responses
+- ALWAYS use memoryUpdates when user shares something personal`;
 }
 
 // ─── SYNC / CLEAR / GET HISTORY ───────────────
@@ -373,20 +419,27 @@ app.post('/chat', async (req, res) => {
   }
 
   const recentEmotions = (memory.emotions||[]).slice(-5).map(e=>`${e.emotion}(${e.date})`).join(', ');
+  const facts = (memory.facts||[]);
+  // Separate profile facts (name/location/age) from general facts
+  const profileFacts = facts.filter(f => /^(name|age|location|occupation|has a )/.test(f));
+  const otherFacts = facts.filter(f => !/^(name|age|location|occupation|has a )/.test(f));
   const memoryContext = `${timeContext}
-[MEMORY - Chat #${memory.chatCount}]
-Known facts: ${(memory.facts||[]).join(', ')||'learning...'}
-Recent emotions: ${recentEmotions||'none'}
-Important moments: ${(memory.importantMoments||[]).slice(-5).join(' | ')||'none'}
-Mood: ${memory.mood} | Affection: ${memory.affection}/100
-Topics: ${(memory.topics||[]).join(', ')||'learning...'}
-[RECENT ${Math.min(history.length,8)} messages]
-${history.slice(-8).map(m=>`${m.role==='user'?'User':'You'}: ${m.content.slice(0,200)}`).join('\n')}`.trim();
+[USER PROFILE — use these naturally in conversation]
+${profileFacts.length ? profileFacts.join(' | ') : 'Still learning about user'}
+[KNOWN FACTS — ${otherFacts.length} saved]
+${otherFacts.slice(-15).join(' | ')||'none yet'}
+[IMPORTANT MOMENTS]
+${(memory.importantMoments||[]).slice(-8).join(' | ')||'none'}
+[EMOTIONAL HISTORY]
+Recent: ${recentEmotions||'none'} | Current mood: ${memory.mood} | Affection: ${memory.affection}/100
+[CONVERSATION TOPICS] ${(memory.topics||[]).join(', ')||'learning...'}
+[RECENT ${Math.min(history.length,14)} MESSAGES — read carefully for context]
+${history.slice(-14).map(m=>`${m.role==='user'?'User':'You'}: ${m.content.slice(0,300)}`).join('\n')}`.trim();
 
   const systemPrompt = buildSystemPrompt(companion || { name:'0816', personalities:['bff'], vibe:'bestie', language:'en', gender:'female' });
 
   try {
-    const pastMessages = history.slice(-8);
+    const pastMessages = history.slice(-14);
     // Gemini requires history to start with 'user' role
     const allPast = pastMessages.slice(0, -1).map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
