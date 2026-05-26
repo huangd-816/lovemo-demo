@@ -52,7 +52,13 @@ function renderFacePresets() {
         ? `<img class="face-preset-thumb" src="${p.url}" alt="${p.name}" loading="lazy">`
         : `<div class="face-preset-thumb face-preset-auto">✨</div>`}
       <span class="face-preset-name">${p.name}</span>
-    </button>`).join('');
+      <span class="face-preset-vibe">${p.vibe}</span>
+    </button>`).join('') +
+    `<button class="face-preset-btn face-preset-coming-soon" disabled>
+      <div class="face-preset-thumb face-preset-custom-icon">✏️</div>
+      <span class="face-preset-name">Custom</span>
+      <span class="face-preset-vibe">Coming soon</span>
+    </button>`;
 }
 
 function selectFacePreset(btn) {
@@ -370,21 +376,21 @@ let mouthOpen = 0;
 // ─── REALISTIC HUMAN FACE ─────────────────────
 // ─── FACE PRESETS (photorealistic portraits) ──
 const FACE_PRESETS = [
-  { id:'auto', name:'Generated', gender:'any',    url:null },
-  { id:'f1',  name:'Mia',       gender:'female', url:'https://i.pravatar.cc/400?img=47' },
-  { id:'f2',  name:'Sofia',     gender:'female', url:'https://i.pravatar.cc/400?img=9'  },
-  { id:'f3',  name:'Nova',      gender:'female', url:'https://i.pravatar.cc/400?img=5'  },
-  { id:'f4',  name:'Jade',      gender:'female', url:'https://i.pravatar.cc/400?img=25' },
-  { id:'f5',  name:'Aria',      gender:'female', url:'https://i.pravatar.cc/400?img=56' },
-  { id:'f6',  name:'Luna',      gender:'female', url:'https://i.pravatar.cc/400?img=1'  },
-  { id:'m1',  name:'Kai',       gender:'male',   url:'https://i.pravatar.cc/400?img=68' },
-  { id:'m2',  name:'Leo',       gender:'male',   url:'https://i.pravatar.cc/400?img=53' },
-  { id:'m3',  name:'Max',       gender:'male',   url:'https://i.pravatar.cc/400?img=61' },
-  { id:'m4',  name:'Ash',       gender:'male',   url:'https://i.pravatar.cc/400?img=7'  },
-  { id:'m5',  name:'Rio',       gender:'male',   url:'https://i.pravatar.cc/400?img=3'  },
-  { id:'m6',  name:'Zion',      gender:'male',   url:'https://i.pravatar.cc/400?img=69' },
-  { id:'nb1', name:'Avery',     gender:'nonbinary', url:'https://i.pravatar.cc/400?img=15' },
-  { id:'nb2', name:'Sage',      gender:'nonbinary', url:'https://i.pravatar.cc/400?img=30' },
+  { id:'auto', name:'Generated', vibe:'AI Style',      gender:'any',       url:null },
+  { id:'f1',  name:'Mia',       vibe:'K-pop Idol',     gender:'female',    url:'https://i.pravatar.cc/400?img=47' },
+  { id:'f2',  name:'Sofia',     vibe:'Hollywood Star', gender:'female',    url:'https://i.pravatar.cc/400?img=9'  },
+  { id:'f3',  name:'Nova',      vibe:'Supermodel',     gender:'female',    url:'https://i.pravatar.cc/400?img=5'  },
+  { id:'f4',  name:'Jade',      vibe:'Pop Star',       gender:'female',    url:'https://i.pravatar.cc/400?img=25' },
+  { id:'f5',  name:'Aria',      vibe:'Actress',        gender:'female',    url:'https://i.pravatar.cc/400?img=56' },
+  { id:'f6',  name:'Luna',      vibe:'Influencer',     gender:'female',    url:'https://i.pravatar.cc/400?img=1'  },
+  { id:'m1',  name:'Kai',       vibe:'K-pop Star',     gender:'male',      url:'https://i.pravatar.cc/400?img=68' },
+  { id:'m2',  name:'Leo',       vibe:'Hollywood',      gender:'male',      url:'https://i.pravatar.cc/400?img=53' },
+  { id:'m3',  name:'Max',       vibe:'Model',          gender:'male',      url:'https://i.pravatar.cc/400?img=61' },
+  { id:'m4',  name:'Ash',       vibe:'Indie Artist',   gender:'male',      url:'https://i.pravatar.cc/400?img=7'  },
+  { id:'m5',  name:'Rio',       vibe:'Athlete',        gender:'male',      url:'https://i.pravatar.cc/400?img=3'  },
+  { id:'m6',  name:'Zion',      vibe:'CEO Vibes',      gender:'male',      url:'https://i.pravatar.cc/400?img=69' },
+  { id:'nb1', name:'Avery',     vibe:'Alt Star',       gender:'nonbinary', url:'https://i.pravatar.cc/400?img=15' },
+  { id:'nb2', name:'Sage',      vibe:'Dreamy',         gender:'nonbinary', url:'https://i.pravatar.cc/400?img=30' },
 ];
 
 const FACE_STYLES = {
@@ -770,16 +776,29 @@ function updateCallPortrait() {
   const c = getCurrentCompanion();
   const portrait = document.getElementById('callPortrait');
   const canvas = document.getElementById('callFaceCanvas');
+  const videoBg = document.querySelector('.video-bg');
   const preset = FACE_PRESETS.find(p => p.id === (c.facePreset || 'auto'));
   if (preset?.url) {
     const img = document.getElementById('callPortraitImg');
     img.src = preset.url;
-    img.onerror = () => { portrait.style.display = 'none'; canvas.style.display = 'block'; startCallFaceAnimation(); };
+    img.onerror = () => {
+      portrait.style.display = 'none';
+      canvas.style.display = 'block';
+      videoBg?.classList.remove('portrait-mode');
+      videoBg?.style.removeProperty('--portrait-bg');
+      startCallFaceAnimation();
+    };
     portrait.style.display = 'flex';
     canvas.style.display = 'none';
+    if (videoBg) {
+      videoBg.style.setProperty('--portrait-bg', `url('${preset.url}')`);
+      videoBg.classList.add('portrait-mode');
+    }
   } else {
     portrait.style.display = 'none';
     canvas.style.display = 'block';
+    videoBg?.classList.remove('portrait-mode');
+    videoBg?.style.removeProperty('--portrait-bg');
   }
 }
 
@@ -925,6 +944,9 @@ function stopVideoCall() {
   callSpeaking = false;
   document.getElementById('callPortrait')?.classList.remove('speaking');
   stopCallFaceAnimation();
+  const vbg = document.querySelector('.video-bg');
+  vbg?.classList.remove('portrait-mode');
+  vbg?.style.removeProperty('--portrait-bg');
   document.querySelector('.video-self-inner').innerHTML = 'You';
   document.getElementById('videoStatus').textContent = 'Connecting...';
   document.getElementById('callPip').classList.remove('active');

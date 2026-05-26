@@ -253,7 +253,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
 .fullscreen.active { display: flex; }
 
 /* ─── VIDEO CALL ─────────────────────────────── */
-.video-bg { flex: 1; background: linear-gradient(160deg,#060a14 0%,#0a1428 50%,#060810 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; position: relative; }
+.video-bg { flex: 1; background: linear-gradient(160deg,#060a14 0%,#0a1428 50%,#060810 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; position: relative; overflow: hidden; }
+.video-bg.portrait-mode { background: #000; }
+.video-bg.portrait-mode::before {
+  content: '';
+  position: absolute; inset: -10%;
+  background-image: var(--portrait-bg, none);
+  background-size: cover; background-position: center top;
+  filter: blur(28px) brightness(0.3) saturate(1.6);
+  transform: scale(1.1);
+  z-index: 0;
+}
+.video-bg > * { position: relative; z-index: 1; }
 #callFaceCanvas { border-radius: 50%; box-shadow: 0 0 60px rgba(0,132,255,0.3); animation: videoPulse 2.5s ease-in-out infinite; }
 @keyframes videoPulse { 0%,100%{box-shadow:0 0 40px rgba(0,132,255,0.2)} 50%{box-shadow:0 0 80px rgba(0,132,255,0.5)} }
 .video-name { font-size: 24px; font-weight: 600; color: #fff; }
@@ -281,63 +292,83 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
 
 /* ─── CALL PORTRAIT (real face mode) ────────── */
 .call-portrait {
-  width: 260px; height: 260px;
-  border-radius: 50%;
+  width: 230px; height: 310px;
+  border-radius: 24px;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 0 60px rgba(0,132,255,0.3);
-  animation: videoPulse 2.5s ease-in-out infinite;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.7), 0 0 40px rgba(0,132,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  animation: facetimePulse 3s ease-in-out infinite;
   transition: box-shadow 0.3s;
 }
 .call-portrait.speaking {
-  box-shadow: 0 0 80px rgba(0,132,255,0.65), 0 0 120px rgba(0,132,255,0.2);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.7), 0 0 60px rgba(0,132,255,0.55), 0 0 100px rgba(0,132,255,0.15);
   animation: portraitSpeakPulse 0.5s ease-in-out infinite alternate;
 }
+@keyframes facetimePulse {
+  0%,100% { box-shadow: 0 8px 48px rgba(0,0,0,0.7), 0 0 30px rgba(0,132,255,0.15); }
+  50%     { box-shadow: 0 8px 48px rgba(0,0,0,0.7), 0 0 55px rgba(0,132,255,0.35); }
+}
 @keyframes portraitSpeakPulse {
-  from { box-shadow: 0 0 55px rgba(0,132,255,0.5); }
-  to   { box-shadow: 0 0 90px rgba(0,132,255,0.8), 0 0 140px rgba(0,132,255,0.3); }
+  from { box-shadow: 0 8px 48px rgba(0,0,0,0.7), 0 0 45px rgba(0,132,255,0.5); }
+  to   { box-shadow: 0 8px 48px rgba(0,0,0,0.7), 0 0 75px rgba(0,132,255,0.8), 0 0 120px rgba(0,132,255,0.25); }
 }
 #callPortraitImg {
   width: 100%; height: 100%;
-  object-fit: cover; object-position: center 15%;
+  object-fit: cover; object-position: center 10%;
   display: block;
   transition: transform 0.15s ease;
 }
 .call-portrait.speaking #callPortraitImg {
-  animation: portraitBreathe 0.55s ease-in-out infinite alternate;
+  animation: portraitBreathe 0.6s ease-in-out infinite alternate;
 }
 @keyframes portraitBreathe {
   from { transform: scale(1); }
-  to   { transform: scale(1.025) translateY(-4px); }
+  to   { transform: scale(1.02) translateY(-3px); }
 }
 
-/* ─── FACE PRESET PICKER ─────────────────────── */
+/* ─── FACE PRESET PICKER (character bar) ────── */
 .face-preset-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 6px 2px 10px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+.face-preset-grid::-webkit-scrollbar { display: none; }
 .face-preset-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  flex-shrink: 0;
   background: rgba(255,255,255,0.04);
   border: 2px solid transparent;
-  border-radius: 12px; padding: 6px 4px;
+  border-radius: 14px; padding: 8px 6px;
   cursor: pointer; transition: all 0.15s;
+  min-width: 72px;
 }
-.face-preset-btn:hover { background: rgba(255,255,255,0.08); }
-.face-preset-btn.selected { border-color: var(--blue); background: rgba(0,132,255,0.1); }
+.face-preset-btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+.face-preset-btn.selected { border-color: var(--blue); background: rgba(0,132,255,0.12); }
+.face-preset-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
 .face-preset-thumb {
-  width: 54px; height: 54px;
+  width: 68px; height: 68px;
   border-radius: 50%; object-fit: cover; object-position: center 10%;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,132,255,0.15); font-size: 22px;
+  background: rgba(0,132,255,0.15); font-size: 24px;
+  transition: transform 0.15s;
 }
+.face-preset-btn.selected .face-preset-thumb { box-shadow: 0 0 0 2.5px var(--blue); }
 .face-preset-name {
-  font-size: 10px; color: var(--text-muted);
+  font-size: 11px; font-weight: 600; color: #fff;
   text-align: center; line-height: 1.2;
 }
-.face-preset-btn.selected .face-preset-name { color: var(--blue-light); }
+.face-preset-vibe {
+  font-size: 9px; color: var(--blue-light); opacity: 0.75;
+  text-align: center; line-height: 1.2;
+}
+.face-preset-btn.selected .face-preset-name { color: #fff; }
+.face-preset-btn.selected .face-preset-vibe { opacity: 1; }
 
 /* ─── CALL SPEAK ─────────────────────────────── */
 .call-speak-indicator { display: flex; align-items: flex-end; gap: 3px; height: 26px; opacity: 0; transition: opacity 0.3s; }
