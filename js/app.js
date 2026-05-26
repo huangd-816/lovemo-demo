@@ -83,14 +83,109 @@ function renderFacePresets() {
     </button>`).join('') + customHtml;
 }
 
+const SMART_KEYWORDS = {
+  region: {
+    western:    ['western','european','american','british','french','italian','blonde','white'],
+    asian:      ['asian','korean','japanese','chinese','kpop','k-pop','jpop','j-pop','cpop','c-pop','idol','anime','east asian'],
+    southasian: ['indian','south asian','desi','bollywood','hindi','pakistani'],
+    black:      ['black','african','dark skin','melanin','caribbean'],
+    latino:     ['latin','hispanic','mexican','brazilian','colombian','spanish'],
+  },
+  style: {
+    glam:    ['glam','glamorous','celebrity','gorgeous','luxury','fashion','chic','elegant','classy','model','runway','star'],
+    bold:    ['bold','fierce','edgy','rock','punk','badass','powerful','strong','confident','rebel','action'],
+    soft:    ['soft','cute','kawaii','sweet','gentle','innocent','dreamy','romantic','pastel'],
+    natural: ['natural','casual','everyday','simple','clean','fresh','real','approachable'],
+  },
+};
+
+function smartFaceMatch(query) {
+  const q = query.toLowerCase();
+  // Check exact or partial name match in library
+  const nameMatch = FACE_PRESETS.find(p =>
+    p.id !== 'auto' && (p.gender === 'any' || p.gender === modalGender) &&
+    p.name.toLowerCase().includes(q)
+  );
+  if (nameMatch) return { type:'preset', id:nameMatch.id };
+
+  // Check vibe keyword match
+  const vibeMatch = FACE_PRESETS.find(p =>
+    p.id !== 'auto' && (p.gender === 'any' || p.gender === modalGender) &&
+    p.vibe.toLowerCase().split(/\s+/).some(w => q.includes(w) && w.length > 3)
+  );
+  if (vibeMatch) return { type:'preset', id:vibeMatch.id };
+
+  // Score region + style from keywords
+  let region = null, style = null;
+  for (const [r, kws] of Object.entries(SMART_KEYWORDS.region)) {
+    if (kws.some(kw => q.includes(kw))) { region = r; break; }
+  }
+  for (const [s, kws] of Object.entries(SMART_KEYWORDS.style)) {
+    if (kws.some(kw => q.includes(kw))) { style = s; break; }
+  }
+
+  if (region || style) return { type:'studio', region: region||'western', style: style||'natural' };
+  return null;
+}
+
 function onFaceNameInput(val) {
   modalFaceName = val.trim();
-  if (modalFaceName) {
-    modalFacePreset = 'custom';
-  } else if (modalFacePreset === 'custom') {
-    modalFacePreset = 'auto';
+  if (!modalFaceName) {
+    if (modalFacePreset === 'custom') modalFacePreset = 'auto';
+    renderFacePresets();
+    return;
   }
+
+  // Try smart match if 3+ chars
+  if (modalFaceName.length >= 3) {
+    const match = smartFaceMatch(modalFaceName);
+    if (match?.type === 'preset') {
+      modalFacePreset = match.id;
+      modalFaceName = '';
+      renderFacePresets();
+      return;
+    }
+    if (match?.type === 'studio') {
+      faceStudioRegion = match.region;
+      faceStudioStyle = match.style;
+      modalFacePreset = 'custom';
+      modalFaceCustomUrl = getFaceStudioUrl();
+      modalFaceName = '';
+      renderFacePresets();
+      return;
+    }
+  }
+
+  // Fallback: generate face from typed name as seed
+  modalFacePreset = 'custom';
+  const url = `https://i.pravatar.cc/400?u=${encodeURIComponent(modalFaceName.toLowerCase())}`;
+  modalFaceCustomUrl = url;
   renderFacePresets();
+}
+
+function handleFaceUpload(input) {
+  const file = input.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxH = 500, ratio = Math.min(maxH / img.height, maxH / img.width, 1);
+      canvas.width = Math.round(img.width * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      modalFacePreset = 'custom';
+      modalFaceCustomUrl = canvas.toDataURL('image/jpeg', 0.85);
+      modalFaceName = '';
+      const inp = document.getElementById('faceNameInput');
+      if (inp) inp.value = '';
+      renderFacePresets();
+      showToast('Photo uploaded ✨');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 // ─── FACE STUDIO ──────────────────────────────
@@ -478,39 +573,70 @@ let mouthOpen = 0;
 // ─── REALISTIC HUMAN FACE ─────────────────────
 // ─── FACE PRESETS (photorealistic portraits) ──
 const FACE_PRESETS = [
-  { id:'auto', name:'Auto',  vibe:'Match Name',   gender:'any',       langs:[],               url:null },
-  // Western / European female
-  { id:'fw1', name:'Emma',   vibe:'Icon',          gender:'female',    langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=emma' },
-  { id:'fw2', name:'Sofia',  vibe:'Supermodel',    gender:'female',    langs:['en','es','fr'], url:'https://i.pravatar.cc/400?u=sofia-model' },
-  { id:'fw3', name:'Lena',   vibe:'Actress',       gender:'female',    langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=lena-actress' },
-  { id:'fw4', name:'Mia',    vibe:'Pop Star',      gender:'female',    langs:['en','es'],      url:'https://i.pravatar.cc/400?u=mia-pop' },
-  { id:'fw5', name:'Aria',   vibe:'Influencer',    gender:'female',    langs:['en'],           url:'https://i.pravatar.cc/400?u=aria-influencer' },
-  { id:'fw6', name:'Zoe',    vibe:'It Girl',       gender:'female',    langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=zoe-itgirl' },
-  { id:'fw7', name:'Chloe',  vibe:'French Chic',   gender:'female',    langs:['fr','en'],      url:'https://i.pravatar.cc/400?u=chloe-paris' },
-  { id:'fw8', name:'Luna',   vibe:'Runway Star',   gender:'female',    langs:['es','en'],      url:'https://i.pravatar.cc/400?u=luna-runway' },
-  // Asian female
-  { id:'fa1', name:'Yuki',   vibe:'K-pop Idol',    gender:'female',    langs:['ja','ko'],      url:'https://i.pravatar.cc/400?u=yuki-kpop' },
-  { id:'fa2', name:'Mei',    vibe:'C-pop Star',    gender:'female',    langs:['zh'],           url:'https://i.pravatar.cc/400?u=mei-cpop' },
-  { id:'fa3', name:'Sora',   vibe:'J-pop Idol',    gender:'female',    langs:['ja'],           url:'https://i.pravatar.cc/400?u=sora-jpop' },
-  { id:'fa4', name:'Jade',   vibe:'C-drama Star',  gender:'female',    langs:['zh','en'],      url:'https://i.pravatar.cc/400?u=jade-cdrama' },
-  { id:'fa5', name:'Hana',   vibe:'K-drama Star',  gender:'female',    langs:['ko','ja'],      url:'https://i.pravatar.cc/400?u=hana-kdrama' },
-  { id:'fa6', name:'Rin',    vibe:'Anime Real',    gender:'female',    langs:['ja'],           url:'https://i.pravatar.cc/400?u=rin-anime' },
-  // Western / European male
-  { id:'mw1', name:'Kai',    vibe:'Hollywood',     gender:'male',      langs:['en','fr','es'], url:'https://i.pravatar.cc/400?u=kai-hollywood' },
-  { id:'mw2', name:'Leo',    vibe:'Supermodel',    gender:'male',      langs:['en','es'],      url:'https://i.pravatar.cc/400?u=leo-model' },
-  { id:'mw3', name:'Max',    vibe:'Lead Actor',    gender:'male',      langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=max-actor' },
-  { id:'mw4', name:'Zion',   vibe:'CEO Vibes',     gender:'male',      langs:['en'],           url:'https://i.pravatar.cc/400?u=zion-ceo' },
-  { id:'mw5', name:'Luca',   vibe:'Rock Star',     gender:'male',      langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=luca-rock' },
-  { id:'mw6', name:'Marco',  vibe:'Italian Icon',  gender:'male',      langs:['fr','es','en'], url:'https://i.pravatar.cc/400?u=marco-italy' },
-  // Asian male
-  { id:'ma1', name:'Ren',    vibe:'K-pop Star',    gender:'male',      langs:['ko','ja'],      url:'https://i.pravatar.cc/400?u=ren-kpop' },
-  { id:'ma2', name:'Wei',    vibe:'C-pop Star',    gender:'male',      langs:['zh'],           url:'https://i.pravatar.cc/400?u=wei-cpop' },
-  { id:'ma3', name:'Rio',    vibe:'J-pop Star',    gender:'male',      langs:['ja'],           url:'https://i.pravatar.cc/400?u=rio-jpop' },
-  { id:'ma4', name:'Jun',    vibe:'K-drama Lead',  gender:'male',      langs:['ko','zh'],      url:'https://i.pravatar.cc/400?u=jun-kdrama' },
-  // Non-binary
-  { id:'nb1', name:'Avery',  vibe:'Alt Star',      gender:'nonbinary', langs:['en'],           url:'https://i.pravatar.cc/400?u=avery-alt' },
-  { id:'nb2', name:'Sage',   vibe:'Dreamy',        gender:'nonbinary', langs:[],               url:'https://i.pravatar.cc/400?u=sage-dreamy' },
-  { id:'nb3', name:'River',  vibe:'Indie',         gender:'nonbinary', langs:['en'],           url:'https://i.pravatar.cc/400?u=river-indie' },
+  { id:'auto',  name:'Auto',      vibe:'Match Name',    gender:'any',       langs:[],               url:null },
+  // ── Western / European female ──────────────────────────────────────────────
+  { id:'fw1',  name:'Emma',       vibe:'Icon',           gender:'female',    langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=emma' },
+  { id:'fw2',  name:'Sofia',      vibe:'Supermodel',     gender:'female',    langs:['en','es','fr'], url:'https://i.pravatar.cc/400?u=sofia-model' },
+  { id:'fw3',  name:'Lena',       vibe:'Actress',        gender:'female',    langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=lena-actress' },
+  { id:'fw4',  name:'Mia',        vibe:'Pop Star',       gender:'female',    langs:['en','es'],      url:'https://i.pravatar.cc/400?u=mia-pop' },
+  { id:'fw5',  name:'Aria',       vibe:'Influencer',     gender:'female',    langs:['en'],           url:'https://i.pravatar.cc/400?u=aria-influencer' },
+  { id:'fw6',  name:'Zoe',        vibe:'It Girl',        gender:'female',    langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=zoe-itgirl' },
+  { id:'fw7',  name:'Chloe',      vibe:'French Chic',    gender:'female',    langs:['fr','en'],      url:'https://i.pravatar.cc/400?u=chloe-paris' },
+  { id:'fw8',  name:'Luna',       vibe:'Runway Star',    gender:'female',    langs:['es','en'],      url:'https://i.pravatar.cc/400?u=luna-runway' },
+  { id:'fw9',  name:'Victoria',   vibe:'Old Hollywood',  gender:'female',    langs:['en'],           url:'https://i.pravatar.cc/400?u=victoria-oldholly' },
+  { id:'fw10', name:'Scarlett',   vibe:'Action Star',    gender:'female',    langs:['en'],           url:'https://i.pravatar.cc/400?u=scarlett-action' },
+  { id:'fw11', name:'Olivia',     vibe:'British Chic',   gender:'female',    langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=olivia-british' },
+  { id:'fw12', name:'Bella',      vibe:'Italian Icon',   gender:'female',    langs:['fr','es','en'], url:'https://i.pravatar.cc/400?u=bella-italian' },
+  // ── Asian female ──────────────────────────────────────────────────────────
+  { id:'fa1',  name:'Yuki',       vibe:'K-pop Idol',     gender:'female',    langs:['ja','ko'],      url:'https://i.pravatar.cc/400?u=yuki-kpop' },
+  { id:'fa2',  name:'Mei',        vibe:'C-pop Star',     gender:'female',    langs:['zh'],           url:'https://i.pravatar.cc/400?u=mei-cpop' },
+  { id:'fa3',  name:'Sora',       vibe:'J-pop Idol',     gender:'female',    langs:['ja'],           url:'https://i.pravatar.cc/400?u=sora-jpop' },
+  { id:'fa4',  name:'Jade',       vibe:'C-drama Star',   gender:'female',    langs:['zh','en'],      url:'https://i.pravatar.cc/400?u=jade-cdrama' },
+  { id:'fa5',  name:'Hana',       vibe:'K-drama Star',   gender:'female',    langs:['ko','ja'],      url:'https://i.pravatar.cc/400?u=hana-kdrama' },
+  { id:'fa6',  name:'Rin',        vibe:'Anime Real',     gender:'female',    langs:['ja'],           url:'https://i.pravatar.cc/400?u=rin-anime' },
+  { id:'fa7',  name:'Tzuyu',      vibe:'K-pop Queen',    gender:'female',    langs:['ko'],           url:'https://i.pravatar.cc/400?u=tzuyu-kpop' },
+  { id:'fa8',  name:'Xiao',       vibe:'Xianxia Star',   gender:'female',    langs:['zh'],           url:'https://i.pravatar.cc/400?u=xiao-xianxia' },
+  // ── South Asian female ────────────────────────────────────────────────────
+  { id:'sa1',  name:'Priya',      vibe:'Bollywood',      gender:'female',    langs:[],               url:'https://i.pravatar.cc/400?u=priya-bollywood' },
+  { id:'sa2',  name:'Aanya',      vibe:'Desi Glam',      gender:'female',    langs:[],               url:'https://i.pravatar.cc/400?u=aanya-desi' },
+  // ── Black / African female ────────────────────────────────────────────────
+  { id:'ba1',  name:'Amara',      vibe:'Global Star',    gender:'female',    langs:[],               url:'https://i.pravatar.cc/400?u=amara-global' },
+  { id:'ba2',  name:'Zara',       vibe:'Fashion Icon',   gender:'female',    langs:[],               url:'https://i.pravatar.cc/400?u=zara-fashion' },
+  // ── Latino female ─────────────────────────────────────────────────────────
+  { id:'la1',  name:'Valentina',  vibe:'Telenovela',     gender:'female',    langs:['es'],           url:'https://i.pravatar.cc/400?u=valentina-tele' },
+  { id:'la2',  name:'Isabella',   vibe:'Brazilian Model',gender:'female',    langs:['es','en'],      url:'https://i.pravatar.cc/400?u=isabella-brazil' },
+  // ── Character-inspired female ─────────────────────────────────────────────
+  { id:'ca1',  name:'Nova',       vibe:'AI Companion',   gender:'female',    langs:[],               url:'https://i.pravatar.cc/400?u=nova-scifi-ai' },
+  { id:'ca2',  name:'Lily',       vibe:'Sweet Companion',gender:'female',    langs:[],               url:'https://i.pravatar.cc/400?u=lily-companion-ai' },
+  // ── Western / European male ───────────────────────────────────────────────
+  { id:'mw1',  name:'Kai',        vibe:'Hollywood',      gender:'male',      langs:['en','fr','es'], url:'https://i.pravatar.cc/400?u=kai-hollywood' },
+  { id:'mw2',  name:'Leo',        vibe:'Supermodel',     gender:'male',      langs:['en','es'],      url:'https://i.pravatar.cc/400?u=leo-model' },
+  { id:'mw3',  name:'Max',        vibe:'Lead Actor',     gender:'male',      langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=max-actor' },
+  { id:'mw4',  name:'Zion',       vibe:'CEO Vibes',      gender:'male',      langs:['en'],           url:'https://i.pravatar.cc/400?u=zion-ceo' },
+  { id:'mw5',  name:'Luca',       vibe:'Rock Star',      gender:'male',      langs:['en','fr'],      url:'https://i.pravatar.cc/400?u=luca-rock' },
+  { id:'mw6',  name:'Marco',      vibe:'Italian Icon',   gender:'male',      langs:['fr','es','en'], url:'https://i.pravatar.cc/400?u=marco-italy' },
+  { id:'mw7',  name:'James',      vibe:'British Spy',    gender:'male',      langs:['en'],           url:'https://i.pravatar.cc/400?u=james-british' },
+  { id:'mw8',  name:'Ryan',       vibe:'Box Office Lead',gender:'male',      langs:['en'],           url:'https://i.pravatar.cc/400?u=ryan-hollywood' },
+  // ── Asian male ────────────────────────────────────────────────────────────
+  { id:'ma1',  name:'Ren',        vibe:'K-pop Star',     gender:'male',      langs:['ko','ja'],      url:'https://i.pravatar.cc/400?u=ren-kpop' },
+  { id:'ma2',  name:'Wei',        vibe:'C-pop Star',     gender:'male',      langs:['zh'],           url:'https://i.pravatar.cc/400?u=wei-cpop' },
+  { id:'ma3',  name:'Rio',        vibe:'J-pop Star',     gender:'male',      langs:['ja'],           url:'https://i.pravatar.cc/400?u=rio-jpop' },
+  { id:'ma4',  name:'Jun',        vibe:'K-drama Lead',   gender:'male',      langs:['ko','zh'],      url:'https://i.pravatar.cc/400?u=jun-kdrama' },
+  { id:'ma5',  name:'Xian',       vibe:'C-drama Lead',   gender:'male',      langs:['zh'],           url:'https://i.pravatar.cc/400?u=xian-cdrama' },
+  // ── South Asian male ──────────────────────────────────────────────────────
+  { id:'sm1',  name:'Arjun',      vibe:'Bollywood Star', gender:'male',      langs:[],               url:'https://i.pravatar.cc/400?u=arjun-bollywood' },
+  // ── Black / African male ──────────────────────────────────────────────────
+  { id:'bm1',  name:'Kofi',       vibe:'Global Star',    gender:'male',      langs:[],               url:'https://i.pravatar.cc/400?u=kofi-global' },
+  { id:'bm2',  name:'Darius',     vibe:'R&B Icon',       gender:'male',      langs:[],               url:'https://i.pravatar.cc/400?u=darius-rnb' },
+  // ── Latino male ───────────────────────────────────────────────────────────
+  { id:'lm1',  name:'Alejandro',  vibe:'Telenovela',     gender:'male',      langs:['es'],           url:'https://i.pravatar.cc/400?u=alejandro-tele' },
+  // ── Character-inspired male ───────────────────────────────────────────────
+  { id:'cm1',  name:'Daemon',     vibe:'Dark & Mysterious',gender:'male',    langs:[],               url:'https://i.pravatar.cc/400?u=daemon-mystery' },
+  // ── Non-binary ────────────────────────────────────────────────────────────
+  { id:'nb1',  name:'Avery',      vibe:'Alt Star',       gender:'nonbinary', langs:['en'],           url:'https://i.pravatar.cc/400?u=avery-alt' },
+  { id:'nb2',  name:'Sage',       vibe:'Dreamy',         gender:'nonbinary', langs:[],               url:'https://i.pravatar.cc/400?u=sage-dreamy' },
+  { id:'nb3',  name:'River',      vibe:'Indie',          gender:'nonbinary', langs:['en'],           url:'https://i.pravatar.cc/400?u=river-indie' },
+  { id:'nb4',  name:'Aether',     vibe:'Ethereal AI',    gender:'nonbinary', langs:[],               url:'https://i.pravatar.cc/400?u=aether-ethereal' },
 ];
 
 const FACE_STYLES = {
@@ -1959,3 +2085,4 @@ window.setFaceRegion = setFaceRegion;
 window.setFaceStudioStyle = setFaceStudioStyle;
 window.toggleFaceStudio = toggleFaceStudio;
 window.applyFaceStudio = applyFaceStudio;
+window.handleFaceUpload = handleFaceUpload;

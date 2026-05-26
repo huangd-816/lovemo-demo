@@ -328,103 +328,107 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
   to   { transform: scale(1.02) translateY(-3px); }
 }
 
-/* ─── FACE NAME INPUT ────────────────────────── */
+/* ─── FACE NAME INPUT (smart search) ────────── */
 .face-name-input {
   width: 100%; box-sizing: border-box;
-  background: rgba(255,255,255,0.06);
-  border: 1.5px solid rgba(255,255,255,0.12);
-  border-radius: 10px; padding: 9px 12px;
-  color: #fff; font-size: 14px; margin-bottom: 8px;
-  outline: none; transition: border-color 0.2s;
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px; padding: 10px 16px;
+  color: #fff; font-size: 13px; margin-bottom: 10px;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
 }
-.face-name-input:focus { border-color: var(--blue); }
-.face-name-input::placeholder { color: var(--text-muted); }
+.face-name-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,132,255,0.15); }
+.face-name-input::placeholder { color: rgba(255,255,255,0.28); }
 
-/* ─── FACE PRESET PICKER (character bar) ────── */
+/* ─── FACE PRESET PICKER (TikTok character bar) */
 .face-preset-grid {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  gap: 10px;
-  padding: 6px 2px 10px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  display: flex; flex-direction: row;
+  overflow-x: auto; gap: 8px;
+  padding: 4px 2px 10px;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
 }
 .face-preset-grid::-webkit-scrollbar { display: none; }
 .face-preset-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  flex-shrink: 0;
-  background: rgba(255,255,255,0.04);
-  border: 2px solid transparent;
-  border-radius: 14px; padding: 8px 6px;
-  cursor: pointer; transition: all 0.15s;
-  min-width: 72px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex-shrink: 0; min-width: 70px;
+  background: #111;
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 8px 6px 6px;
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), border-color 0.15s, background 0.15s;
 }
-.face-preset-btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
-.face-preset-btn.selected { border-color: var(--blue); background: rgba(0,132,255,0.12); }
-.face-preset-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+.face-preset-btn:hover { transform: scale(1.05); border-color: rgba(255,255,255,0.2); background: #1a1a1a; }
+.face-preset-btn.selected { border-color: var(--blue); background: rgba(0,132,255,0.14); }
+.face-preset-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
 .face-preset-thumb {
-  width: 68px; height: 68px;
+  width: 66px; height: 66px;
   border-radius: 50%; object-fit: cover; object-position: center 10%;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,132,255,0.15); font-size: 24px;
-  transition: transform 0.15s;
+  background: #222; font-size: 22px;
 }
-.face-preset-btn.selected .face-preset-thumb { box-shadow: 0 0 0 2.5px var(--blue); }
-.face-preset-name {
-  font-size: 11px; font-weight: 600; color: #fff;
-  text-align: center; line-height: 1.2;
-}
-.face-preset-vibe {
-  font-size: 9px; color: var(--blue-light); opacity: 0.75;
-  text-align: center; line-height: 1.2;
-}
-.face-preset-btn.selected .face-preset-name { color: #fff; }
-.face-preset-btn.selected .face-preset-vibe { opacity: 1; }
+.face-preset-btn.selected .face-preset-thumb { box-shadow: 0 0 0 2.5px var(--blue), 0 0 12px rgba(0,132,255,0.3); }
+.face-preset-name { font-size: 11px; font-weight: 700; color: #fff; text-align: center; line-height: 1.2; }
+.face-preset-vibe { font-size: 9px; color: rgba(255,255,255,0.38); text-align: center; line-height: 1.2; }
+.face-preset-btn.selected .face-preset-vibe { color: var(--blue-light); opacity: 1; }
 
-/* ─── FACE STUDIO BUILDER ────────────────────── */
+/* ─── FACE STUDIO BUILDER (TikTok style) ─────── */
 .face-build-toggle {
-  width: 100%; margin-top: 8px;
-  background: rgba(255,255,255,0.04);
-  border: 1.5px dashed rgba(255,255,255,0.18);
-  border-radius: 10px; padding: 9px;
-  color: var(--text-muted); font-size: 13px;
-  cursor: pointer; transition: all 0.2s;
+  width: 100%; margin-top: 6px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px; padding: 8px 16px;
+  color: rgba(255,255,255,0.45); font-size: 12px; font-weight: 500;
+  cursor: pointer; letter-spacing: 0.02em;
+  transition: border-color 0.15s, color 0.15s;
 }
-.face-build-toggle:hover { border-color: var(--blue); color: var(--blue-light); background: rgba(0,132,255,0.06); }
+.face-build-toggle:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
 .face-studio {
   max-height: 0; overflow: hidden;
-  transition: max-height 0.35s ease, opacity 0.3s;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
   opacity: 0; pointer-events: none;
 }
-.face-studio.open { max-height: 480px; opacity: 1; pointer-events: all; }
+.face-studio.open { max-height: 520px; opacity: 1; pointer-events: all; }
 .face-studio-preview {
-  width: 100px; height: 130px;
-  border-radius: 16px; object-fit: cover; object-position: center 10%;
-  display: block; margin: 12px auto 8px;
-  border: 2px solid rgba(0,132,255,0.4);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  background: rgba(255,255,255,0.05);
+  width: 88px; height: 116px;
+  border-radius: 18px; object-fit: cover; object-position: center 10%;
+  display: block; margin: 14px auto 10px;
+  border: 2px solid rgba(0,132,255,0.5);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+  background: #111;
 }
-.fs-group-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 10px 0 6px; }
+.fs-group-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em; margin: 12px 0 6px; }
 .fs-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 2px; }
 .fs-region-btn, .fs-style-btn {
-  background: rgba(255,255,255,0.05);
-  border: 1.5px solid rgba(255,255,255,0.12);
-  border-radius: 20px; padding: 5px 10px;
-  color: var(--text-muted); font-size: 12px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px; padding: 6px 13px;
+  color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 500;
   cursor: pointer; transition: all 0.15s;
 }
-.fs-region-btn:hover, .fs-style-btn:hover { border-color: var(--blue); color: var(--blue-light); }
-.fs-region-btn.selected, .fs-style-btn.selected { border-color: var(--blue); background: rgba(0,132,255,0.15); color: #fff; }
-.fs-apply-btn {
-  width: 100%; margin-top: 12px;
-  background: linear-gradient(135deg, var(--blue), #0055cc);
-  border: none; border-radius: 12px; padding: 11px;
-  color: #fff; font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: opacity 0.2s;
+.fs-region-btn:hover, .fs-style-btn:hover { background: #252525; color: #fff; border-color: rgba(255,255,255,0.25); }
+.fs-region-btn.selected, .fs-style-btn.selected {
+  background: #fff; border-color: #fff;
+  color: #000; font-weight: 700;
 }
-.fs-apply-btn:hover { opacity: 0.88; }
+.fs-upload-row { margin-top: 12px; }
+.fs-upload-btn {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 10px;
+  color: rgba(255,255,255,0.6); font-size: 13px;
+  cursor: pointer; transition: all 0.15s;
+}
+.fs-upload-btn:hover { background: #222; color: #fff; border-color: rgba(255,255,255,0.3); }
+.fs-apply-btn {
+  width: 100%; margin-top: 10px;
+  background: #fff;
+  border: none; border-radius: 999px; padding: 12px;
+  color: #000; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s, transform 0.15s;
+  letter-spacing: 0.01em;
+}
+.fs-apply-btn:hover { opacity: 0.88; transform: scale(1.01); }
 
 /* ─── CALL SPEAK ─────────────────────────────── */
 .call-speak-indicator { display: flex; align-items: flex-end; gap: 3px; height: 26px; opacity: 0; transition: opacity 0.3s; }

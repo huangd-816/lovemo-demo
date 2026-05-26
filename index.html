@@ -258,7 +258,7 @@
         <button class="voice-btn" data-voice="deep" onclick="selectVoice(this)">🌊 Deep</button>
       </div>
       <div class="modal-label" style="margin-top:16px">Face</div>
-      <input type="text" id="faceNameInput" class="face-name-input" placeholder="Type a name for a unique face..." oninput="onFaceNameInput(this.value)" autocomplete="off" maxlength="24">
+      <input type="text" id="faceNameInput" class="face-name-input" placeholder='Search: name, "korean idol", "bollywood glam"...' oninput="onFaceNameInput(this.value)" autocomplete="off" maxlength="40">
       <div class="face-preset-grid" id="facePresetGrid"></div>
       <button class="face-build-toggle" onclick="toggleFaceStudio()">✏️ Build a face</button>
       <div class="face-studio" id="faceStudio">
@@ -278,6 +278,10 @@
           <button class="fs-style-btn" data-fstyle="bold" onclick="setFaceStudioStyle(this)">🔥 Bold</button>
           <button class="fs-style-btn" data-fstyle="soft" onclick="setFaceStudioStyle(this)">🌸 Soft</button>
         </div>
+        <div class="fs-upload-row">
+          <button class="fs-upload-btn" onclick="document.getElementById('faceUploadInput').click()">📷 Upload your photo</button>
+          <input type="file" id="faceUploadInput" accept="image/*" style="display:none" onchange="handleFaceUpload(this)">
+        </div>
         <button class="fs-apply-btn" onclick="applyFaceStudio()">Use this face →</button>
       </div>
       <button class="modal-create-btn" onclick="createCompanion()">✨ Create</button>
@@ -286,6 +290,6 @@
   </div>
 </div>
 
-<script src="js/app.js?v=6.4"></script>
+<script src="js/app.js?v=6.5"></script>
 </body>
 </html>
