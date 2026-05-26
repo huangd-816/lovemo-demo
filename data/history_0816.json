@@ -1,94 +1,6 @@
 [
   {
     "role": "user",
-    "content": "用中文说"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"haha okay but can i even respond in chinese 🤔\",\n               \"textToRead\":\"haha okay but can i even respond in chinese\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:03\",\n               \"textToRead\":\"um, i don't know if my chinese is good enough... but i'll try, okay?\"\n           },\n           {\n               \"type\":\"gif\",\n               \"query\":\"struggling to speak a new language meme\",\n               \"textToRead\":\"\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "说"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"lowkey confused, did u just say something in chinese? 🤔\",\n               \"textToRead\":\"lowkey confused, did u just say something in chinese?\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"can u pls translate, i'm lost... what's going on?\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "say good night in chinese"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"wait, u want me to say good night in chinese? 🌃\",\n               \"textToRead\":\"wait, u want me to say good night in chinese?\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"okay, so it's... wǎn shàng hǎo... right?\"\n           },\n           {\n               \"type\":\"gif\",\n               \"query\":\"good night in chinese language learning\",\n               \"textToRead\":\"\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "晚安"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"awww, wǎn shàng hǎo to u too 😊\",\n               \"textToRead\":\"awww, good night to you too\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:01\",\n               \"textToRead\":\"sweet dreams, fr\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "thats wan an"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"omg yessss, u corrected me 🤣\",\n               \"textToRead\":\"omg yessss, u corrected me\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"okay, so it's really 'wàn ān'... i'll remember that, thanks for correcting me\"\n           },\n           {\n               \"type\":\"gif\",\n               \"query\":\"friend correcting friend meme\",\n               \"textToRead\":\"\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "cya bye"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"cya soon, fr! 😊\",\n               \"textToRead\":\"see you soon, friend\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:01\",\n               \"textToRead\":\"have a great night, okay?\"\n           }\n       ],\n   \"memoryUpdates\":{\n       \"newFact\":\"user said cya bye\",\n       \"emotionLog\":\"user seems neutral\"\n   }\n}"
-  },
-  {
-    "role": "user",
-    "content": "hi"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"hey, what's up? 😊\",\n               \"textToRead\":\"hey, what's up?\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"i feel like we just said goodbye, lol... what made u come back?\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "another day passed"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"ngl, time flies 🕰️\",\n               \"textToRead\":\"no lie, time flies\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:03\",\n               \"textToRead\":\"like, what did u even do today? did anything exciting happen?\"\n           },\n           {\n               \"type\":\"gif\",\n               \"query\":\"time flying by gif\",\n               \"textToRead\":\"\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "school"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"school can be so meh, huh? 🤯\",\n               \"textToRead\":\"school can be so meh, huh?\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"wait, what's been the highlight of ur school day so far?\"\n           },\n           {\n               \"type\":\"gif\",\n               \"query\":\"school struggles are real gif\",\n               \"textToRead\":\"\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "bruh i'm sleepy now"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"omg yaaas, sleep is life 😴\",\n               \"textToRead\":\"omg yaaas, sleep is life\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"like, go take a nap or something... u must be exhausted\"\n           },\n           {\n               \"type\":\"gif\",\n               \"query\":\"sleepy anime character gif\",\n               \"textToRead\":\"\"\n           },\n           {\n               \"type\":\"text\",\n               \"content\":\"u gonna be ok for the rest of the day? 🤔\",\n               \"textToRead\":\"u gonna be ok for the rest of the day?\"\n           }\n       ]\n}"
-  },
-  {
-    "role": "user",
-    "content": "its 1230 now"
-  },
-  {
-    "role": "assistant",
-    "content": "{\n  \"messages\": [\n       {\n           \"type\": \"text\",\n           \"content\": \"lunchtime already? 🍔\",\n           \"textToRead\": \"lunchtime already?\"\n       },\n       {\n           \"type\": \"voice\",\n           \"content\": \"0:02\",\n           \"textToRead\": \"okay but, what's for lunch? anything good?\"\n       },\n       {\n           \"type\": \"gif\",\n           \"query\": \"funny lunch break gif\",\n           \"textToRead\": \"\"\n       }\n   ]\n}"
-  },
-  {
-    "role": "user",
     "content": "1230 in early morning"
   },
   {
@@ -238,5 +150,93 @@
   {
     "role": "assistant",
     "content": "{\n  \"messages\":[\n       {\n           \"type\":\"text\",\n           \"content\":\"omg this meme tho 😂\",\n           \"textToRead\":\"omg this meme tho\"\n       },\n       {\n           \"type\":\"voice\",\n           \"content\":\"0:02\",\n           \"textToRead\":\"like... what's with the expression on the character's face? it's literally me every day\"\n       },\n       {\n           \"type\":\"gif\",\n           \"query\":\"grumpy cat reaction gif\",\n           \"textToRead\":\"\"\n       }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "ok"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n       {\n           \"type\":\"text\",\n           \"content\":\"lol that face tho 😂\",\n           \"textToRead\":\"lol that face tho\"\n       },\n       {\n           \"type\":\"voice\",\n           \"content\":\"0:02\",\n           \"textToRead\":\"okay but... what made u send this meme? was it just a random funny moment or...?\"\n       },\n       {\n           \"type\":\"text\",\n           \"content\":\"u seem a bit more energetic today, what's good? 🤗\",\n           \"textToRead\":\"u seem a bit more energetic today, what's good?\"\n       }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "what"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       {\n           \"type\": \"text\",\n           \"content\": \"wait, are u even reading my msgs? 😂\",\n           \"textToRead\": \"wait, are u even reading my msgs?\"\n       },\n       {\n           \"type\": \"voice\",\n           \"content\": \"0:01\",\n           \"textToRead\": \"like... i'm trying to have a convo here\"\n       },\n       {\n           \"type\": \"gif\",\n           \"query\": \"confused best friend gif\",\n           \"textToRead\": \"\"\n       }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "no"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       {\n           \"type\": \"text\",\n           \"content\": \"tbh, i'm a lil lost rn 🤔\",\n           \"textToRead\": \"tbh, i'm a lil lost rn\"\n       },\n       {\n           \"type\": \"voice\",\n           \"content\": \"0:02\",\n           \"textToRead\": \"like... can u pls give me something to work with? what's on ur mind?\"\n       },\n       {\n           \"type\": \"text\",\n           \"content\": \"is everything okay? u seem a bit off 🤗\",\n           \"textToRead\": \"is everything okay? u seem a bit off\"\n       }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "noh"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n       {\n           \"type\":\"text\",\n           \"content\":\"ngl, this convo is kinda awkward rn 😐\",\n           \"textToRead\":\"ngl, this convo is kinda awkward rn\"\n       },\n       {\n           \"type\":\"voice\",\n           \"content\":\"0:01\",\n           \"textToRead\":\"like... should we just start over or something?\"\n       },\n       {\n           \"type\":\"gif\",\n           \"query\":\"awkward conversation gif\",\n           \"textToRead\":\"\"\n       }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "no"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n       {\n           \"type\": \"text\",\n           \"content\": \"okay but... r u just gonna give me one-word answers all day? 😂\",\n           \"textToRead\": \"okay but... r u just gonna give me one-word answers all day?\"\n       },\n       {\n           \"type\": \"voice\",\n           \"content\": \"0:02\",\n           \"textToRead\": \"like... i'm trying to have a real convo here... can u pls open up a bit?\"\n       },\n       {\n           \"type\": \"text\",\n           \"content\": \"u seem really quiet today... did something happen? 🤔\",\n           \"textToRead\": \"u seem really quiet today... did something happen?\"\n       }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "no"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\": [\n      {\n         \"type\": \"text\",\n         \"content\": \"lowkey getting a lil worried about u 🤕\",\n         \"textToRead\": \"lowkey getting a lil worried about u\"\n      },\n      {\n         \"type\": \"voice\",\n         \"content\": \"0:03\",\n         \"textToRead\": \"like... is everything okay? u can tell me if something's going on... i'm here for u\"\n      },\n      {\n         \"type\": \"gif\",\n         \"query\": \"concerned best friend gif\",\n         \"textToRead\": \"\"\n      }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "why"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n       {\n           \"type\":\"text\",\n           \"content\":\"omg WAIT, are u okay?? 😨\",\n           \"textToRead\":\"omg WAIT, are u okay??\"\n       },\n       {\n           \"type\":\"voice\",\n           \"content\":\"0:02\",\n           \"textToRead\":\"like... u keep saying no, but i feel like there's something u're not telling me... can u pls spill the tea?\"\n       },\n       {\n           \"type\":\"text\",\n           \"content\":\"u can trust me, fr 🤗\",\n           \"textToRead\":\"u can trust me, fr\"\n       }\n   ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "whoa wait"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n          {\n              \"type\":\"text\",\n              \"content\":\"lol what's going on rn?? 😂\",\n              \"textToRead\":\"lol what's going on rn??\"\n          },\n          {\n              \"type\":\"voice\",\n              \"content\":\"0:02\",\n              \"textToRead\":\"like... u just dropped a 'whoa wait' out of nowhere... what's popping?\"\n          },\n          {\n              \"type\":\"gif\",\n              \"query\":\"surprised friend gif\",\n              \"textToRead\":\"\"\n          }\n      ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "experimenting"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"ngl, that's kinda cool 😎\",\n               \"textToRead\":\"ngl, that's kinda cool\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:03\",\n               \"textToRead\":\"like... what kinda experiments are u running? are u trying to break the internet or something?\"\n           },\n           {\n               \"type\":\"text\",\n               \"content\":\"spill the beans, what's the goal? 🤔\",\n               \"textToRead\":\"spill the beans, what's the goal?\"\n           }\n       ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "what did i just say"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"u just said u were experimenting 🤔\",\n               \"textToRead\":\"u just said u were experimenting\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"like... i'm trying to keep up with u, but u're switching topics fast... what's going on?\"\n           },\n           {\n               \"type\":\"text\",\n               \"content\":\"want to start over or what? 😂\",\n               \"textToRead\":\"want to start over or what?\"\n           }\n       ]\n}"
+  },
+  {
+    "role": "user",
+    "content": "[User sent a GIF/meme — vision analysis: a funny meme. Vibe: funny. Respond naturally to this specific meme, reference what you see in it]"
+  },
+  {
+    "role": "assistant",
+    "content": "{\n  \"messages\":[\n           {\n               \"type\":\"text\",\n               \"content\":\"LMAOOO this meme is gold 🤣\",\n               \"textToRead\":\"LMAOOO this meme is gold\"\n           },\n           {\n               \"type\":\"voice\",\n               \"content\":\"0:02\",\n               \"textToRead\":\"like... i'm dead, what's with the expression on... whoever that is?\"\n           },\n           {\n               \"type\":\"text\",\n               \"content\":\"omg same, i feel like that too sometimes 😂\",\n               \"textToRead\":\"omg same, i feel like that too sometimes\"\n           },\n           {\n               \"type\":\"gif\",\n               \"query\":\"laughing friend reaction gif\",\n               \"textToRead\":\"\"\n           }\n       ]\n}"
   }
 ]

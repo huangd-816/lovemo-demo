@@ -1,23 +1,13 @@
 {
   "userName": null,
   "affection": 100,
-  "chatCount": 54,
-  "lastInteraction": "2026-05-25T21:52:35.557Z",
+  "chatCount": 65,
+  "lastInteraction": "2026-05-25T22:48:05.298Z",
   "mood": "curious",
   "topics": [
     "pets"
   ],
   "keywords": [
-    "wait",
-    "theres",
-    "no",
-    "chat",
-    "history",
-    "here",
-    "i'm",
-    "add",
-    "them",
-    "did",
     "i",
     "said",
     "before",
@@ -27,7 +17,17 @@
     "sent",
     "a",
     "GIF/meme",
-    "—"
+    "—",
+    "ok",
+    "what",
+    "noh",
+    "no",
+    "why",
+    "whoa",
+    "wait",
+    "experimenting",
+    "just",
+    "say"
   ],
   "sentiment": "positive",
   "preferences": {
@@ -96,6 +96,26 @@
       "date": "2026-05-25",
       "emotion": "curious",
       "context": "what did i said before"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "[User sent a GIF/meme — vision analysis: a funny m"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "what"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "why"
+    },
+    {
+      "date": "2026-05-25",
+      "emotion": "curious",
+      "context": "what did i just say"
     },
     {
       "date": "2026-05-25",

@@ -1,5 +1,69 @@
 console.log("lovemo v6.0 - Multi-Companion");
 
+// ─── AVATAR COLORS (emoji-palette) ───────────
+// Uses canvas to extract real dominant color from any emoji
+const _emojiColorCache = {};
+
+function getEmojiColor(emoji) {
+  if (_emojiColorCache[emoji]) return _emojiColorCache[emoji];
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64; canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.font = '52px Apple Color Emoji, Segoe UI Emoji, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, 32, 32);
+    const pixels = ctx.getImageData(0, 0, 64, 64).data;
+
+    // Pick most saturated non-outline color
+    // Apple emoji outlines are typically yellow-orange (#F4C430 range)
+    let bestScore = -1, bestR = 0, bestG = 0, bestB = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+      const [r, g, b, a] = [pixels[i], pixels[i+1], pixels[i+2], pixels[i+3]];
+      if (a < 150) continue;
+      const brightness = (r + g + b) / 3;
+      if (brightness > 235 || brightness < 20) continue;
+
+      // Skip Apple emoji yellow outline (r>200, g>150, b<80)
+      if (r > 200 && g > 140 && b < 100) continue;
+      // Skip grey/neutral
+      const max = Math.max(r,g,b), min = Math.min(r,g,b);
+      const sat = max === 0 ? 0 : (max-min)/max;
+      if (sat < 0.2) continue;
+
+      // Score by saturation + uniqueness of hue
+      const score = sat * 100 + (max - min);
+      if (score > bestScore) {
+        bestScore = score; bestR = r; bestG = g; bestB = b;
+      }
+    }
+
+    if (bestScore < 0) return '#0084FF';
+    const best = `${bestR},${bestG},${bestB}`;
+
+    const [r, g, b] = best.split(',').map(Number);
+    const hex = `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+    _emojiColorCache[emoji] = hex;
+    return hex;
+  } catch(e) { return '#0084FF'; }
+}
+
+function avatarColor(emoji) {
+  return getEmojiColor(emoji);
+}
+
+function avatarGradient(emoji) {
+  const hex = getEmojiColor(emoji);
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  const light = `rgb(${Math.min(255,r+60)},${Math.min(255,g+60)},${Math.min(255,b+60)})`;
+  const dark  = `rgb(${Math.round(r*0.5)},${Math.round(g*0.5)},${Math.round(b*0.5)})`;
+  return `linear-gradient(135deg, ${light}, ${dark})`;
+}
+
+
 // ─── COMPANIONS ────────────────────────────────
 let companions = JSON.parse(localStorage.getItem('lovemo_companions') || 'null');
 if (!companions) {
@@ -183,7 +247,7 @@ function renderSidebar(filter = '') {
     const time = c.lastTime ? formatTime(c.lastTime) : '';
     const personalities = (c.personalities || []).slice(0, 2).join(', ');
     item.innerHTML = `
-      <div class="companion-avatar">${c.avatar}</div>
+      <div class="companion-avatar" style="background:${avatarGradient(c.avatar)}">${c.avatar}</div>
       <div class="companion-info">
         <div class="companion-row">
           <span class="companion-name">${c.name}</span>
@@ -221,7 +285,7 @@ function switchCompanion(id) {
   document.getElementById('topbarEmoji').textContent = c.avatar;
   document.getElementById('topbarName').textContent = c.name;
   document.getElementById('topbarAvatar').style.background =
-    `linear-gradient(135deg, ${avatarColor(c.avatar)} 0%, #0055cc 100%)`;
+avatarGradient(c.avatar);
 
   // Restore from memory cache or localStorage
   if (chatCaches[id]) {
@@ -239,11 +303,6 @@ function switchCompanion(id) {
   document.getElementById('chatPanel').classList.add('panel-active');
 
   scrollToBottom();
-}
-
-function avatarColor(emoji) {
-  const colors = { '👻': '#0084FF', '🐱': '#FF9500', '🦊': '#FF6B35', '🐺': '#636366', '🐰': '#FF2D55', '🐸': '#30D158', '🦋': '#BF5AF2', '🌙': '#5E5CE6', '⭐': '#FFD60A', '🔥': '#FF3B30', '💎': '#32ADE6', '🌸': '#FF6B9D' };
-  return colors[emoji] || '#0084FF';
 }
 
 function showSidebar() {
@@ -701,15 +760,20 @@ function hideTyping() { document.getElementById('typingIndicator')?.remove(); }
 // ─── REPLY ────────────────────────────────────
 let replyingTo = null;
 function setReply(text, sender) {
-  if (!text?.trim()) return;
-  replyingTo = { text: text.trim(), sender };
-  const bar = document.getElementById('replyBar');
-  const barText = document.getElementById('replyBarText');
-  if (bar) bar.classList.add('active');
-  if (barText) barText.textContent = (sender==='user'?'You':'AI') + ': ' + text.slice(0,60);
-  document.getElementById('input')?.focus();
+  replyingTo = { text, sender };
+  document.getElementById('replyBar').classList.add('active');
+  document.getElementById('replyBarText').textContent = (sender==='user'?'You':'AI') + ': ' + text.slice(0,60);
+  document.getElementById('input').focus();
 }
-function cancelReply() { replyingTo = null; document.getElementById('replyBar').classList.remove('active'); }
+function cancelReply() {
+  replyingTo = null;
+  window._editMode = false;
+  window._editingRow = null;
+  const bar = document.getElementById('replyBar');
+  bar.classList.remove('active', 'edit-mode');
+  document.getElementById('replyBarText').textContent = '';
+  document.getElementById('input').value = '';
+}
 
 // ─── SCROLL ───────────────────────────────────
 function scrollToBottom() {
@@ -801,6 +865,49 @@ function createGifActions(gifUrl, title) {
   return actions;
 }
 
+
+// ─── CUSTOM CONFIRM ───────────────────────────
+function showConfirm(message, onConfirm) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;';
+  overlay.innerHTML = `
+    <div style="background:#1a1a2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;width:280px;text-align:center;">
+      <div style="font-size:15px;color:#f0f0f0;margin-bottom:20px;">${message}</div>
+      <div style="display:flex;gap:10px;">
+        <button id="confirmCancel" style="flex:1;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#f0f0f0;cursor:pointer;font-size:14px;">Cancel</button>
+        <button id="confirmOk" style="flex:1;padding:10px;border-radius:12px;border:none;background:#ff3b30;color:#fff;cursor:pointer;font-size:14px;font-weight:600;">Delete</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#confirmCancel').onclick = () => overlay.remove();
+  overlay.querySelector('#confirmOk').onclick = () => { overlay.remove(); onConfirm(); };
+}
+
+
+// ─── SYNC HISTORY TO SERVER ───────────────────
+async function syncHistoryToServer() {
+  // Rebuild history from visible DOM messages
+  const chat = document.getElementById('chat');
+  const messages = [];
+  chat.querySelectorAll('.msg-row').forEach(row => {
+    const sender = row.classList.contains('user') ? 'user' : 'assistant';
+    const textEl = row.querySelector('.translate-content') || row.querySelector('.msg-text-inner');
+    const voiceEl = row.querySelector('.voice-text');
+    if (textEl?.textContent?.trim()) {
+      messages.push({ role: sender, content: textEl.textContent.trim() });
+    } else if (voiceEl?.textContent?.trim()) {
+      messages.push({ role: sender, content: voiceEl.textContent.trim() });
+    }
+  });
+  try {
+    await fetch('/sync-history', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ companionId: currentId, messages })
+    });
+  } catch(e) { console.warn('Sync failed:', e); }
+}
+
 // ─── RENDER MESSAGE ───────────────────────────
 function renderMessage(item, sender) {
   const chat = document.getElementById('chat');
@@ -808,12 +915,23 @@ function renderMessage(item, sender) {
 
   if (item.type === 'text') {
     const c = getCurrentCompanion();
-    const showTranslate = sender === 'user' && c.language !== 'en';
-    div.innerHTML = `
-      <div class="translate-wrap">
-        <div class="msg-text-inner translate-content">${escapeHtml(item.content)}</div>
-        ${showTranslate ? `<button class="translate-btn" title="Translate" onclick="translateText('${escapeHtml(item.content).replace(/'/g, "\'")}', 'en', this)">🌐</button>` : ''}
-      </div>`;
+    const showTranslate = c.language !== 'en';
+    const wrap = document.createElement('div');
+    wrap.className = 'translate-wrap';
+    const tc = document.createElement('div');
+    tc.className = 'msg-text-inner translate-content';
+    tc.textContent = item.content;
+    wrap.appendChild(tc);
+    if (showTranslate) {
+      const gb = document.createElement('button');
+      gb.className = 'translate-btn';
+      gb.title = 'Translate';
+      gb.textContent = '🌐';
+      gb.dataset.origText = item.content;
+      gb.onclick = function() { translateText(this.dataset.origText, 'en', this); };
+      wrap.appendChild(gb);
+    }
+    div.appendChild(wrap);
   } else if (item.type === 'emoji-reaction') {
     div.className += ' msg-emoji-react'; div.textContent = item.content;
   } else if (item.type === 'image' || item.type === 'image-upload') {
@@ -872,7 +990,7 @@ function renderMessage(item, sender) {
     transcriptWrap.innerHTML = `
       <div class="translate-wrap">
         <div class="translate-content">${escapeHtml(voiceText)}</div>
-        ${showTranslate || true ? `<button class="translate-btn small" title="Translate to English" onclick="translateText('${escapeHtml(voiceText).replace(/'/g, "\'")}', 'en', this)">🌐</button>` : ''}
+        ${showTranslate ? `<button class="translate-btn small" title="Translate" onclick="translateText('${escapeHtml(voiceText).replace(/'/g, "\'")}', 'en', this)">🌐</button>` : ''}
       </div>`;
 
     div.appendChild(voiceBar);
@@ -884,22 +1002,54 @@ function renderMessage(item, sender) {
 
   const replyBtn = document.createElement('button'); replyBtn.className = 'msg-action-btn'; replyBtn.title = 'Reply'; replyBtn.innerHTML = '↩';
   replyBtn.onclick = () => {
-    let t;
-    if (item.type === 'image' || item.type === 'image-upload') {
-      t = item.title || div.querySelector('img')?.title || 'meme';
-    } else if (item.type === 'voice') {
-      t = div.querySelector('.voice-text')?.textContent || 'voice message';
-    } else {
-      // Try item.content first, fallback to reading from DOM
-      t = item.content || div.querySelector('.translate-content')?.textContent || div.querySelector('.msg-text-inner')?.textContent || 'message';
-    }
-    setReply(t.slice(0, 80), sender);
+    const t = (item.type==='image'||item.type==='image-upload') ? (item.title||'meme') : (item.content||'message');
+    setReply(t, sender);
   };
   actEl.appendChild(replyBtn);
 
   const reactBtn = document.createElement('button'); reactBtn.className = 'msg-action-btn'; reactBtn.title = 'React'; reactBtn.innerHTML = '😊';
   reactBtn.onclick = e => { e.stopPropagation(); showReactionPicker(div, row); };
   actEl.appendChild(reactBtn);
+
+  // Delete button
+  const delBtn = document.createElement('button');
+  delBtn.className = 'msg-action-btn tik-action-btn';
+  delBtn.title = 'Delete';
+  delBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>';
+  delBtn.onclick = () => {
+    showConfirm('Delete this message?', () => {
+      row.style.opacity = '0';
+      row.style.transform = 'scale(0.9)';
+      row.style.transition = 'all 0.2s';
+      setTimeout(() => {
+        row.remove();
+        saveChatToStorage();
+        syncHistoryToServer(); // update server memory
+      }, 200);
+    });
+  };
+  actEl.appendChild(delBtn);
+
+  // Edit button (user text only)
+  if (sender === 'user' && item.type === 'text') {
+    const contentEl = div.querySelector('.translate-content') || div.querySelector('.msg-text-inner');
+    const editBtn = document.createElement('button');
+    editBtn.className = 'msg-action-btn tik-action-btn';
+    editBtn.title = 'Edit';
+    editBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+    editBtn.onclick = () => {
+      const txt = contentEl ? contentEl.textContent.trim() : (item.content || '');
+      document.getElementById('input').value = txt;
+      document.getElementById('input').focus();
+      window._editingRow = row;
+      window._editMode = true;
+      replyingTo = null;
+      const bar = document.getElementById('replyBar');
+      bar.classList.add('active', 'edit-mode');
+      document.getElementById('replyBarText').textContent = txt.slice(0, 50);
+    };
+    actEl.appendChild(editBtn);
+  }
 
   if (item.replyTo) {
     const q = document.createElement('div'); q.className = 'reply-quote';
@@ -1091,6 +1241,47 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
+// ─── MESSAGE ACTIONS: DELETE & EDIT ───────────
+function deleteMessage(row) {
+  if (!confirm('Delete this message?')) return;
+  row.style.animation = 'msgOut 0.2s ease forwards';
+  setTimeout(() => { row.remove(); saveChatToStorage(); }, 200);
+}
+
+function editMessage(row, originalText) {
+  const input = document.getElementById('input');
+  // Fill input with original text
+  input.value = originalText;
+  input.focus();
+
+  // Mark row as being edited
+  row.classList.add('editing');
+
+  // Store reference to edited row
+  window._editingRow = row;
+  window._editingOriginal = originalText;
+
+  // Show edit indicator in reply bar
+  const bar = document.getElementById('replyBar');
+  const barText = document.getElementById('replyBarText');
+  bar.classList.add('active');
+  bar.classList.add('edit-mode');
+  barText.textContent = 'Editing: ' + originalText.slice(0, 50);
+
+  // Override send to handle edit
+  window._editMode = true;
+}
+
+function cancelEdit() {
+  window._editMode = false;
+  window._editingRow = null;
+  window._editingOriginal = null;
+  document.getElementById('replyBar').classList.remove('active', 'edit-mode');
+  document.getElementById('replyBarText').textContent = '';
+  document.getElementById('input').value = '';
+}
+
 // ─── TRANSLATE ────────────────────────────────
 async function translateText(text, targetLang, btn) {
   if (!text?.trim()) return;
@@ -1170,4 +1361,7 @@ function loadChatFromStorage(id) {
   messages.forEach(msg => renderMessage(msg, msg.sender));
 }
 window.translateText = translateText;
+window.deleteMessage = deleteMessage;
+window.editMessage = editMessage;
+window.cancelEdit = cancelEdit;
 window.toggleTranscript = toggleTranscript;

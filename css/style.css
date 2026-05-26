@@ -396,3 +396,72 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
 /* Japanese font support */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap');
 .lang-ja .msg { font-family: 'Noto Sans JP', sans-serif; }
+
+/* ─── DELETE & EDIT BUTTONS ──────────────────── */
+.msg-delete-btn { color: rgba(255,59,48,0.5); }
+.msg-delete-btn:hover { color: #ff3b30 !important; background: rgba(255,59,48,0.15) !important; }
+
+.msg-edit-btn { color: rgba(255,255,255,0.4); }
+.msg-edit-btn:hover { color: var(--blue-light) !important; background: rgba(0,132,255,0.15) !important; }
+
+.msg-row.editing .msg { 
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  opacity: 0.7;
+}
+
+.reply-bar.edit-mode {
+  background: rgba(255,159,10,0.12);
+  border-top-color: rgba(255,159,10,0.3);
+}
+
+.reply-bar.edit-mode .reply-bar-text { color: #ff9f0a; }
+
+@keyframes msgOut {
+  from { opacity: 1; transform: scale(1); max-height: 200px; }
+  to   { opacity: 0; transform: scale(0.9); max-height: 0; margin: 0; padding: 0; }
+}
+
+/* ─── TIKTOK ACTION BUTTONS ──────────────────── */
+.tik-action-btn {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s !important;
+  color: rgba(255,255,255,0.6) !important;
+}
+
+.tik-action-btn:hover {
+  transform: scale(1.15) !important;
+  background: rgba(255,255,255,0.14) !important;
+}
+
+/* Edit bar styling */
+.reply-bar.edit-mode {
+  background: rgba(255,159,10,0.12);
+  border-top-color: rgba(255,159,10,0.3);
+  gap: 8px;
+}
+
+.reply-bar.edit-mode::before {
+  content: '✏️';
+  font-size: 14px;
+}
+
+.reply-bar.edit-mode .reply-bar-text {
+  color: #ff9f0a;
+  font-style: italic;
+}
+
+/* Edited label */
+.edited-label {
+  font-size: 10px;
+  opacity: 0.45;
+  margin-left: 6px;
+  font-style: italic;
+}

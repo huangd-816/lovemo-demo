@@ -55,7 +55,12 @@ app.get('/giphy/trending', async (req, res) => {
 // ─── GIF VISION ───────────────────────────────
 app.post('/describe-gif', async (req, res) => {
   const { imageUrl } = req.body;
-  if (!imageUrl) return res.json({ description: 'a meme', text: '', people: '' });
+  if (!imageUrl) return res.json({ description: 'a meme', text: '', people: '', vibe: 'funny' });
+
+  // Skip vision for animated GIFs - model doesn't support them
+  if (imageUrl.includes('giphy.com') || imageUrl.endsWith('.gif')) {
+    return res.json({ description: 'a funny meme', text: '', people: '', vibe: 'funny' });
+  }
   try {
     const c = await groq.chat.completions.create({
       model: "meta-llama/llama-4-scout-17b-16e-instruct",
@@ -201,6 +206,19 @@ ${text}`
   } catch(e) {
     console.error('Translate error:', e.message);
     res.status(500).json({ translated: text, error: e.message });
+  }
+});
+
+
+// ─── SYNC HISTORY FROM CLIENT ─────────────────
+app.post('/sync-history', (req, res) => {
+  const { companionId, messages } = req.body;
+  const id = companionId || '0816';
+  try {
+    saveChatHistory(id, messages);
+    res.json({ ok: true });
+  } catch(e) {
+    res.status(500).json({ ok: false });
   }
 });
 
