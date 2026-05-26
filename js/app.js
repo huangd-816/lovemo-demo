@@ -36,6 +36,8 @@ let modalFacePreset = 'auto';
 let modalFaceName = '';
 let modalFaceCustomUrl = '';
 let modalCatchphrase = '';
+let modalDialogueSample = '';
+let modalDialoguePerson = '';
 let editingId = null;
 
 function selectVoice(btn) {
@@ -242,6 +244,34 @@ function onFaceNameInput(val) {
   renderFacePresets();
 }
 
+function handleDialogueUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 500000) { showToast('File too large — max 500KB'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const raw = e.target.result.trim();
+    modalDialogueSample = raw.slice(0, 4000);
+    const lines = raw.split('\n').filter(l => l.trim()).length;
+    const status = document.getElementById('dialogueStatus');
+    if (status) {
+      status.style.display = 'flex';
+      const t = status.querySelector('.dialogue-status-text');
+      if (t) t.textContent = `✅ ${lines} lines loaded — style ready`;
+    }
+    input.value = '';
+    showToast('Chat style uploaded ✨');
+  };
+  reader.readAsText(file);
+}
+
+function clearDialogueSample() {
+  modalDialogueSample = '';
+  const status = document.getElementById('dialogueStatus');
+  if (status) status.style.display = 'none';
+  showToast('Style cleared');
+}
+
 function handleFaceUpload(input) {
   const file = input.files[0];
   if (!file || !file.type.startsWith('image/')) return;
@@ -341,6 +371,8 @@ function openCreateModal() {
   modalFaceName = '';
   modalFaceCustomUrl = '';
   modalCatchphrase = '';
+  modalDialogueSample = '';
+  modalDialoguePerson = '';
   document.getElementById('modalTitle').textContent = 'New AI Companion';
   document.getElementById('companionNameInput').value = '';
   document.querySelectorAll('.avatar-opt').forEach(e => e.classList.remove('selected'));
@@ -390,6 +422,20 @@ function editCurrentCompanion() {
   modalFaceName = c.facePreset === 'custom' ? (c.faceName || '') : '';
   modalFaceCustomUrl = c.faceCustomUrl || '';
   modalCatchphrase = c.catchphrase || '';
+  modalDialogueSample = c.dialogueSample || '';
+  modalDialoguePerson = c.dialoguePerson || '';
+  const dpInp = document.getElementById('dialoguePersonInput');
+  if (dpInp) dpInp.value = modalDialoguePerson;
+  const dStatus = document.getElementById('dialogueStatus');
+  if (dStatus) {
+    if (modalDialogueSample) {
+      dStatus.style.display = 'flex';
+      const t = dStatus.querySelector('.dialogue-status-text');
+      if (t) t.textContent = `✅ Style loaded (${modalDialogueSample.length} chars)`;
+    } else {
+      dStatus.style.display = 'none';
+    }
+  }
   goStep(1);
   document.getElementById('createModal').classList.add('active');
   closeScreen('profile');
@@ -463,6 +509,8 @@ function createCompanion() {
     c.voiceStyle = modalVoiceStyle; c.facePreset = modalFacePreset;
     c.faceName = modalFaceName; c.faceCustomUrl = modalFacePreset === 'custom' ? modalFaceCustomUrl : '';
     c.catchphrase = modalCatchphrase;
+    c.dialogueSample = modalDialogueSample;
+    c.dialoguePerson = modalDialoguePerson;
     saveCompanions();
     renderSidebar();
     switchCompanion(editingId);
@@ -476,6 +524,8 @@ function createCompanion() {
       voiceStyle: modalVoiceStyle, facePreset: modalFacePreset,
       faceName: modalFaceName, faceCustomUrl: modalFacePreset === 'custom' ? modalFaceCustomUrl : '',
       catchphrase: modalCatchphrase,
+      dialogueSample: modalDialogueSample,
+      dialoguePerson: modalDialoguePerson,
       created: Date.now(), lastMessage: '', lastTime: Date.now()
     });
     saveCompanions();
@@ -2572,6 +2622,8 @@ window.setFaceStudioStyle = setFaceStudioStyle;
 window.toggleFaceStudio = toggleFaceStudio;
 window.applyFaceStudio = applyFaceStudio;
 window.handleFaceUpload = handleFaceUpload;
+window.handleDialogueUpload = handleDialogueUpload;
+window.clearDialogueSample = clearDialogueSample;
 window.toggleChatSearch = toggleChatSearch;
 window.runChatSearch = runChatSearch;
 window.searchNav = searchNav;

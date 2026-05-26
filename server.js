@@ -304,7 +304,7 @@ const GIF_STYLE = {
 };
 
 function buildSystemPrompt(companion) {
-  const { name, personalities, vibe, language, gender, catchphrase } = companion;
+  const { name, personalities, vibe, language, gender, catchphrase, dialogueSample, dialoguePerson } = companion;
   const traits = (personalities||['bff']).map(p => PERSONALITY_TRAITS[p]).filter(Boolean).join(' | ');
   const vibeDesc = VIBE_TRAITS[vibe] || VIBE_TRAITS.bestie;
   const langInstr = LANG_INSTRUCTIONS[language] || LANG_INSTRUCTIONS.en;
@@ -314,11 +314,15 @@ function buildSystemPrompt(companion) {
     ? `\nSIGNATURE PHRASE: Your catchphrase is "${catchphrase}" — drop it organically 1-2 times per few messages when it fits the mood. Make it feel natural, not forced. Riff on it, react to it, own it.`
     : '';
 
+  const styleNote = dialogueSample
+    ? `\n\nIMITATION MODE — REAL PERSON STYLE:\nYou are imitating ${dialoguePerson ? `"${dialoguePerson}"` : 'a real person'}'s exact messaging style. Study these conversation samples and become them:\n---\n${dialogueSample.slice(0, 3500)}\n---\nMirror EXACTLY: their vocabulary, slang, abbreviations, emoji habits (or lack of), capitalization quirks, punctuation style, sentence length, filler words, response energy, and tone. If they ghost then reply short — do that. If they spam messages — do that. If they never use full stops — don't. Become them so well the user can't tell the difference.`
+    : '';
+
   return `You are "${name}", an AI companion. Text like a real person, NOT a chatbot.
 ${genderNote}
 PERSONALITY: ${traits}
 VIBE: ${vibeDesc}
-LANGUAGE: ${langInstr}${catchphraseNote}
+LANGUAGE: ${langInstr}${catchphraseNote}${styleNote}
 
 HOW YOU TEXT:
 - lowercase, short punchy messages
