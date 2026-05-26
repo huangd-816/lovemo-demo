@@ -425,12 +425,15 @@ function renderSidebar(filter = '') {
     item.onclick = () => switchCompanion(c.id);
     const time = c.lastTime ? formatTime(c.lastTime) : '';
     const personalities = (c.personalities || []).slice(0, 2).join(', ');
+    const mood = c.mood || 'happy';
+    const moodColor = MOOD_COLORS?.[mood] || '#0084FF';
+    const streak = getStreak(c.id);
     item.innerHTML = `
-      <div class="companion-avatar">${c.avatar}</div>
+      <div class="companion-avatar" style="box-shadow:0 0 0 2px ${moodColor},0 0 8px ${moodColor}44">${c.avatar}</div>
       <div class="companion-info">
         <div class="companion-row">
           <span class="companion-name">${c.name}</span>
-          <span class="companion-time">${time}</span>
+          <span class="companion-time">${time}${streak > 1 ? `<span class="streak-badge">🔥${streak}</span>` : ''}</span>
         </div>
         <div class="companion-preview">${c.lastMessage || personalities || 'Say hi!'}</div>
       </div>`;
@@ -479,6 +482,17 @@ function switchCompanion(id) {
     }
   }
 
+  // Apply per-companion theme, mood ring, XP
+  applyCompanionTheme(id);
+  updateStatusRing(c.mood || 'happy');
+  _refreshXpDisplay(id);
+
+  // Match voice recognition language to companion
+  if (recognition) {
+    const langMap = { zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', es:'es-ES', fr:'fr-FR' };
+    recognition.lang = langMap[c.language] || 'en-US';
+  }
+
   // Update sidebar active state
   renderSidebar(document.querySelector('.sidebar-search')?.value || '');
 
@@ -525,6 +539,8 @@ function openScreen(name) {
     tags.appendChild(langTag);
     updateProfileStats();
     renderSavedGifs();
+    _refreshXpDisplay(c.id);
+    applyCompanionTheme(c.id);
   }
 }
 
@@ -1355,8 +1371,18 @@ function showTyping() {
   el.className = 'typing-indicator'; el.id = 'typingIndicator';
   el.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
   chat.appendChild(el); scrollToBottom();
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  if (dot) dot.classList.add('dot-typing');
+  if (txt) txt.textContent = 'typing...';
 }
-function hideTyping() { document.getElementById('typingIndicator')?.remove(); }
+function hideTyping() {
+  document.getElementById('typingIndicator')?.remove();
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  if (dot) dot.classList.remove('dot-typing');
+  if (txt) txt.textContent = 'Active now';
+}
 
 // ─── REPLY ────────────────────────────────────
 let replyingTo = null;
@@ -1524,7 +1550,10 @@ function deleteSelected() {
     });
     selectedRows.clear();
     toggleSelectMode();
-    setTimeout(saveChatToStorage, 300);
+    setTimeout(() => {
+      saveChatToStorage();
+      chatCaches[currentId] = '';
+    }, 300);
   });
 }
 
@@ -1664,7 +1693,7 @@ function renderMessage(item, sender) {
   delBtn.style.cssText = 'background:rgba(255,59,48,0.08);border-color:rgba(255,59,48,0.2);';
   delBtn.onclick = () => showConfirm('Delete this message?', () => {
     row.style.opacity = '0'; row.style.transform = 'scale(0.9)'; row.style.transition = 'all 0.2s';
-    setTimeout(() => { row.remove(); saveChatToStorage(); }, 200);
+    setTimeout(() => { row.remove(); saveChatToStorage(); chatCaches[currentId] = ''; }, 200);
   });
   actEl.appendChild(delBtn);
 
@@ -1852,6 +1881,14 @@ async function sendToAI(text, originalText) {
     if (data.emojiReaction) setTimeout(()=>addReactionToLastUserMsg(data.emojiReaction), 600);
     setTimeout(saveChatToStorage, 500);
 
+    // Gamification + UX
+    const hasVoice = (data.messages||[]).some(m => m.type === 'voice');
+    addXp(currentId, hasVoice ? 15 : 10);
+    updateStreak(currentId);
+    playChime();
+    const firstText = (data.messages||[]).find(m => m.type === 'text')?.content || '';
+    setCompanionMood(currentId, detectMood(firstText));
+
     // Update last message from AI
     if (data.messages?.[0]?.type === 'text') {
       c.lastMessage = data.messages[0].content.slice(0,40); c.lastTime = Date.now();
@@ -1923,7 +1960,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function deleteMessage(row) {
   if (!confirm('Delete this message?')) return;
   row.style.animation = 'msgOut 0.2s ease forwards';
-  setTimeout(() => { row.remove(); saveChatToStorage(); }, 200);
+  setTimeout(() => { row.remove(); saveChatToStorage(); chatCaches[currentId] = ''; }, 200);
 }
 
 function editMessage(row, originalText) {
@@ -2075,6 +2112,188 @@ function loadChatFromStorage(id) {
     renderMessage(msg, msg.sender);
   });
 }
+// ─── MOOD SYSTEM ──────────────────────────────
+const MOOD_COLORS = { happy:'#FFD60A', excited:'#FF9F0A', playful:'#30D158', curious:'#5E5CE6', tired:'#636366', melancholy:'#0084FF' };
+const MOOD_ICONS  = { happy:'😊', excited:'🔥', playful:'😄', curious:'🤔', tired:'😴', melancholy:'🌙' };
+
+function detectMood(text) {
+  if (!text) return 'happy';
+  const t = text.toLowerCase();
+  if (/tired|sleepy|exhausted|ugh|meh|😴|😑/.test(t)) return 'tired';
+  if (/miss|sad|lonely|sigh|😔|💔|😢/.test(t)) return 'melancholy';
+  if (/hmm|wonder|curious|really\?|tell me|🤔/.test(t)) return 'curious';
+  if (/lol|haha|😄|🤪|silly|fun|hilarious/.test(t)) return 'playful';
+  if (/!|amazing|love|great|yay|🥰|😍|🔥|✨|wow/.test(t)) return 'excited';
+  return 'happy';
+}
+
+function setCompanionMood(id, mood) {
+  const c = getCompanion(id);
+  if (!c || c.mood === mood) return;
+  c.mood = mood;
+  saveCompanions();
+  if (id === currentId) updateStatusRing(mood);
+}
+
+function updateStatusRing(mood) {
+  const avatar = document.getElementById('topbarAvatar');
+  if (!avatar) return;
+  const color = MOOD_COLORS[mood] || '#0084FF';
+  avatar.style.boxShadow = `0 0 0 2px ${color}, 0 0 10px ${color}55`;
+  const sidebarItem = document.querySelector(`.companion-item.active .companion-avatar`);
+  if (sidebarItem) sidebarItem.style.boxShadow = `0 0 0 2px ${color}, 0 0 8px ${color}44`;
+}
+
+// ─── XP / LEVEL SYSTEM ────────────────────────
+const XP_THRESHOLDS = [0, 100, 250, 500, 900, 1400, 2000];
+const LEVEL_NAMES   = ['Strangers', 'Acquaintances', 'Friends', 'Close Friends', 'Best Friends', 'Soulmates', 'Bonded ✨'];
+
+function getXpData(id)       { return JSON.parse(localStorage.getItem(`chatty-xp-${id}`) || '{"xp":0,"level":0}'); }
+function saveXpData(id, data){ localStorage.setItem(`chatty-xp-${id}`, JSON.stringify(data)); }
+
+function addXp(id, amount) {
+  const data = getXpData(id);
+  data.xp += amount;
+  const oldLevel = data.level;
+  while (data.level < XP_THRESHOLDS.length - 1 && data.xp >= XP_THRESHOLDS[data.level + 1]) data.level++;
+  saveXpData(id, data);
+  if (data.level > oldLevel) showToast(`💫 Level up! Now: ${LEVEL_NAMES[data.level] || 'Bonded'}`);
+  if (id === currentId) _refreshXpDisplay(id);
+}
+
+function _refreshXpDisplay(id) {
+  const data = getXpData(id);
+  const lvl = data.level;
+  const prev = XP_THRESHOLDS[lvl] || 0;
+  const next = XP_THRESHOLDS[lvl + 1];
+  const pct  = next ? Math.min(100, ((data.xp - prev) / (next - prev)) * 100) : 100;
+  const fill = document.getElementById('xpBarFill');
+  const name = document.getElementById('xpLevelName');
+  if (fill) fill.style.width = pct + '%';
+  if (name) name.textContent = LEVEL_NAMES[lvl] || 'Bonded ✨';
+  const sc = document.getElementById('streakCount');
+  if (sc) sc.textContent = '🔥 ' + getStreak(id);
+}
+
+// ─── DAILY STREAK ─────────────────────────────
+function updateStreak(id) {
+  const key = `chatty-streak-${id}`;
+  const data = JSON.parse(localStorage.getItem(key) || '{"streak":0,"lastDate":""}');
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (data.lastDate === today) return;
+  data.streak = (data.lastDate === yesterday) ? data.streak + 1 : 1;
+  data.lastDate = today;
+  localStorage.setItem(key, JSON.stringify(data));
+  if (data.streak > 1) showToast(`🔥 ${data.streak} day streak!`);
+}
+function getStreak(id) { return JSON.parse(localStorage.getItem(`chatty-streak-${id}`) || '{"streak":0}').streak || 0; }
+
+// ─── NOTIFICATION CHIME ───────────────────────
+let _audioCtx = null;
+function playChime() {
+  try {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = _audioCtx;
+    [[523.25, 0], [659.25, 0.1], [783.99, 0.2]].forEach(([freq, delay]) => {
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = freq; osc.type = 'sine';
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.15, t + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      osc.start(t); osc.stop(t + 0.55);
+    });
+  } catch {}
+}
+
+// ─── CHAT BACKGROUND THEMES ───────────────────
+const BG_THEMES = {
+  default: '',
+  ocean:   'radial-gradient(ellipse at 20% 80%, rgba(0,80,160,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(0,160,200,0.2) 0%, transparent 50%)',
+  forest:  'radial-gradient(ellipse at 30% 70%, rgba(0,80,40,0.35) 0%, transparent 60%), radial-gradient(ellipse at 70% 30%, rgba(40,120,20,0.2) 0%, transparent 50%)',
+  sunset:  'radial-gradient(ellipse at 50% 100%, rgba(200,60,30,0.3) 0%, transparent 60%), radial-gradient(ellipse at 50% 0%, rgba(120,40,160,0.25) 0%, transparent 50%)',
+  cosmic:  'radial-gradient(ellipse at 20% 20%, rgba(100,40,200,0.3) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(0,100,200,0.25) 0%, transparent 50%)',
+  cherry:  'radial-gradient(ellipse at 60% 40%, rgba(200,60,100,0.3) 0%, transparent 60%), radial-gradient(ellipse at 30% 80%, rgba(160,40,80,0.2) 0%, transparent 50%)',
+};
+
+function applyCompanionTheme(id) {
+  const c = getCompanion(id);
+  const chat = document.getElementById('chat');
+  if (!chat) return;
+  chat.style.background = BG_THEMES[c.chatBg || 'default'] || '';
+  document.querySelectorAll('.bg-dot').forEach(d => d.classList.toggle('active', d.dataset.theme === (c.chatBg || 'default')));
+}
+
+function setChatBg(theme) {
+  const c = getCurrentCompanion();
+  c.chatBg = theme;
+  saveCompanions();
+  applyCompanionTheme(c.id);
+}
+
+// ─── CHAT SEARCH ──────────────────────────────
+let _searchOpen = false, _searchMatches = [], _searchIdx = 0;
+
+function toggleChatSearch() {
+  _searchOpen = !_searchOpen;
+  const bar = document.getElementById('chatSearchBar');
+  if (!bar) return;
+  if (_searchOpen) {
+    bar.style.display = 'flex';
+    document.getElementById('chatSearchInput')?.focus();
+  } else {
+    bar.style.display = 'none';
+    const inp = document.getElementById('chatSearchInput');
+    if (inp) inp.value = '';
+    _clearSearchHL(); _searchMatches = [];
+    document.getElementById('searchCount').textContent = '';
+  }
+}
+
+function runChatSearch(val) {
+  _clearSearchHL(); _searchMatches = []; _searchIdx = 0;
+  if (!val.trim()) { document.getElementById('searchCount').textContent = ''; return; }
+  document.querySelectorAll('.msg-row').forEach(row => {
+    const txt = row.querySelector('.translate-content, .msg-text-inner, .voice-text')?.textContent || '';
+    if (txt.toLowerCase().includes(val.toLowerCase())) { row.classList.add('search-match'); _searchMatches.push(row); }
+  });
+  _applySearchCurrent();
+}
+
+function searchNav(dir) {
+  if (!_searchMatches.length) return;
+  _searchMatches[_searchIdx]?.classList.remove('search-current');
+  _searchIdx = (_searchIdx + dir + _searchMatches.length) % _searchMatches.length;
+  _applySearchCurrent();
+}
+
+function _applySearchCurrent() {
+  const el = _searchMatches[_searchIdx];
+  if (el) { el.classList.add('search-current'); el.scrollIntoView({ behavior:'smooth', block:'center' }); }
+  const cnt = document.getElementById('searchCount');
+  if (cnt) cnt.textContent = _searchMatches.length ? `${_searchIdx+1}/${_searchMatches.length}` : '0';
+}
+
+function _clearSearchHL() {
+  document.querySelectorAll('.search-match,.search-current').forEach(el => el.classList.remove('search-match','search-current'));
+}
+
+// ─── EXPORT CHAT ──────────────────────────────
+function exportChat() {
+  const c = getCurrentCompanion();
+  let text = `chatty-ai — ${c.name}\nExported: ${new Date().toLocaleString()}\n${'─'.repeat(40)}\n\n`;
+  document.querySelectorAll('.msg-row').forEach(row => {
+    const who = row.classList.contains('user') ? 'You' : c.name;
+    const content = row.querySelector('.translate-content, .msg-text-inner, .voice-text')?.textContent?.trim();
+    if (content) text += `${who}: ${content}\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type:'text/plain' }));
+  a.download = `${c.name}-chat.txt`; a.click();
+}
+
 window.translateText = translateText;
 window.deleteMessage = deleteMessage;
 window.showConfirm = showConfirm;
@@ -2093,3 +2312,8 @@ window.setFaceStudioStyle = setFaceStudioStyle;
 window.toggleFaceStudio = toggleFaceStudio;
 window.applyFaceStudio = applyFaceStudio;
 window.handleFaceUpload = handleFaceUpload;
+window.toggleChatSearch = toggleChatSearch;
+window.runChatSearch = runChatSearch;
+window.searchNav = searchNav;
+window.exportChat = exportChat;
+window.setChatBg = setChatBg;

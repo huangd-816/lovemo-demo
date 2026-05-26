@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>chatty-ai</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/style.css?v=6.1">
+  <link rel="stylesheet" href="css/style.css?v=6.7">
 </head>
 <body>
 <div class="app-shell">
@@ -35,10 +35,13 @@
         <div class="avatar" id="topbarAvatar"><span class="avatar-emoji" id="topbarEmoji">👻</span></div>
         <div class="status-info">
           <div class="name" id="topbarName">0816</div>
-          <div class="online"><span class="dot"></span>Active now</div>
+          <div class="online"><span class="dot" id="statusDot"></span><span id="statusText">Active now</span></div>
         </div>
       </div>
       <div class="topbar-actions">
+        <button class="icon-btn" onclick="toggleChatSearch()" title="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
         <button class="icon-btn" onclick="openScreen('video')" title="Call">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
         </button>
@@ -48,6 +51,13 @@
       </div>
     </div>
 
+    <div id="chatSearchBar" style="display:none;align-items:center;gap:8px;padding:8px 12px;background:rgba(10,10,18,0.97);border-bottom:1px solid rgba(255,255,255,0.07);z-index:9;">
+      <input type="text" id="chatSearchInput" placeholder="Search messages..." oninput="runChatSearch(this.value)" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:7px 12px;color:#f0f0f0;font-size:14px;outline:none;" />
+      <span id="searchCount" style="font-size:12px;color:rgba(255,255,255,0.4);min-width:32px;text-align:center;"></span>
+      <button onclick="searchNav(-1)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">↑</button>
+      <button onclick="searchNav(1)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">↓</button>
+      <button onclick="toggleChatSearch()" style="background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
     <div id="chat" class="chat"></div>
 
     <div class="gif-picker" id="gifPicker">
@@ -172,9 +182,26 @@
       <div class="stat"><span id="statAffection">0</span><label>Bond</label></div>
       <div class="stat"><span id="statSaved">0</span><label>Saved</label></div>
     </div>
+    <div class="bond-section">
+      <div class="bond-label-row">
+        <span id="xpLevelName" class="bond-level">Strangers</span>
+        <span id="streakCount" class="streak-count">🔥 0</span>
+      </div>
+      <div class="xp-track"><div id="xpBarFill" class="xp-fill"></div></div>
+    </div>
+    <div class="profile-section-title">Chat Theme</div>
+    <div class="bg-theme-row">
+      <button class="bg-dot active" data-theme="default" onclick="setChatBg('default')" style="background:#3a3a3a" title="Default"></button>
+      <button class="bg-dot" data-theme="ocean" onclick="setChatBg('ocean')" style="background:#0050a0" title="Ocean"></button>
+      <button class="bg-dot" data-theme="forest" onclick="setChatBg('forest')" style="background:#2a7014" title="Forest"></button>
+      <button class="bg-dot" data-theme="sunset" onclick="setChatBg('sunset')" style="background:#c83c1e" title="Sunset"></button>
+      <button class="bg-dot" data-theme="cosmic" onclick="setChatBg('cosmic')" style="background:#6428c8" title="Cosmic"></button>
+      <button class="bg-dot" data-theme="cherry" onclick="setChatBg('cherry')" style="background:#c83c64" title="Cherry"></button>
+    </div>
     <div class="profile-section-title">Saved GIFs</div>
     <div class="gif-grid" id="savedGifGrid" style="padding:0;max-height:200px;overflow-y:auto;"></div>
-    <button class="profile-clear-btn" onclick="clearMemory()">🗑️ Clear Memory</button>
+    <button class="profile-clear-btn" onclick="exportChat()">📤 Export Chat</button>
+    <button class="profile-clear-btn" onclick="clearMemory()" style="margin-top:8px">🗑️ Clear Memory</button>
     <button class="profile-clear-btn" style="background:rgba(255,59,48,0.15);margin-top:8px" onclick="deleteCurrentCompanion()">🗑️ Delete AI</button>
   </div>
 </div>
@@ -290,6 +317,6 @@
   </div>
 </div>
 
-<script src="js/app.js?v=6.6"></script>
+<script src="js/app.js?v=6.7"></script>
 </body>
 </html>
