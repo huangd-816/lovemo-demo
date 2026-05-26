@@ -258,14 +258,34 @@
         <button class="voice-btn" data-voice="deep" onclick="selectVoice(this)">🌊 Deep</button>
       </div>
       <div class="modal-label" style="margin-top:16px">Face</div>
-      <input type="text" id="faceNameInput" class="face-name-input" placeholder="Type a name for a custom face..." oninput="onFaceNameInput(this.value)" autocomplete="off" maxlength="24">
+      <input type="text" id="faceNameInput" class="face-name-input" placeholder="Type a name for a unique face..." oninput="onFaceNameInput(this.value)" autocomplete="off" maxlength="24">
       <div class="face-preset-grid" id="facePresetGrid"></div>
+      <button class="face-build-toggle" onclick="toggleFaceStudio()">✏️ Build a face</button>
+      <div class="face-studio" id="faceStudio">
+        <img id="faceStudioPreview" class="face-studio-preview" src="" alt="Preview">
+        <div class="fs-group-label">Region</div>
+        <div class="fs-row">
+          <button class="fs-region-btn selected" data-region="western" onclick="setFaceRegion(this)">🌍 Western</button>
+          <button class="fs-region-btn" data-region="asian" onclick="setFaceRegion(this)">🌏 Asian</button>
+          <button class="fs-region-btn" data-region="southasian" onclick="setFaceRegion(this)">🌺 S. Asian</button>
+          <button class="fs-region-btn" data-region="black" onclick="setFaceRegion(this)">🌟 Black</button>
+          <button class="fs-region-btn" data-region="latino" onclick="setFaceRegion(this)">🌎 Latino</button>
+        </div>
+        <div class="fs-group-label">Style</div>
+        <div class="fs-row">
+          <button class="fs-style-btn selected" data-fstyle="natural" onclick="setFaceStudioStyle(this)">🍃 Natural</button>
+          <button class="fs-style-btn" data-fstyle="glam" onclick="setFaceStudioStyle(this)">💫 Glam</button>
+          <button class="fs-style-btn" data-fstyle="bold" onclick="setFaceStudioStyle(this)">🔥 Bold</button>
+          <button class="fs-style-btn" data-fstyle="soft" onclick="setFaceStudioStyle(this)">🌸 Soft</button>
+        </div>
+        <button class="fs-apply-btn" onclick="applyFaceStudio()">Use this face →</button>
+      </div>
       <button class="modal-create-btn" onclick="createCompanion()">✨ Create</button>
       <button class="modal-back-btn" onclick="goStep(2)">← Back</button>
     </div>
   </div>
 </div>
 
-<script src="js/app.js?v=6.3"></script>
+<script src="js/app.js?v=6.4"></script>
 </body>
 </html>

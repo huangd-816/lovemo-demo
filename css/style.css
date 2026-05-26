@@ -382,6 +382,50 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
 .face-preset-btn.selected .face-preset-name { color: #fff; }
 .face-preset-btn.selected .face-preset-vibe { opacity: 1; }
 
+/* ─── FACE STUDIO BUILDER ────────────────────── */
+.face-build-toggle {
+  width: 100%; margin-top: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px dashed rgba(255,255,255,0.18);
+  border-radius: 10px; padding: 9px;
+  color: var(--text-muted); font-size: 13px;
+  cursor: pointer; transition: all 0.2s;
+}
+.face-build-toggle:hover { border-color: var(--blue); color: var(--blue-light); background: rgba(0,132,255,0.06); }
+.face-studio {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s;
+  opacity: 0; pointer-events: none;
+}
+.face-studio.open { max-height: 480px; opacity: 1; pointer-events: all; }
+.face-studio-preview {
+  width: 100px; height: 130px;
+  border-radius: 16px; object-fit: cover; object-position: center 10%;
+  display: block; margin: 12px auto 8px;
+  border: 2px solid rgba(0,132,255,0.4);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  background: rgba(255,255,255,0.05);
+}
+.fs-group-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 10px 0 6px; }
+.fs-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 2px; }
+.fs-region-btn, .fs-style-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 20px; padding: 5px 10px;
+  color: var(--text-muted); font-size: 12px;
+  cursor: pointer; transition: all 0.15s;
+}
+.fs-region-btn:hover, .fs-style-btn:hover { border-color: var(--blue); color: var(--blue-light); }
+.fs-region-btn.selected, .fs-style-btn.selected { border-color: var(--blue); background: rgba(0,132,255,0.15); color: #fff; }
+.fs-apply-btn {
+  width: 100%; margin-top: 12px;
+  background: linear-gradient(135deg, var(--blue), #0055cc);
+  border: none; border-radius: 12px; padding: 11px;
+  color: #fff; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.fs-apply-btn:hover { opacity: 0.88; }
+
 /* ─── CALL SPEAK ─────────────────────────────── */
 .call-speak-indicator { display: flex; align-items: flex-end; gap: 3px; height: 26px; opacity: 0; transition: opacity 0.3s; }
 .call-speak-indicator.speaking { opacity: 1; }
