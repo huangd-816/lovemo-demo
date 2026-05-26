@@ -428,8 +428,11 @@ function renderSidebar(filter = '') {
     const mood = c.mood || 'happy';
     const moodColor = MOOD_COLORS?.[mood] || '#0084FF';
     const streak = getStreak(c.id);
+    const avatarInner = c.customPhoto
+      ? `<img src="${c.customPhoto}" class="companion-photo-img" alt="${c.name}">`
+      : c.avatar;
     item.innerHTML = `
-      <div class="companion-avatar" style="box-shadow:0 0 0 2px ${moodColor},0 0 8px ${moodColor}44">${c.avatar}</div>
+      <div class="companion-avatar" style="box-shadow:0 0 0 2px ${moodColor},0 0 8px ${moodColor}44">${avatarInner}</div>
       <div class="companion-info">
         <div class="companion-row">
           <span class="companion-name">${c.name}</span>
@@ -482,10 +485,11 @@ function switchCompanion(id) {
     }
   }
 
-  // Apply per-companion theme, mood ring, XP
+  // Apply per-companion theme, mood ring, XP, photos
   applyCompanionTheme(id);
   updateStatusRing(c.mood || 'happy');
   _refreshXpDisplay(id);
+  _applyCompanionPhotos(c);
 
   // Match voice recognition language to companion
   if (recognition) {
@@ -541,6 +545,7 @@ function openScreen(name) {
     renderSavedGifs();
     _refreshXpDisplay(c.id);
     applyCompanionTheme(c.id);
+    _applyCompanionPhotos(c);
   }
 }
 
@@ -1944,6 +1949,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let st;
   document.getElementById('gifSearch')?.addEventListener('input', e => { clearTimeout(st); st=setTimeout(()=>searchGifs(e.target.value),400); });
 
+  // Restore user photo
+  const savedUserPhoto = getUserPhoto();
+  if (savedUserPhoto) setUserPhoto(savedUserPhoto);
+
   renderSidebar();
 
   // On mobile, start at sidebar; on desktop show chat
@@ -2112,6 +2121,88 @@ function loadChatFromStorage(id) {
     renderMessage(msg, msg.sender);
   });
 }
+// ─── PHOTO UPLOADS ────────────────────────────
+function compressPhoto(file, maxSize, cb) {
+  if (file.type === 'image/gif') {
+    if (file.size > 3 * 1024 * 1024) { showToast('GIF too large (max 3MB)'); return; }
+    const r = new FileReader(); r.onload = e => cb(e.target.result); r.readAsDataURL(file);
+    return;
+  }
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = Math.min(maxSize / img.width, maxSize / img.height, 1);
+      const w = Math.round(img.width * ratio), h = Math.round(img.height * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      try { cb(canvas.toDataURL('image/jpeg', 0.82)); } catch { cb(e.target.result); }
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+// ── User profile photo ──
+function getUserPhoto() { return localStorage.getItem('chatty-ai_user_photo') || ''; }
+
+function setUserPhoto(url) {
+  try { localStorage.setItem('chatty-ai_user_photo', url); } catch { showToast('Storage full — try a smaller photo'); return; }
+  const btn = document.getElementById('userPhotoBtn');
+  if (btn) {
+    if (url) { btn.style.backgroundImage = `url(${url})`; btn.textContent = ''; }
+    else { btn.style.backgroundImage = ''; btn.textContent = '👤'; }
+  }
+}
+
+function handleUserPhotoUpload(input) {
+  const file = input.files[0]; if (!file) return; input.value = '';
+  compressPhoto(file, 300, url => { setUserPhoto(url); showToast('Your photo updated ✨'); });
+}
+
+// ── AI companion photo ──
+function handleAIPhotoUpload(input) {
+  const file = input.files[0]; if (!file) return; input.value = '';
+  compressPhoto(file, 400, url => {
+    const c = getCurrentCompanion();
+    c.customPhoto = url;
+    saveCompanions();
+    _applyCompanionPhotos(c);
+    renderSidebar(document.querySelector('.sidebar-search')?.value || '');
+    showToast(`${c.name}'s photo updated ✨`);
+  });
+}
+
+function _applyCompanionPhotos(c) {
+  // Topbar avatar
+  const emoji = document.getElementById('topbarEmoji');
+  const photo = document.getElementById('topbarAvatarPhoto');
+  if (emoji && photo) {
+    if (c.customPhoto) { photo.src = c.customPhoto; photo.style.display = 'block'; emoji.style.display = 'none'; }
+    else { photo.style.display = 'none'; emoji.style.display = ''; emoji.textContent = c.avatar; }
+  }
+  // Profile screen avatar
+  const bigEmoji = document.getElementById('profileAvatarBig');
+  const bigPhoto = document.getElementById('profileAvatarPhoto');
+  if (bigEmoji && bigPhoto) {
+    if (c.customPhoto) { bigPhoto.src = c.customPhoto; bigPhoto.style.display = 'block'; bigEmoji.style.display = 'none'; }
+    else { bigPhoto.style.display = 'none'; bigEmoji.style.display = ''; bigEmoji.textContent = c.avatar; }
+  }
+}
+
+// ── Custom chat background ──
+function handleChatBgUpload(input) {
+  const file = input.files[0]; if (!file) return; input.value = '';
+  compressPhoto(file, 1400, url => {
+    const c = getCurrentCompanion();
+    c.chatBgCustom = url; c.chatBg = 'custom';
+    saveCompanions();
+    applyCompanionTheme(c.id);
+    showToast('Chat background updated ✨');
+  });
+}
+
 // ─── MOOD SYSTEM ──────────────────────────────
 const MOOD_COLORS = { happy:'#FFD60A', excited:'#FF9F0A', playful:'#30D158', curious:'#5E5CE6', tired:'#636366', melancholy:'#0084FF' };
 const MOOD_ICONS  = { happy:'😊', excited:'🔥', playful:'😄', curious:'🤔', tired:'😴', melancholy:'🌙' };
@@ -2222,7 +2313,11 @@ function applyCompanionTheme(id) {
   const c = getCompanion(id);
   const chat = document.getElementById('chat');
   if (!chat) return;
-  chat.style.background = BG_THEMES[c.chatBg || 'default'] || '';
+  if (c.chatBg === 'custom' && c.chatBgCustom) {
+    chat.style.background = `linear-gradient(rgba(6,6,14,0.62), rgba(6,6,14,0.62)), url(${c.chatBgCustom}) center/cover`;
+  } else {
+    chat.style.background = BG_THEMES[c.chatBg || 'default'] || '';
+  }
   document.querySelectorAll('.bg-dot').forEach(d => d.classList.toggle('active', d.dataset.theme === (c.chatBg || 'default')));
 }
 
@@ -2317,3 +2412,6 @@ window.runChatSearch = runChatSearch;
 window.searchNav = searchNav;
 window.exportChat = exportChat;
 window.setChatBg = setChatBg;
+window.handleUserPhotoUpload = handleUserPhotoUpload;
+window.handleAIPhotoUpload = handleAIPhotoUpload;
+window.handleChatBgUpload = handleChatBgUpload;

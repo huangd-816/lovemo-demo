@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>chatty-ai</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/style.css?v=6.7">
+  <link rel="stylesheet" href="css/style.css?v=6.8">
 </head>
 <body>
 <div class="app-shell">
@@ -14,9 +14,13 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-topbar">
       <div class="sidebar-title">chatty-ai</div>
-      <button class="sidebar-edit-btn" onclick="openCreateModal()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="user-photo-btn" id="userPhotoBtn" onclick="document.getElementById('userPhotoInput').click()" title="Your profile photo">👤</button>
+        <input type="file" id="userPhotoInput" accept="image/*,image/gif" style="display:none" onchange="handleUserPhotoUpload(this)">
+        <button class="sidebar-edit-btn" onclick="openCreateModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
     </div>
     <div class="sidebar-search-wrap">
       <input class="sidebar-search" id="sidebarSearch" name="sidebarSearch" type="text" placeholder="Search" oninput="filterCompanions(this.value)" autocomplete="off" />
@@ -32,7 +36,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <div class="status" id="currentCompanionStatus">
-        <div class="avatar" id="topbarAvatar"><span class="avatar-emoji" id="topbarEmoji">👻</span></div>
+        <div class="avatar" id="topbarAvatar">
+          <span class="avatar-emoji" id="topbarEmoji">👻</span>
+          <img id="topbarAvatarPhoto" class="avatar-photo-img" src="" alt="" style="display:none">
+        </div>
         <div class="status-info">
           <div class="name" id="topbarName">0816</div>
           <div class="online"><span class="dot" id="statusDot"></span><span id="statusText">Active now</span></div>
@@ -174,7 +181,12 @@
     <button class="profile-edit-btn" id="profileEditBtn" onclick="editCurrentCompanion()">Edit</button>
   </div>
   <div class="profile-body">
-    <div class="profile-avatar-big" id="profileAvatarBig">👻</div>
+    <div class="profile-avatar-wrap" onclick="document.getElementById('aiPhotoInput').click()">
+      <div class="profile-avatar-big" id="profileAvatarBig">👻</div>
+      <img id="profileAvatarPhoto" class="profile-avatar-photo" src="" alt="" style="display:none">
+      <span class="photo-edit-badge">📷</span>
+    </div>
+    <input type="file" id="aiPhotoInput" accept="image/*,image/gif" style="display:none" onchange="handleAIPhotoUpload(this)">
     <div class="profile-name" id="profileNameBig">0816</div>
     <div class="profile-tags" id="profileTags"></div>
     <div class="profile-stats">
@@ -197,6 +209,8 @@
       <button class="bg-dot" data-theme="sunset" onclick="setChatBg('sunset')" style="background:#c83c1e" title="Sunset"></button>
       <button class="bg-dot" data-theme="cosmic" onclick="setChatBg('cosmic')" style="background:#6428c8" title="Cosmic"></button>
       <button class="bg-dot" data-theme="cherry" onclick="setChatBg('cherry')" style="background:#c83c64" title="Cherry"></button>
+      <button class="bg-dot bg-dot-upload" data-theme="custom" onclick="document.getElementById('chatBgInput').click()" title="Upload photo/GIF">📷</button>
+      <input type="file" id="chatBgInput" accept="image/*,image/gif" style="display:none" onchange="handleChatBgUpload(this)">
     </div>
     <div class="profile-section-title">Saved GIFs</div>
     <div class="gif-grid" id="savedGifGrid" style="padding:0;max-height:200px;overflow-y:auto;"></div>
@@ -317,6 +331,6 @@
   </div>
 </div>
 
-<script src="js/app.js?v=6.7"></script>
+<script src="js/app.js?v=6.8"></script>
 </body>
 </html>

@@ -748,3 +748,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
 .bg-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.18s; flex-shrink: 0; }
 .bg-dot.active { border-color: #fff; transform: scale(1.18); box-shadow: 0 0 8px rgba(255,255,255,0.4); }
 .bg-dot:hover { transform: scale(1.1); }
+.bg-dot-upload { background: rgba(255,255,255,0.08) !important; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+
+/* ─── PROFILE PHOTO ──────────────────────────── */
+.profile-avatar-wrap { position: relative; display: inline-flex; cursor: pointer; margin-bottom: 4px; }
+.profile-avatar-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 24px rgba(0,132,255,0.3); border: 2px solid rgba(255,255,255,0.15); }
+.photo-edit-badge { position: absolute; bottom: 0; right: 0; background: rgba(10,10,20,0.85); border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 11px; pointer-events: none; }
+.profile-avatar-wrap:hover .photo-edit-badge { background: var(--blue); }
+
+/* ─── TOPBAR AVATAR PHOTO ────────────────────── */
+.avatar-photo-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; position: absolute; inset: 0; }
+.avatar { position: relative; overflow: hidden; }
+
+/* ─── SIDEBAR COMPANION PHOTO ────────────────── */
+.companion-photo-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+/* ─── USER PHOTO BUTTON ──────────────────────── */
+.user-photo-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.5); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.18s; background-size: cover; background-position: center; flex-shrink: 0; }
+.user-photo-btn:hover { background-color: rgba(0,132,255,0.15); border-color: rgba(0,132,255,0.3); }
