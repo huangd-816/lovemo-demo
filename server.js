@@ -97,22 +97,52 @@ const ELEVENLABS_VOICES = {
   male_sarcastic:'VR6AewLTigWG4xSOukaG', male_cool:'ErXwobaYiN019PkySvjV',
 };
 
+// Named voice style overrides (selected in create/edit modal)
+const VOICE_STYLE_IDS = {
+  warm:    { female:'EXAVITQu4vr4xnSDxMaL', male:'TxGEqnHWrfWFTfGW9XjX' },
+  playful: { female:'cgSgspJ2msm6clMCkdW9', male:'VR6AewLTigWG4xSOukaG' },
+  bold:    { female:'jBpfuIE2acCO8z3wKNLl', male:'pNInz6obpgDQGcFmaJgB' },
+  deep:    { female:'pFZP5JQG7iQjIQuC4Bku', male:'ErXwobaYiN019PkySvjV' },
+};
+
+// Per-personality speaking style (expressiveness, stability)
+const PERSONALITY_TTS_SETTINGS = {
+  bff:       { stability:0.45, similarity_boost:0.80, style:0.60 },
+  flirty:    { stability:0.38, similarity_boost:0.85, style:0.72 },
+  soft:      { stability:0.65, similarity_boost:0.80, style:0.28 },
+  deep:      { stability:0.70, similarity_boost:0.75, style:0.38 },
+  sarcastic: { stability:0.33, similarity_boost:0.80, style:0.78 },
+  chaotic:   { stability:0.22, similarity_boost:0.75, style:0.92 },
+  cool:      { stability:0.60, similarity_boost:0.80, style:0.48 },
+  hype:      { stability:0.28, similarity_boost:0.80, style:0.88 },
+};
+
 function getVoiceId(companion) {
   const gender = companion.gender || 'female';
+  const style = companion.voiceStyle;
+  if (style && style !== 'auto' && VOICE_STYLE_IDS[style]) {
+    return VOICE_STYLE_IDS[style][gender] || VOICE_STYLE_IDS[style].female;
+  }
   const p = (companion.personalities||['bff'])[0];
   const key = gender === 'male' ? `male_${p}` : p;
   return ELEVENLABS_VOICES[key] || ELEVENLABS_VOICES.bff;
+}
+
+function getVoiceSettings(companion) {
+  const p = (companion.personalities||['bff'])[0];
+  return PERSONALITY_TTS_SETTINGS[p] || { stability:0.5, similarity_boost:0.8, style:0.5 };
 }
 
 app.post('/tts', async (req, res) => {
   const { text, companion } = req.body;
   if (!text?.trim()) return res.status(400).json({ error: 'No text' });
   const voiceId = getVoiceId(companion || {});
+  const vs = getVoiceSettings(companion || {});
   try {
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: 'POST',
       headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-      body: JSON.stringify({ text: text.slice(0, 500), model_id: 'eleven_turbo_v2_5', voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.5, use_speaker_boost: true } })
+      body: JSON.stringify({ text: text.slice(0, 500), model_id: 'eleven_turbo_v2_5', voice_settings: { ...vs, use_speaker_boost: true } })
     });
     if (!response.ok) return res.status(response.status).json({ error: await response.text() });
     const audioBuffer = await response.arrayBuffer();

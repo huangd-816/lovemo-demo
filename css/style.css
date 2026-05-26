@@ -326,9 +326,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
 .avatar-opt { font-size: 26px; text-align: center; padding: 8px 4px; border-radius: 12px; cursor: pointer; background: rgba(255,255,255,0.04); border: 2px solid transparent; transition: all 0.15s; }
 .avatar-opt:hover { background: rgba(255,255,255,0.08); }
 .avatar-opt.selected { border-color: var(--blue); background: rgba(0,132,255,0.15); }
-.vibe-grid, .lang-grid, .gender-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.vibe-grid, .lang-grid, .gender-grid, .voice-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 .vibe-btn, .lang-btn, .gender-btn { background: rgba(255,255,255,0.06); border: 1.5px solid var(--border); border-radius: 20px; padding: 8px 14px; color: var(--text); font-size: 13px; cursor: pointer; transition: all 0.15s; }
-.vibe-btn.selected, .lang-btn.selected, .gender-btn.selected { background: rgba(0,132,255,0.2); border-color: var(--blue); color: var(--blue-light); }
+.vibe-btn.selected, .lang-btn.selected, .gender-btn.selected, .voice-btn.selected { background: rgba(0,132,255,0.2); border-color: var(--blue); color: var(--blue-light); }
+.voice-btn { background: rgba(255,255,255,0.06); border: 1.5px solid var(--border); border-radius: 20px; padding: 8px 14px; color: var(--text); font-size: 13px; cursor: pointer; transition: all 0.15s; }
 .personality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .pers-btn { background: rgba(255,255,255,0.04); border: 1.5px solid var(--border); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; cursor: pointer; transition: all 0.15s; text-align: left; }
 .pers-btn span { font-size: 22px; }

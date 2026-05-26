@@ -244,6 +244,14 @@
         <button class="gender-btn" data-gender="male" onclick="selectGender(this)">👨 Male</button>
         <button class="gender-btn" data-gender="nonbinary" onclick="selectGender(this)">🧑 Non-binary</button>
       </div>
+      <div class="modal-label" style="margin-top:16px">Voice Style</div>
+      <div class="voice-grid" id="voiceGrid">
+        <button class="voice-btn selected" data-voice="auto" onclick="selectVoice(this)">🎵 Auto</button>
+        <button class="voice-btn" data-voice="warm" onclick="selectVoice(this)">🌸 Warm</button>
+        <button class="voice-btn" data-voice="playful" onclick="selectVoice(this)">✨ Playful</button>
+        <button class="voice-btn" data-voice="bold" onclick="selectVoice(this)">🔥 Bold</button>
+        <button class="voice-btn" data-voice="deep" onclick="selectVoice(this)">🌊 Deep</button>
+      </div>
       <button class="modal-create-btn" onclick="createCompanion()">✨ Create</button>
       <button class="modal-back-btn" onclick="goStep(2)">← Back</button>
     </div>

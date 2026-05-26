@@ -31,10 +31,18 @@ let modalVibe = 'bestie';
 let modalPersonalities = ['bff'];
 let modalLang = 'en';
 let modalGender = 'female';
+let modalVoiceStyle = 'auto';
 let editingId = null;
+
+function selectVoice(btn) {
+  document.querySelectorAll('.voice-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  modalVoiceStyle = btn.dataset.voice;
+}
 
 function openCreateModal() {
   editingId = null;
+  modalVoiceStyle = 'auto';
   document.getElementById('modalTitle').textContent = 'New AI Companion';
   document.getElementById('companionNameInput').value = '';
   document.querySelectorAll('.avatar-opt').forEach(e => e.classList.remove('selected'));
@@ -75,6 +83,10 @@ function editCurrentCompanion() {
   });
   document.querySelectorAll('.gender-btn').forEach(b => {
     b.classList.toggle('selected', b.dataset.gender === c.gender);
+  });
+  modalVoiceStyle = c.voiceStyle || 'auto';
+  document.querySelectorAll('.voice-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.voice === modalVoiceStyle);
   });
   goStep(1);
   document.getElementById('createModal').classList.add('active');
@@ -138,6 +150,7 @@ function createCompanion() {
     const c = getCompanion(editingId);
     c.name = name; c.avatar = modalAvatar; c.vibe = modalVibe;
     c.personalities = modalPersonalities; c.language = modalLang; c.gender = modalGender;
+    c.voiceStyle = modalVoiceStyle;
     saveCompanions();
     renderSidebar();
     switchCompanion(editingId);
@@ -147,7 +160,7 @@ function createCompanion() {
     const id = 'ai_' + Date.now();
     companions.push({
       id, name, avatar: modalAvatar, personalities: modalPersonalities,
-      vibe: modalVibe, language: modalLang, gender: modalGender,
+      vibe: modalVibe, language: modalLang, gender: modalGender, voiceStyle: modalVoiceStyle,
       created: Date.now(), lastMessage: '', lastTime: Date.now()
     });
     saveCompanions();
@@ -408,6 +421,32 @@ function drawCallFace(speaking) {
     ctx.fill();
   }
 
+  // ── Shoulders ──
+  const shoulderGrad = ctx.createLinearGradient(0, cy + h*0.38, 0, h);
+  shoulderGrad.addColorStop(0, st.skin);
+  shoulderGrad.addColorStop(1, st.skin2 + '00');
+  ctx.fillStyle = shoulderGrad;
+  ctx.beginPath();
+  ctx.moveTo(0, h);
+  ctx.bezierCurveTo(cx - w*0.38, h*0.88, cx - w*0.22, cy + h*0.44, cx - 20, cy + h*0.41);
+  ctx.lineTo(cx + 20, cy + h*0.41);
+  ctx.bezierCurveTo(cx + w*0.22, cy + h*0.44, cx + w*0.38, h*0.88, w, h);
+  ctx.closePath(); ctx.fill();
+
+  // ── Ears (drawn before face so face edge naturally overlaps inner ear) ──
+  const earY = cy - h*0.01;
+  const earW = w*0.065, earH = h*0.115;
+  [cx - w*0.272, cx + w*0.272].forEach((ex, i) => {
+    const tilt = i === 0 ? 0.08 : -0.08;
+    ctx.fillStyle = st.skin;
+    ctx.beginPath(); ctx.ellipse(ex, earY, earW, earH, tilt, 0, Math.PI*2); ctx.fill();
+    const earShadow = ctx.createRadialGradient(ex + (i===0?2:-2), earY, 1, ex, earY, earW);
+    earShadow.addColorStop(0, st.skin2 + 'AA');
+    earShadow.addColorStop(1, st.skin2 + '00');
+    ctx.fillStyle = earShadow;
+    ctx.beginPath(); ctx.ellipse(ex, earY, earW*0.7, earH*0.7, tilt, 0, Math.PI*2); ctx.fill();
+  });
+
   // ── Neck ──
   const neckGrad = ctx.createLinearGradient(cx - 15, 0, cx + 15, 0);
   neckGrad.addColorStop(0, st.skin2);
@@ -443,6 +482,18 @@ function drawCallFace(speaking) {
   ctx.bezierCurveTo(cx + w*0.28, cy - h*0.28, cx + w*0.3, cy - h*0.05, cx + w*0.27, cy + h*0.08);
   ctx.bezierCurveTo(cx + w*0.22, cy + h*0.22, cx + w*0.1, cy + h*0.3, cx, cy + h*0.32);
   ctx.closePath(); ctx.fill();
+
+  // Subsurface scattering — warm glow at face edges and nose
+  const sssGrad = ctx.createRadialGradient(cx, cy + h*0.12, 5, cx, cy, w*0.32);
+  sssGrad.addColorStop(0, 'rgba(0,0,0,0)');
+  sssGrad.addColorStop(0.75, 'rgba(0,0,0,0)');
+  sssGrad.addColorStop(1, 'rgba(200,80,40,0.07)');
+  ctx.fillStyle = sssGrad;
+  ctx.beginPath(); ctx.arc(cx, cy, w*0.35, 0, Math.PI*2); ctx.fill();
+  // Under-eye shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.07)';
+  ctx.beginPath(); ctx.ellipse(cx - w*0.1, cy + h*0.01, w*0.08, h*0.025, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx + w*0.1, cy + h*0.01, w*0.08, h*0.025, 0, 0, Math.PI*2); ctx.fill();
 
   // Forehead highlight
   const hlGrad = ctx.createRadialGradient(cx - w*0.05, cy - h*0.18, 2, cx - w*0.05, cy - h*0.18, w*0.18);
@@ -631,6 +682,13 @@ function drawCallFace(speaking) {
   ctx.beginPath(); ctx.ellipse(cx - w*0.18, cy + h*0.1, 20, 12, 0.2, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(cx + w*0.18, cy + h*0.1, 20, 12, -0.2, 0, Math.PI*2); ctx.fill();
 
+  // ── Chin shadow ──
+  const chinGrad = ctx.createRadialGradient(cx, cy + h*0.3, 2, cx, cy + h*0.3, w*0.18);
+  chinGrad.addColorStop(0, 'rgba(0,0,0,0.1)');
+  chinGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = chinGrad;
+  ctx.beginPath(); ctx.ellipse(cx, cy + h*0.3, w*0.16, h*0.06, 0, 0, Math.PI*2); ctx.fill();
+
   // ── Philtrum (nose-lip groove) ──
   ctx.strokeStyle = `${st.skin2}66`;
   ctx.lineWidth = 1;
@@ -706,20 +764,25 @@ function buildCallPhrases() {
 }
 
 async function speakCallPhrase() {
-  if (callSpeaking || voicePlaying) return;
+  if (callSpeaking) return;
   const phrases = buildCallPhrases();
   const phrase = phrases[Math.floor(Math.random() * phrases.length)];
 
   callSpeaking = true;
   document.getElementById('callSpeakIndicator')?.classList.add('speaking');
 
+  const controller = new AbortController();
+  const ttsTimeout = setTimeout(() => controller.abort(), 8000);
+
   try {
     const companion = getCurrentCompanion();
     const res = await fetch('/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: phrase, companion })
+      body: JSON.stringify({ text: phrase, companion }),
+      signal: controller.signal
     });
+    clearTimeout(ttsTimeout);
 
     if (!res.ok) throw new Error('TTS failed');
 
@@ -737,6 +800,7 @@ async function speakCallPhrase() {
     };
     audio.play();
   } catch (e) {
+    clearTimeout(ttsTimeout);
     callSpeaking = false;
     document.getElementById('callSpeakIndicator')?.classList.remove('speaking');
     console.warn('Call voice error:', e);
@@ -752,15 +816,18 @@ async function startVideoCall() {
   document.getElementById('videoStatus').textContent = 'Ringing... 📞';
   startCallFaceAnimation();
 
-  try {
-    videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    videoStream.getVideoTracks().forEach(t => t.enabled = false);
-    const selfEl = document.querySelector('.video-self-inner');
-    const video = document.createElement('video');
-    video.srcObject = videoStream; video.autoplay = true; video.muted = true; video.playsInline = true;
-    video.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;opacity:0;';
-    selfEl.innerHTML = ''; selfEl.appendChild(video);
-  } catch (e) { console.warn('No media:', e); }
+  // Non-blocking — never delays call startup
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+      videoStream = stream;
+      stream.getVideoTracks().forEach(t => t.enabled = false);
+      const selfEl = document.querySelector('.video-self-inner');
+      const video = document.createElement('video');
+      video.srcObject = stream; video.autoplay = true; video.muted = true; video.playsInline = true;
+      video.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:10px;opacity:0;';
+      selfEl.innerHTML = ''; selfEl.appendChild(video);
+    })
+    .catch(e => console.warn('No media:', e));
 
   const camBtn = document.getElementById('camBtn');
   if (camBtn) {
@@ -779,9 +846,9 @@ async function startVideoCall() {
       document.getElementById('videoStatus').textContent = t;
       document.getElementById('pipTime').textContent = t;
     }, 1000);
-    setTimeout(() => speakCallPhrase(), 1500);
+    setTimeout(() => speakCallPhrase(), 600);
     callInterval = setInterval(() => { if (Math.random() > 0.3) speakCallPhrase(); }, 12000 + Math.random()*6000);
-  }, 1200);
+  }, 500);
 }
 
 function stopVideoCall() {
@@ -1661,3 +1728,4 @@ window.toggleTranscript = toggleTranscript;
 window.toggleSelectMode = toggleSelectMode;
 window.deleteSelected = deleteSelected;
 window.selectAll = selectAll;
+window.selectVoice = selectVoice;
