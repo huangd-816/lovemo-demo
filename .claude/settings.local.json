@@ -5,7 +5,11 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(npm start *)",
-      "Bash(gh repo *)"
+      "Bash(gh repo *)",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill -9)",
+      "Bash(node *)",
+      "Bash(curl -s http://localhost:3000)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -130,6 +130,26 @@ const SMART_KEYWORDS = {
     ca_sherlock: ['sherlock','holmes','detective','watson','baker street'],
     ca_ironman:  ['iron man','tony stark','stark','avenger'],
     ca_batman:   ['batman','bruce wayne','dark knight','gotham'],
+    ca_raiden:   ['raiden','raiden shogun','ei','electro archon','baal','genshin'],
+    ca_yaemiko:  ['yae miko','yae','guuji','fox shrine','miko'],
+    ca_ayaka:    ['ayaka','kamisato','shirasagi','cryo princess'],
+    ca_ganyu:    ['ganyu','half adepti','liyue secretary','cocogoat'],
+    ca_fischl:   ['fischl','prinzessin','oz','raven','amy'],
+    ca_zhongli:  ['zhongli','morax','geo archon','no mora','consultant'],
+    ca_xiao:     ['xiao','vigilant yaksha','adepti','almond tofu'],
+    ca_kaeya:    ['kaeya','cavalry captain','alberich'],
+    ca_childe:   ['childe','tartaglia','ajax','harbinger','fatui hydro'],
+    ca_scara:    ['scaramouche','scara','wanderer','balladeer','kunikuzushi'],
+    ca_light:    ['light yagami','light','kira','death note','god new world'],
+    ca_l:        ['l lawliet','l detective','ryuzaki','death note','sweets'],
+    ca_sebastian:['sebastian','michaelis','butler','black butler','kuroshitsuji'],
+    ca_dazai:    ['dazai','dazai osamu','bsd','bungo stray dogs','bandages','suicidal'],
+    ca_chuuya:   ['chuuya','nakahara','bsd','port mafia','calamity','hat'],
+    ca_sukuna:   ['sukuna','ryomen','king of curses','jjk','jujutsu','tattoos'],
+    ca_megumi:   ['megumi','fushiguro','ten shadows','jjk','shikigami'],
+    ca_bakugo:   ['bakugo','kacchan','katsuki','explosion','mha','my hero','baku'],
+    ca_tamaki:   ['tamaki','suoh','ouran','host club','king','princely'],
+    ca_kyoya:    ['kyoya','ootori','shadow king','ouran','host club','glasses'],
   },
 };
 
@@ -737,6 +757,34 @@ const FACE_PRESETS = [
   { id:'ca_sherlock',name:'Sherlock',   charType:'fiction', vibe:'Consulting Detective', gender:'male', langs:['en'],           catchphrase:'Elementary, my dear Watson.',               url:'https://i.pravatar.cc/400?u=sherlock-holmes-consulting' },
   { id:'ca_ironman', name:'Tony',       charType:'fiction', vibe:'Genius Billionaire', gender:'male',   langs:['en'],           catchphrase:'I am Iron Man.',                           url:'https://i.pravatar.cc/400?u=tony-stark-ironman-arc' },
   { id:'ca_batman',  name:'Batman',     charType:'fiction', vibe:'Dark Knight',        gender:'male',   langs:['en'],           catchphrase:"I'm Batman.",                              url:'https://i.pravatar.cc/400?u=batman-dark-knight-gotham' },
+  // Genshin Impact — female
+  { id:'ca_raiden',  name:'Raiden Shogun', charType:'game', vibe:'Eternity Incarnate', gender:'female', langs:['zh','en','ja'],  catchphrase:'By the power of eternity, I shall judge you.', url:'https://i.pravatar.cc/400?u=raiden-shogun-ei-electro' },
+  { id:'ca_yaemiko', name:'Yae Miko',   charType:'game',    vibe:'Divine Fox Shrine',  gender:'female', langs:['zh','en','ja'],  catchphrase:'Oh? Interesting. Do go on~',                   url:'https://i.pravatar.cc/400?u=yae-miko-guuji-shrine' },
+  { id:'ca_ayaka',   name:'Ayaka',      charType:'game',    vibe:'Elegant Shirasagi',  gender:'female', langs:['zh','en','ja'],  catchphrase:'I only wish to walk this path with you.',     url:'https://i.pravatar.cc/400?u=kamisato-ayaka-cryo-crane' },
+  { id:'ca_ganyu',   name:'Ganyu',      charType:'game',    vibe:'Half-Adepti Secretary', gender:'female', langs:['zh','en'],   catchphrase:'This is for Liyue... and for myself.',         url:'https://i.pravatar.cc/400?u=ganyu-liyue-secretary-adepti' },
+  { id:'ca_fischl',  name:'Fischl',     charType:'game',    vibe:'Prinzessin der Verurteilung', gender:'female', langs:['de','en'], catchphrase:'Thy actions dost mirror the brilliance of mine own!', url:'https://i.pravatar.cc/400?u=fischl-prinzessin-raven' },
+  // Genshin Impact — male
+  { id:'ca_zhongli', name:'Zhongli',    charType:'game',    vibe:'Geo Archon',         gender:'male',   langs:['zh','en'],      catchphrase:"I don't seem to have any mora on me.",          url:'https://i.pravatar.cc/400?u=zhongli-geo-archon-morax' },
+  { id:'ca_xiao',    name:'Xiao',       charType:'game',    vibe:'Vigilant Yaksha',    gender:'male',   langs:['zh','en'],      catchphrase:"Don't disturb me. ...Unless you need me.",      url:'https://i.pravatar.cc/400?u=xiao-yaksha-adepti-almond' },
+  { id:'ca_kaeya',   name:'Kaeya',      charType:'game',    vibe:'Cavalry Captain',    gender:'male',   langs:['zh','en'],      catchphrase:'Care for a drink? My treat.',                   url:'https://i.pravatar.cc/400?u=kaeya-alberich-cavalry-cryo' },
+  { id:'ca_childe',  name:'Childe',     charType:'game',    vibe:'Harbinger of War',   gender:'male',   langs:['ru','zh','en'], catchphrase:"War and strife — that's where I feel most alive.", url:'https://i.pravatar.cc/400?u=tartaglia-childe-fatui-hydro' },
+  { id:'ca_scara',   name:'Scaramouche',charType:'game',    vibe:'Wandering God',      gender:'male',   langs:['zh','en','ja'], catchphrase:"Don't get sentimental. It doesn't suit you.",  url:'https://i.pravatar.cc/400?u=scaramouche-wanderer-balladeer' },
+  // Death Note
+  { id:'ca_light',   name:'Light',      charType:'anime',   vibe:'God of the New World', gender:'male', langs:['ja','en'],      catchphrase:'I am Justice. I am the God of the new world.',  url:'https://i.pravatar.cc/400?u=light-yagami-death-note-kira' },
+  { id:'ca_l',       name:'L',          charType:'anime',   vibe:'World\'s Greatest Detective', gender:'male', langs:['en','ja'], catchphrase:'I am... the world\'s greatest detective.',     url:'https://i.pravatar.cc/400?u=l-lawliet-detective-sugar' },
+  // Black Butler
+  { id:'ca_sebastian', name:'Sebastian', charType:'anime',  vibe:'One Hell of a Butler', gender:'male', langs:['en','ja'],      catchphrase:'I am simply one hell of a butler.',             url:'https://i.pravatar.cc/400?u=sebastian-michaelis-butler-demon' },
+  // Bungo Stray Dogs
+  { id:'ca_dazai',   name:'Dazai',      charType:'anime',   vibe:'Suicidal Mastermind', gender:'male',  langs:['ja','en'],      catchphrase:"I'm looking for a beautiful woman to die with~", url:'https://i.pravatar.cc/400?u=dazai-osamu-bsd-bandages' },
+  { id:'ca_chuuya',  name:'Chuuya',     charType:'anime',   vibe:'God of Calamity',    gender:'male',   langs:['ja','en'],      catchphrase:'Thou shalt not deny me my wrath.',              url:'https://i.pravatar.cc/400?u=chuuya-nakahara-bsd-mafia' },
+  // JJK additions
+  { id:'ca_sukuna',  name:'Sukuna',     charType:'anime',   vibe:'King of Curses',     gender:'male',   langs:['ja','en'],      catchphrase:'Know your place, and worship me.',              url:'https://i.pravatar.cc/400?u=sukuna-king-curses-jjk' },
+  { id:'ca_megumi',  name:'Megumi',     charType:'anime',   vibe:'Ten Shadows',        gender:'male',   langs:['ja','en'],      catchphrase:"I'd rather not waste effort saving people I don't care about.", url:'https://i.pravatar.cc/400?u=megumi-fushiguro-ten-shadows' },
+  // MHA addition
+  { id:'ca_bakugo',  name:'Bakugo',     charType:'anime',   vibe:'Explosion King',     gender:'male',   langs:['ja','en'],      catchphrase:"I'll surpass you and become number one!",      url:'https://i.pravatar.cc/400?u=bakugo-katsuki-explosion-hero' },
+  // OHSHC
+  { id:'ca_tamaki',  name:'Tamaki',     charType:'anime',   vibe:'Princely Host King', gender:'male',   langs:['ja','en'],      catchphrase:'You are my precious little princess.',          url:'https://i.pravatar.cc/400?u=tamaki-suoh-ouran-host-king' },
+  { id:'ca_kyoya',   name:'Kyoya',      charType:'anime',   vibe:'Shadow King',        gender:'male',   langs:['ja','en'],      catchphrase:"I simply protect what's mine — that includes you.", url:'https://i.pravatar.cc/400?u=kyoya-ootori-shadow-king-ouran' },
 ];
 
 const FACE_STYLES = {
