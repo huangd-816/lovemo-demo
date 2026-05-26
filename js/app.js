@@ -1057,7 +1057,7 @@ function renderMessage(item, sender) {
 
   if (item.type === 'text') {
     const c = getCurrentCompanion();
-    const showTranslate = c.language !== 'en' || sender === 'ai';
+    const showTranslate = c.language !== 'en';
     div.innerHTML = `
       <div class="translate-wrap">
         <div class="msg-text-inner translate-content">${escapeHtml(item.content)}</div>
@@ -1121,7 +1121,7 @@ function renderMessage(item, sender) {
     transcriptWrap.innerHTML = `
       <div class="translate-wrap">
         <div class="translate-content">${escapeHtml(voiceText)}</div>
-        ${showTranslate || true ? `<button class="translate-btn small" title="Translate to English" onclick="translateText('${escapeHtml(voiceText).replace(/'/g, "\'")}', 'en', this)">🌐</button>` : ''}
+        ${showTranslate ? `<button class="translate-btn small" title="Translate to English" onclick="translateText('${escapeHtml(voiceText).replace(/'/g, "\'")}', 'en', this)">🌐</button>` : ''}
       </div>`;
 
     div.appendChild(voiceBar);
@@ -1250,13 +1250,28 @@ async function sendMessage() {
   setTimeout(saveChatToStorage, 100);
 }
 
-async function sendToAI(text) {
+async function sendToAI(text, originalText) {
   showTyping();
   const c = getCurrentCompanion();
+
+  // Get time and rough location for context
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  const dateStr = now.toLocaleDateString([], { weekday:'long', month:'long', day:'numeric' });
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  let locationStr = tz; // fallback
+  try {
+    const pos = await new Promise((res, rej) =>
+      navigator.geolocation.getCurrentPosition(res, rej, { timeout: 2000 })
+    );
+    locationStr = `${pos.coords.latitude.toFixed(2)},${pos.coords.longitude.toFixed(2)}`;
+  } catch {}
+
   try {
     const res = await fetch('http://localhost:3000/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ message:text, companionId:c.id, companion:c })
+      body: JSON.stringify({ message: originalText || text, fullMessage: text, companionId:c.id, companion:c, context: { time: timeStr, date: dateStr, timezone: tz, location: locationStr } })
     });
     hideTyping();
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

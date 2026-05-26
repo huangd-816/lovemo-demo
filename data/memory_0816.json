@@ -1,33 +1,33 @@
 {
   "userName": null,
   "affection": 100,
-  "chatCount": 75,
-  "lastInteraction": "2026-05-26T03:28:59.352Z",
-  "mood": "curious",
+  "chatCount": 90,
+  "lastInteraction": "2026-05-26T03:53:15.662Z",
+  "mood": "neutral",
   "topics": [
     "pets"
   ],
   "keywords": [
-    "wait",
-    "experimenting",
-    "just",
-    "say",
-    "its",
-    "monkey",
-    "yeah",
-    "reacted",
-    "👏",
-    "to",
-    "your",
+    "do",
+    "you",
+    "know",
+    "this",
+    "mate",
+    "see?",
+    "get",
+    "what",
+    "can",
+    "see",
+    "i'm",
+    "message",
     "oi",
-    "cat",
-    "nope",
-    "hello",
-    "wow",
-    "what's",
-    "the",
-    "time",
-    "now"
+    "there's",
+    "an",
+    "app",
+    "prob",
+    "yeah",
+    "said",
+    "that"
   ],
   "sentiment": "positive",
   "preferences": {
@@ -47,16 +47,6 @@
     "user said good night"
   ],
   "emotions": [
-    {
-      "date": "2026-05-22",
-      "emotion": "user seems neutral",
-      "context": "AI observed"
-    },
-    {
-      "date": "2026-05-22",
-      "emotion": "curious",
-      "context": "why"
-    },
     {
       "date": "2026-05-22",
       "emotion": "curious",
@@ -136,6 +126,26 @@
       "date": "2026-05-26",
       "emotion": "curious",
       "context": "what's the time now"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "see?"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "get what"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "can you see what i'm replying to"
+    },
+    {
+      "date": "2026-05-26",
+      "emotion": "curious",
+      "context": "do you know what this app is"
     }
   ],
   "importantMoments": [],
